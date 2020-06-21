@@ -1,0 +1,26 @@
+/build/
+.gradle
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# VS Code
+.vscode
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+/out/
+
+/target/
+.DS_Store
+
+/bin/
