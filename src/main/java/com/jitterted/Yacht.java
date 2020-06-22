@@ -1,6 +1,5 @@
 package com.jitterted;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Yacht {
@@ -24,7 +23,7 @@ public class Yacht {
 
   // YAGNI - You Ain't Gonna Need It
 
-  public int scoreAsOnes(String roll) {
+  public int scoreAsOnes(List<Integer> roll) {
     return calculateScore(roll, 1);
   }
 
@@ -32,23 +31,15 @@ public class Yacht {
     return calculateScore(dice, 2);
   }
 
-  public int scoreAsThrees(String roll) {
+  public int scoreAsThrees(List<Integer> roll) {
     return calculateScore(roll, 3);
   }
 
-  public int scoreAsFives(String roll) {
+  public int scoreAsFives(List<Integer> roll) {
     return calculateScore(roll, 5);
   }
 
-  private int calculateScore(String roll, int scoreCategory) {
-    List<Integer> dice = new ArrayList<>();
-    for (char c : roll.toCharArray()) {
-      dice.add(Character.getNumericValue(c));
-    }
-    return calculateScore(dice, scoreCategory);
-  }
-
-  public int scoreAsFullHouse(String roll) {
+  public int scoreAsFullHouse(List<Integer> roll) {
     return 0;
   }
 
