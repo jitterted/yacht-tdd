@@ -1,4 +1,4 @@
-package com.jitterted.yacht;
+package com.jitterted.yacht.domain;
 
 import java.util.List;
 import java.util.Map;
