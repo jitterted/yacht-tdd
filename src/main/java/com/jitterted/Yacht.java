@@ -33,10 +33,10 @@ public class Yacht {
     return calculateScore(roll, '5', 5);
   }
 
-  private int calculateScore(String roll, char ch, int value) {
+  private int calculateScore(String roll, char dieSide, int scoreForDie) {
     int count = (int) (roll.chars()
-                           .filter(c -> c == ch)
+                           .filter(c -> c == dieSide)
                            .count());
-    return count * value;
+    return count * scoreForDie;
   }
 }
