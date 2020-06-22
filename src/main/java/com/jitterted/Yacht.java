@@ -48,9 +48,13 @@ public class Yacht {
   }
 
   public int scoreAsTwos(List<Integer> dice) {
+    return calculateScore(dice, 2);
+  }
+
+  private int calculateScore(List<Integer> dice, int scoreCategory) {
     int count = (int) dice.stream()
-                          .filter(die -> die == 2)
+                          .filter(die -> die == scoreCategory)
                           .count();
-    return count * 2;
+    return count * scoreCategory;
   }
 }
