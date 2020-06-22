@@ -49,6 +49,16 @@ public class YachtScoringTest {
   }
 
   @Test
+  public void rollOf13336Scores9ForThreesCategory() throws Exception {
+    Yacht yacht = new Yacht();
+
+    int score = yacht.scoreAsThrees("13336");
+
+    assertThat(score)
+        .isEqualTo(9);
+  }
+
+  @Test
   public void rollOf12556Scores10ForFivesCategory() throws Exception {
     Yacht yacht = new Yacht();
 

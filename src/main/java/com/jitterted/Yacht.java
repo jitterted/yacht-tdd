@@ -25,6 +25,10 @@ public class Yacht {
     return calculateScore(roll, '1', 1);
   }
 
+  public int scoreAsThrees(String roll) {
+    return calculateScore(roll, '3', 3);
+  }
+
   public int scoreAsFives(String roll) {
     return calculateScore(roll, '5', 5);
   }
