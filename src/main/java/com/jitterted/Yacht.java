@@ -1,5 +1,7 @@
 package com.jitterted;
 
+import java.util.List;
+
 public class Yacht {
   private final DieRoller dieRoller;
 
@@ -25,6 +27,7 @@ public class Yacht {
     return calculateScore(roll, '1', 1);
   }
 
+
   public int scoreAsThrees(String roll) {
     return calculateScore(roll, '3', 3);
   }
@@ -38,5 +41,16 @@ public class Yacht {
                            .filter(c -> c == dieSide)
                            .count());
     return count * scoreForDie;
+  }
+
+  public int scoreAsFullHouse(String roll) {
+    return 0;
+  }
+
+  public int scoreAsTwos(List<Integer> dice) {
+    int count = (int) dice.stream()
+                          .filter(die -> die == 2)
+                          .count();
+    return count * 2;
   }
 }

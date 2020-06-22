@@ -2,6 +2,8 @@ package com.jitterted;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class YachtScoringNumberCategoriesTest {
@@ -66,6 +68,16 @@ public class YachtScoringNumberCategoriesTest {
 
     assertThat(score)
         .isEqualTo(10);
+  }
+
+  @Test
+  public void rollOf22345Scores4ForTwosCategory() throws Exception {
+    Yacht yacht = new Yacht();
+
+    int score = yacht.scoreAsTwos(List.of(2, 2, 3, 4, 5));
+
+    assertThat(score)
+        .isEqualTo(2 + 2);
   }
 
 }
