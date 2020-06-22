@@ -39,7 +39,7 @@ public class YachtScoringFullHouseTest {
         .isZero();
   }
 
-  @Disabled
+  @Test
   public void rollOf22666ScoresAs22() throws Exception {
     Yacht yacht = new Yacht();
 

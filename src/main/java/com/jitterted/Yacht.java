@@ -43,7 +43,17 @@ public class Yacht {
   }
 
   public int scoreAsFullHouse(List<Integer> roll) {
-    Map<Integer, Long> listMap =
+    if (isValidFullHouse(roll)) {
+      return roll.stream()
+                 .distinct()
+                 .mapToInt(die -> calculateScore(roll, die))
+                 .sum();
+    }
+    return 0;
+  }
+
+  private boolean isValidFullHouse(List<Integer> roll) {
+    Map<Integer, Long> dieToCountMap =
         roll.stream()
             .collect(
                 Collectors.groupingBy(
@@ -52,18 +62,17 @@ public class Yacht {
                 )
             );
 
-    long count = listMap.entrySet().stream()
-                        .filter(e -> e.getValue() >= 2)
-                        .count();
+    long numberOfDiceOccurringTwoOrMoreTimes =
+        dieToCountMap.entrySet()
+                     .stream()
+                     .filter(this::twoOrMoreOccurrences)
+                     .count();
 
-    if (count != 2) {
-      return 0;
-    }
+    return numberOfDiceOccurringTwoOrMoreTimes == 2;
+  }
 
-    return roll.stream()
-               .distinct()
-               .mapToInt(die -> calculateScore(roll, die))
-               .sum();
+  private boolean twoOrMoreOccurrences(Map.Entry<Integer, Long> e) {
+    return e.getValue() >= 2;
   }
 
   private int calculateScore(List<Integer> dice, int scoreCategory) {
