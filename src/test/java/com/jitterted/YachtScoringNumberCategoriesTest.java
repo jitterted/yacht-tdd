@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class YachtScoringTest {
+public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf23456ResultsInScoreOfZeroForOnesCategory() throws Exception {
