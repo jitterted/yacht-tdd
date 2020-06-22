@@ -1,4 +1,4 @@
-package com.jitterted;
+package com.jitterted.yacht;
 
 import org.junit.jupiter.api.Test;
 
