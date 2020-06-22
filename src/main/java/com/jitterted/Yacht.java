@@ -7,6 +7,10 @@ public class Yacht {
     this.dieRoller = dieRoller;
   }
 
+  public Yacht() {
+    this.dieRoller = new RandomDieRoller();
+  }
+
   public String rollDice() {
     String result = "";
     for (int i = 0; i < 5; i++) {
@@ -15,13 +19,20 @@ public class Yacht {
     return result;
   }
 
+  // YAGNI - You Ain't Gonna Need It
+
   public int scoreAsOnes(String roll) {
-    int score = 0;
-    for (int i = 0; i < roll.length(); i++) {
-      if (roll.substring(i, i+1).equals("1")) {
-        score++;
-      }
-    }
-    return score;
+    return calculateScore(roll, '1', 1);
+  }
+
+  public int scoreAsFives(String roll) {
+    return calculateScore(roll, '5', 5);
+  }
+
+  private int calculateScore(String roll, char ch, int value) {
+    int count = (int) (roll.chars()
+                           .filter(c -> c == ch)
+                           .count());
+    return count * value;
   }
 }
