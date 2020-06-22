@@ -1,6 +1,9 @@
 package com.jitterted;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Yacht {
   private final DieRoller dieRoller;
@@ -40,7 +43,27 @@ public class Yacht {
   }
 
   public int scoreAsFullHouse(List<Integer> roll) {
-    return 0;
+    Map<Integer, Long> listMap =
+        roll.stream()
+            .collect(
+                Collectors.groupingBy(
+                    Function.identity(),
+                    Collectors.counting()
+                )
+            );
+
+    long count = listMap.entrySet().stream()
+                        .filter(e -> e.getValue() >= 2)
+                        .count();
+
+    if (count != 2) {
+      return 0;
+    }
+
+    return roll.stream()
+               .distinct()
+               .mapToInt(die -> calculateScore(roll, die))
+               .sum();
   }
 
   private int calculateScore(List<Integer> dice, int scoreCategory) {
