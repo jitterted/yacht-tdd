@@ -10,9 +10,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf23456ResultsInScoreOfZeroForOnesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsOnes(List.of(2, 3, 4, 5, 6));
+    int score = yachtScorer.scoreAsOnes(List.of(2, 3, 4, 5, 6));
 
     assertThat(score)
         .isZero();
@@ -20,9 +20,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf12345ResultsInScoreOf1ForOnesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsOnes(List.of(1, 2, 3, 4, 5));
+    int score = yachtScorer.scoreAsOnes(List.of(1, 2, 3, 4, 5));
 
     assertThat(score)
         .isEqualTo(1);
@@ -30,9 +30,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf11111ResultsInScoreOf5ForOnesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsOnes(List.of(1, 1, 1, 1, 1));
+    int score = yachtScorer.scoreAsOnes(List.of(1, 1, 1, 1, 1));
 
     assertThat(score)
         .isEqualTo(5);
@@ -42,9 +42,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf12346Scores0ForFivesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsFives(List.of(1, 2, 3, 4, 6));
+    int score = yachtScorer.scoreAsFives(List.of(1, 2, 3, 4, 6));
 
     assertThat(score)
         .isZero();
@@ -52,9 +52,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf13336Scores9ForThreesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsThrees(List.of(1, 3, 3, 3, 6));
+    int score = yachtScorer.scoreAsThrees(List.of(1, 3, 3, 3, 6));
 
     assertThat(score)
         .isEqualTo(9);
@@ -62,9 +62,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf12556Scores10ForFivesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsFives(List.of(1, 2, 5, 5, 6));
+    int score = yachtScorer.scoreAsFives(List.of(1, 2, 5, 5, 6));
 
     assertThat(score)
         .isEqualTo(10);
@@ -72,9 +72,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf22345Scores4ForTwosCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsTwos(List.of(2, 2, 3, 4, 5));
+    int score = yachtScorer.scoreAsTwos(List.of(2, 2, 3, 4, 5));
 
     assertThat(score)
         .isEqualTo(2 + 2);
@@ -82,9 +82,9 @@ public class YachtScoringNumberCategoriesTest {
 
   @Test
   public void rollOf66644Scores18ForSixesCategory() throws Exception {
-    Yacht yacht = new Yacht();
+    YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yacht.scoreAsSixes(List.of(6, 6, 6, 4, 4));
+    int score = yachtScorer.scoreAsSixes(List.of(6, 6, 6, 4, 4));
 
     assertThat(score)
         .isEqualTo(6 + 6 + 6);

@@ -5,26 +5,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Yacht {
-  private final DieRoller dieRoller;
-
-  public Yacht(DieRoller dieRoller) {
-    this.dieRoller = dieRoller;
-  }
-
-  public Yacht() {
-    this.dieRoller = new RandomDieRoller();
-  }
-
-  public String rollDice() {
-    String result = "";
-    for (int i = 0; i < 5; i++) {
-      result += String.valueOf(dieRoller.roll());
-    }
-    return result;
-  }
-
-  // YAGNI - You Ain't Gonna Need It
+public class YachtScorer {
 
   public int scoreAsOnes(List<Integer> roll) {
     return calculateScore(roll, 1);
