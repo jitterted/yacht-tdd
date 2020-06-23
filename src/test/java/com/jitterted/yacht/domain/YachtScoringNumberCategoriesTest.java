@@ -38,8 +38,6 @@ public class YachtScoringNumberCategoriesTest {
         .isEqualTo(5);
   }
 
-  // ZOM/BIES - Zero/Empty, One, Many/More/More complex
-
   @Test
   public void rollOf12346Scores0ForFivesCategory() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
@@ -88,7 +86,17 @@ public class YachtScoringNumberCategoriesTest {
 
     assertThat(score)
         .isEqualTo(6 + 6 + 6);
+  }
 
+  @Test
+  public void oldScoreForFoursIsSameAsDiceRollBasedScore() throws Exception {
+    YachtScorer yachtScorer = new YachtScorer();
+
+    int diceRollScore = yachtScorer.scoreAsFours(DiceRoll.of(5, 5, 4, 4, 4));
+    int score = yachtScorer.scoreAsFours(List.of(5, 5, 4, 4, 4));
+
+    assertThat(diceRollScore)
+        .isEqualTo(score);
   }
 
 }

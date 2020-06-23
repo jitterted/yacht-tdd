@@ -34,4 +34,5 @@ public class GameTest {
     assertThat(game.score())
         .isEqualTo(2);
   }
+
 }

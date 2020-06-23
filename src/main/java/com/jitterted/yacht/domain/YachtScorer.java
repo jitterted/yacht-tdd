@@ -19,6 +19,10 @@ public class YachtScorer {
     return calculateScore(roll, 3);
   }
 
+  public int scoreAsFours(DiceRoll diceRoll) {
+    return diceRoll.countFor(4) * 4;
+  }
+
   public int scoreAsFours(List<Integer> roll) {
     return calculateScore(roll, 4);
   }
