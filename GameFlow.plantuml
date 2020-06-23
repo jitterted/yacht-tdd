@@ -1,0 +1,17 @@
+@startuml
+
+actor User
+User -> Browser: Clicks [New Game]
+Browser -> GameController: POST "NEW_GAME"
+GameController -> Browser: ScoreboardView
+User -> Browser: Click [Roll Dice]
+Browser -> GameController: POST "ROLL_DICE"
+GameController -> Game: rollDice
+Game -> Scoreboard: updateDiceRoll
+GameController -> Browser: ScoreboardView
+note left: 'Ask for Category'
+User -> Browser: Click [Some Category]
+Browser -> GameController: POST "CATEGORY_x"
+GameController -> Game: assign DiceRoll\nto Category
+
+@enduml
