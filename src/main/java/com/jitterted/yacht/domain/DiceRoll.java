@@ -1,6 +1,7 @@
 package com.jitterted.yacht.domain;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class DiceRoll {
   private final List<Integer> dice;
@@ -17,5 +18,9 @@ public class DiceRoll {
     return (int) dice.stream()
                      .filter(die -> die == dieValue)
                      .count();
+  }
+
+  public Stream<Integer> stream() {
+    return dice.stream();
   }
 }

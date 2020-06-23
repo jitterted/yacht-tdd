@@ -1,18 +1,15 @@
 package com.jitterted.yacht.domain;
 
-import java.util.Collections;
-import java.util.List;
-
 public class Game {
   private final YachtScorer yachtScorer = new YachtScorer();
-  private List<Integer> lastRoll = Collections.emptyList();
+  private DiceRoll lastRoll = new DiceRoll(0, 0, 0, 0, 0);
 
   public void rollDice() {
-    lastRoll = List.of(1, 1, 2, 3, 4);
+    lastRoll = DiceRoll.of(1, 1, 2, 3, 4);
   }
 
-  public List<Integer> lastRoll() {
-    return List.of(1, 2, 3, 4, 5);
+  public DiceRoll lastRoll() {
+    return DiceRoll.of(1, 2, 3, 4, 5);
   }
 
   public int score() {

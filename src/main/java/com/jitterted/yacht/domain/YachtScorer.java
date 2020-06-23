@@ -1,41 +1,36 @@
 package com.jitterted.yacht.domain;
 
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class YachtScorer {
 
-  public int scoreAsOnes(List<Integer> roll) {
+  public int scoreAsOnes(DiceRoll roll) {
     return calculateScore(roll, 1);
   }
 
-  public int scoreAsTwos(List<Integer> dice) {
+  public int scoreAsTwos(DiceRoll dice) {
     return calculateScore(dice, 2);
   }
 
-  public int scoreAsThrees(List<Integer> roll) {
+  public int scoreAsThrees(DiceRoll roll) {
     return calculateScore(roll, 3);
   }
 
-  public int scoreAsFours(DiceRoll diceRoll) {
-    return diceRoll.countFor(4) * 4;
-  }
-
-  public int scoreAsFours(List<Integer> roll) {
+  public int scoreAsFours(DiceRoll roll) {
     return calculateScore(roll, 4);
   }
 
-  public int scoreAsFives(List<Integer> roll) {
+  public int scoreAsFives(DiceRoll roll) {
     return calculateScore(roll, 5);
   }
 
-  public int scoreAsSixes(List<Integer> roll) {
+  public int scoreAsSixes(DiceRoll roll) {
     return calculateScore(roll, 6);
   }
 
-  public int scoreAsFullHouse(List<Integer> roll) {
+  public int scoreAsFullHouse(DiceRoll roll) {
     if (isValidFullHouse(roll)) {
       return roll.stream()
                  .distinct()
@@ -45,7 +40,7 @@ public class YachtScorer {
     return 0;
   }
 
-  private boolean isValidFullHouse(List<Integer> roll) {
+  private boolean isValidFullHouse(DiceRoll roll) {
     Map<Integer, Long> dieToCountMap =
         roll.stream()
             .collect(
@@ -68,10 +63,7 @@ public class YachtScorer {
     return e.getValue() >= 2;
   }
 
-  private int calculateScore(List<Integer> dice, int scoreCategory) {
-    long count = dice.stream()
-                     .filter(die -> die == scoreCategory)
-                     .count();
-    return (int) (count * scoreCategory);
+  private int calculateScore(DiceRoll dice, int scoreCategory) {
+    return dice.countFor(scoreCategory) * scoreCategory;
   }
 }
