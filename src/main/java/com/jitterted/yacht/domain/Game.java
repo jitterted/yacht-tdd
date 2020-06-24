@@ -6,8 +6,7 @@ public class Game {
 
   private DiceRoll lastRoll = new DiceRoll(0, 0, 0, 0, 0);
 
-  private boolean isAssignedToOnesCategory = false;
-  private boolean isAssignedToSixesCategory = false;
+  private int score = 0;
 
   public Game() {
     diceRoller = new DiceRoller();
@@ -26,25 +25,18 @@ public class Game {
   }
 
   public int score() {
-    if (isAssignedToOnesCategory) {
-      return yachtScorer.scoreAsOnes(lastRoll);
-    } else if (isAssignedToSixesCategory) {
-      return yachtScorer.scoreAsSixes(lastRoll);
-    } else {
-      return yachtScorer.scoreAsFullHouse(lastRoll);
-    }
+    return score;
   }
 
   public void assignRollToNumberOnesCategory() {
-    isAssignedToOnesCategory = true;
+    score = yachtScorer.scoreAsOnes(lastRoll);
   }
 
   public void assignRollToFullHouseCategory() {
-    isAssignedToOnesCategory = false;
+    score = yachtScorer.scoreAsFullHouse(lastRoll);
   }
 
   public void assignRollToNumberSixesCategory() {
-    isAssignedToOnesCategory = false;
-    isAssignedToSixesCategory = true;
+    score = yachtScorer.scoreAsSixes(lastRoll);
   }
 }
