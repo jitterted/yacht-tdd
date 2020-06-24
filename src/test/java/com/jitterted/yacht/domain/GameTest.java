@@ -2,6 +2,9 @@ package com.jitterted.yacht.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class GameTest {
@@ -68,21 +71,37 @@ public class GameTest {
         .isEqualTo(diceRoll);
   }
 
+  @Test
+  public void twoRollsAssignedToDifferentCategoriesResultsInSumOfBothScores() throws Exception {
+    DiceRoll fullHouseRoll = DiceRoll.of(1, 1, 1, 2, 2);
+    DiceRoll sixesRoll = DiceRoll.of(6, 5, 1, 5, 6);
+    StubDiceRoller diceRoller = new StubDiceRoller(fullHouseRoll, sixesRoll);
+    Game game = new Game(diceRoller);
+
+    game.rollDice();
+    game.assignRollToFullHouseCategory();
+    game.rollDice();
+    game.assignRollToNumberSixesCategory();
+
+    assertThat(game.score())
+        .isEqualTo((1 + 1 + 1 + 2 + 2) + (6 + 6));
+  }
+
   private Game createGameWithDiceRollAlwaysOf(int die1, int die2, int die3, int die4, int die5) {
     return new Game(new StubDiceRoller(DiceRoll.of(die1, die2, die3, die4, die5)));
   }
 
   static class StubDiceRoller extends DiceRoller {
 
-    private final DiceRoll diceRoll;
+    private final Iterator<DiceRoll> diceRollIterator;
 
-    public StubDiceRoller(DiceRoll diceRoll) {
-      this.diceRoll = diceRoll;
+    public StubDiceRoller(DiceRoll... diceRoll) {
+      this.diceRollIterator = Arrays.asList(diceRoll).iterator();
     }
 
     @Override
     public DiceRoll roll() {
-      return diceRoll;
+      return diceRollIterator.next();
     }
   }
 }

@@ -29,14 +29,14 @@ public class Game {
   }
 
   public void assignRollToNumberOnesCategory() {
-    score = yachtScorer.scoreAsOnes(lastRoll);
+    score += yachtScorer.scoreAsOnes(lastRoll);
   }
 
   public void assignRollToFullHouseCategory() {
-    score = yachtScorer.scoreAsFullHouse(lastRoll);
+    score += yachtScorer.scoreAsFullHouse(lastRoll);
   }
 
   public void assignRollToNumberSixesCategory() {
-    score = yachtScorer.scoreAsSixes(lastRoll);
+    score += yachtScorer.scoreAsSixes(lastRoll);
   }
 }
