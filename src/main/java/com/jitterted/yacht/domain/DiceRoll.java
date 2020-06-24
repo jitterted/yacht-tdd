@@ -23,4 +23,24 @@ public class DiceRoll {
   public Stream<Integer> stream() {
     return dice.stream();
   }
+
+  @Override
+  public String toString() {
+    return "DiceRoll: " + dice;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    DiceRoll diceRoll = (DiceRoll) o;
+
+    return dice.equals(diceRoll.dice);
+  }
+
+  @Override
+  public int hashCode() {
+    return dice.hashCode();
+  }
 }

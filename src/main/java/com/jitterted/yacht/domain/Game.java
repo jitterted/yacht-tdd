@@ -19,7 +19,7 @@ public class Game {
   }
 
   public DiceRoll lastRoll() {
-    return DiceRoll.of(1, 2, 3, 4, 5);
+    return lastRoll;
   }
 
   public int score() {
