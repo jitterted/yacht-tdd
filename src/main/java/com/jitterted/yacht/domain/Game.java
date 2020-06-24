@@ -2,9 +2,11 @@ package com.jitterted.yacht.domain;
 
 public class Game {
   private final YachtScorer yachtScorer = new YachtScorer();
+  private final DiceRoller diceRoller;
+
   private DiceRoll lastRoll = new DiceRoll(0, 0, 0, 0, 0);
 
-  private final DiceRoller diceRoller;
+  private boolean isAssignedToOnesCategory = false;
 
   public Game() {
     diceRoller = new DiceRoller();
@@ -23,14 +25,18 @@ public class Game {
   }
 
   public int score() {
-    return yachtScorer.scoreAsOnes(lastRoll);
+    if (isAssignedToOnesCategory) {
+      return yachtScorer.scoreAsOnes(lastRoll);
+    } else {
+      return yachtScorer.scoreAsFullHouse(lastRoll);
+    }
   }
 
   public void assignRollToNumberOnesCategory() {
-
+    isAssignedToOnesCategory = true;
   }
 
   public void assignRollToFullHouseCategory() {
-
+    isAssignedToOnesCategory = false;
   }
 }

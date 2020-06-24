@@ -36,17 +36,6 @@ public class GameTest {
   }
 
   @Test
-  public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
-    DiceRoll diceRoll = DiceRoll.of(6, 5, 4, 3, 2);
-    Game game = new Game(new StubDiceRoller(diceRoll));
-
-    game.rollDice();
-
-    assertThat(game.lastRoll())
-        .isEqualTo(diceRoll);
-  }
-
-  @Test
   public void givenLastRollOf_44455_ScoreAsFullHouseResultsInScoreOf22() throws Exception {
     Game game = new Game(new StubDiceRoller(DiceRoll.of(4, 4, 4, 5, 5)));
 
@@ -55,6 +44,17 @@ public class GameTest {
 
     assertThat(game.score())
         .isEqualTo(4 + 4 + 4 + 5 + 5);
+  }
+
+  @Test
+  public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
+    DiceRoll diceRoll = DiceRoll.of(6, 5, 4, 3, 2);
+    Game game = new Game(new StubDiceRoller(diceRoll));
+
+    game.rollDice();
+
+    assertThat(game.lastRoll())
+        .isEqualTo(diceRoll);
   }
 
   static class StubDiceRoller extends DiceRoller {
