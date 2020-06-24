@@ -10,11 +10,20 @@
 
 <h1>Roll Results</h1>
 <div>
-  You rolled a <span th:text="${roll}">99999</span>
+  You rolled a <span th:text="${roll}">9 9 9 9 9</span>
 </div>
-
-<form>
+<br/>
+<form action="#" th:action="select-category" method="post">
   <button name='category' value='ones'>Score in ONEs Category</button>
+  <br/>
+  <br/>
+  <button name='category' value='twos'>Score in TWOs Category</button>
+  <br/>
+  <br/>
+  <button name='category' value='threes'>Score in THREEs Category</button>
+  <br/>
+  <br/>
+  <button name='category' value='fullhouse'>Score in FULL HOUSE Category</button>
 </form>
 
 </body>

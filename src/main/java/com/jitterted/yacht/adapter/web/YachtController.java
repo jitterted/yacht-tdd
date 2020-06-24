@@ -35,4 +35,14 @@ public class YachtController {
     model.addAttribute("roll", roll);
     return "roll-result.html";
   }
+
+  @PostMapping("/select-category")
+  public String assignRollToCategory(String category) {
+    if (category.equals("threes")) {
+      game.assignRollToNumberThreesCategory();
+    } else {
+      game.assignRollToFullHouseCategory();
+    }
+    return "redirect:/rollresult";
+  }
 }

@@ -31,7 +31,7 @@ public class WebTest {
   }
 
   @Test
-  public void postToRollDice() throws Exception {
+  public void postToRollDiceShowsRollResult() throws Exception {
     MvcResult mvcResult = mockMvc.perform(post("/rolldice"))
                                  .andExpect(status().is3xxRedirection())
                                  .andExpect(redirectedUrl("/rollresult"))
@@ -42,6 +42,14 @@ public class WebTest {
            .andExpect(content().string(
                containsStringIgnoringCase("<button name='category' value='ones'>")
            ));
+  }
+
+  @Test
+  public void postToSelectCategoryScoresRollResultForThatCategory() throws Exception {
+    mockMvc.perform(post("/select-category")
+                        .param("category", "threes"))
+           .andExpect(status().is3xxRedirection())
+           .andExpect(redirectedUrl("/rollresult"));
   }
 
 }
