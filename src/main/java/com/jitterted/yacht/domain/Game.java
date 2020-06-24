@@ -39,4 +39,8 @@ public class Game {
   public void assignRollToFullHouseCategory() {
     isAssignedToOnesCategory = false;
   }
+
+  public void assignRollToNumberSixesCategory() {
+
+  }
 }
