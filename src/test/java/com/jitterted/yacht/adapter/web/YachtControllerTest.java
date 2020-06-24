@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 public class YachtControllerTest {
 
   @Test
-  public void rollingDiceReturnsRollInResultsPage() throws Exception {
+  public void initialDiceRollReturnsRollInResultsPage() throws Exception {
     Game game = new Game(StubDiceRoller.createDiceRollerFor(3, 1, 4, 1, 5));
     YachtController yachtController = new YachtController(game);
 

@@ -28,6 +28,10 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## To Do
 
+* Check that the score is being rendered as desired
+
+* Refactor the YachtController category assignment code
+
 * Full House validation is broken (see disabled test)
 
 * Categories can currently be assigned to multiple times, 
