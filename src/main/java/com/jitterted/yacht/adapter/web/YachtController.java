@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.stream.Collectors;
+
 @Controller
 public class YachtController {
 
@@ -19,13 +21,18 @@ public class YachtController {
 
   @PostMapping("/rolldice")
   public String rollDice() {
+    game.rollDice();
     return "redirect:/rollresult";
   }
 
   @GetMapping("/rollresult")
   public String rollResult(Model model) {
     model.addAttribute("score", "0");
-    model.addAttribute("roll", "12345");
+    String roll = game.lastRoll()
+                      .stream()
+                      .map(String::valueOf)
+                      .collect(Collectors.joining(" "));
+    model.addAttribute("roll", roll);
     return "roll-result.html";
   }
 }

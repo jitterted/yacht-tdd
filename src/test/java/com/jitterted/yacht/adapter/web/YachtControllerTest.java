@@ -26,4 +26,6 @@ public class YachtControllerTest {
         .isTrue();
   }
 
+  // Another form of YAGNI: Don't Solve Problems That You Don't Yet Have (DSPTYDYH)
+
 }
