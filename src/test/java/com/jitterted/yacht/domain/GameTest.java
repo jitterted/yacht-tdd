@@ -27,7 +27,7 @@ public class GameTest {
 
   @Test
   public void givenLastRollOf_11234_ScoreAsOnesCategoryResultsInScoreOf2() throws Exception {
-    Game game = new Game();
+    Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 1, 2, 3, 4));
 
     game.rollDice();
     game.assignRollToNumberOnesCategory();

@@ -4,7 +4,7 @@ public class Game {
   private final YachtScorer yachtScorer = new YachtScorer();
   private final DiceRoller diceRoller;
 
-  private DiceRoll lastRoll = new DiceRoll(0, 0, 0, 0, 0);
+  private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
   private int score = 0;
 

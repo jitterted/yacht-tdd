@@ -1,17 +1,26 @@
 package com.jitterted.yacht.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class DiceRoll {
   private final List<Integer> dice;
 
-  public DiceRoll(int die1, int die2, int die3, int die4, int die5) {
+  private DiceRoll(int die1, int die2, int die3, int die4, int die5) {
     dice = List.of(die1, die2, die3, die4, die5);
+  }
+
+  private DiceRoll(List<Integer> dieRolls) {
+    dice = Collections.unmodifiableList(dieRolls);
   }
 
   public static DiceRoll of(int die1, int die2, int die3, int die4, int die5) {
     return new DiceRoll(die1, die2, die3, die4, die5);
+  }
+
+  public static DiceRoll from(List<Integer> dieRolls) {
+    return new DiceRoll(dieRolls);
   }
 
   public int countFor(int dieValue) {
