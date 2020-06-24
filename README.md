@@ -8,7 +8,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Steps
 
-* Create a representation of a Player that stores the state of their part of the game,
+* Create a representation of a Game that stores the state of their part of the game,
   i.e., current score, which categories have been used, the rolls of the game, etc.
 
 * From the UI have a way to create a Player, initially could just be anonymous and
@@ -25,4 +25,12 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
     1. Update score
     1. Repeat from 1. until no categories are left unassigned
     1. Show final score
+
+## To Do
+
+* Full House validation is broken (see disabled test)
+
+* Categories can currently be assigned to multiple times, 
+  need to constrain to only once per category per round
   
+* Introduce "Die" as a value object (to replace Integer)
