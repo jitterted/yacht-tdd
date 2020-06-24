@@ -11,7 +11,6 @@ import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,8 +39,6 @@ public class WebTest {
 
     String redirectedUrl = mvcResult.getResponse().getRedirectedUrl();
     mockMvc.perform(get(redirectedUrl))
-           .andExpect(model().attributeExists("roll"))
-           .andExpect(model().attributeExists("score"))
            .andExpect(content().string(
                containsStringIgnoringCase("<button name='category' value='ones'>")
            ));

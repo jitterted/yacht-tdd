@@ -1,9 +1,7 @@
 package com.jitterted.yacht.domain;
 
+import com.jitterted.yacht.StubDiceRoller;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -40,7 +38,7 @@ public class GameTest {
 
   @Test
   public void givenLastRollOf_44455_ScoreAsFullHouseResultsInScoreOf22() throws Exception {
-    Game game = createGameWithDiceRollAlwaysOf(4, 4, 4, 5, 5);
+    Game game = new Game(StubDiceRoller.createDiceRollerFor(4, 4, 4, 5, 5));
 
     game.rollDice();
     game.assignRollToFullHouseCategory();
@@ -51,7 +49,7 @@ public class GameTest {
 
   @Test
   public void givenLastRollOf_65456_ScoreAsSixesResultsInScoreOf12() throws Exception {
-    Game game = createGameWithDiceRollAlwaysOf(6, 5, 4, 5, 6);
+    Game game = new Game(StubDiceRoller.createDiceRollerFor(6, 5, 4, 5, 6));
 
     game.rollDice();
     game.assignRollToNumberSixesCategory();
@@ -87,21 +85,4 @@ public class GameTest {
         .isEqualTo((1 + 1 + 1 + 2 + 2) + (6 + 6));
   }
 
-  private Game createGameWithDiceRollAlwaysOf(int die1, int die2, int die3, int die4, int die5) {
-    return new Game(new StubDiceRoller(DiceRoll.of(die1, die2, die3, die4, die5)));
-  }
-
-  static class StubDiceRoller extends DiceRoller {
-
-    private final Iterator<DiceRoll> diceRollIterator;
-
-    public StubDiceRoller(DiceRoll... diceRoll) {
-      this.diceRollIterator = Arrays.asList(diceRoll).iterator();
-    }
-
-    @Override
-    public DiceRoll roll() {
-      return diceRollIterator.next();
-    }
-  }
 }
