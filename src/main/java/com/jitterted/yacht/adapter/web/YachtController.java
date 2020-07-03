@@ -38,9 +38,11 @@ public class YachtController {
   }
 
   @PostMapping("/select-category")
-  public String assignRollToCategory(@RequestParam("category") String cat) {
-    if (cat.equals("threes")) {
+  public String assignRollToCategory(@RequestParam("category") String category) {
+    if (category.equals("threes")) {
       game.assignRollToNumberThreesCategory();
+    } else if (category.equalsIgnoreCase("ones")) {
+      game.assignRollToNumberOnesCategory();
     } else {
       game.assignRollToFullHouseCategory();
     }
