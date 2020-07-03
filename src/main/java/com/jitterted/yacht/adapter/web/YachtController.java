@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class YachtController {
 
   @GetMapping("/rollresult")
   public String rollResult(Model model) {
-    model.addAttribute("score", "0");
+    model.addAttribute("score", String.valueOf(game.score()));
     String roll = game.lastRoll()
                       .stream()
                       .map(String::valueOf)
@@ -37,8 +38,8 @@ public class YachtController {
   }
 
   @PostMapping("/select-category")
-  public String assignRollToCategory(String category) {
-    if (category.equals("threes")) {
+  public String assignRollToCategory(@RequestParam("category") String cat) {
+    if (cat.equals("threes")) {
       game.assignRollToNumberThreesCategory();
     } else {
       game.assignRollToFullHouseCategory();

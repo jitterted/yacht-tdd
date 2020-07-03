@@ -22,8 +22,8 @@ public class YachtControllerTest {
     assertThat(model.getAttribute("roll"))
         .isEqualTo("3 1 4 1 5");
 
-    assertThat(model.containsAttribute("score"))
-        .isTrue();
+    assertThat(model.getAttribute("score"))
+        .isEqualTo("0");
   }
 
   @Test
@@ -34,8 +34,10 @@ public class YachtControllerTest {
 
     yachtController.assignRollToCategory("threes");
 
-    assertThat(game.score())
-        .isEqualTo(3 + 3);
+    Model model = new ConcurrentModel();
+    yachtController.rollResult(model);
+    assertThat(model.getAttribute("score"))
+        .isEqualTo(String.valueOf(3 + 3));
   }
 
   @Test
