@@ -1,6 +1,5 @@
 package com.jitterted.yacht.domain;
 
-import com.jitterted.yacht.StubDiceRoller;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -38,15 +37,13 @@ public class ScoreboardScoringTest {
   public void twoRollsAssignedToDifferentCategoriesResultsInSumOfBothScores() throws Exception {
     DiceRoll fullHouseRoll = DiceRoll.of(1, 1, 1, 2, 2);
     DiceRoll sixesRoll = DiceRoll.of(6, 5, 1, 5, 6);
-    StubDiceRoller diceRoller = new StubDiceRoller(fullHouseRoll, sixesRoll);
-    Game game = new Game(diceRoller);
 
-    game.rollDice();
-    game.assignRollToFullHouseCategory();
-    game.rollDice();
-    game.assignRollToNumberSixesCategory();
+    Scoreboard scoreboard = new Scoreboard();
 
-    assertThat(game.score())
+    scoreboard.scoreAs(ScoreCategory.FULLHOUSE, fullHouseRoll);
+    scoreboard.scoreAs(ScoreCategory.SIXES, sixesRoll);
+
+    assertThat(scoreboard.score())
         .isEqualTo((1 + 1 + 1 + 2 + 2) + (6 + 6));
   }
 
