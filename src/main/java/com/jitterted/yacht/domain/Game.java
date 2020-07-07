@@ -1,12 +1,10 @@
 package com.jitterted.yacht.domain;
 
 public class Game {
-  private final YachtScorer yachtScorer = new YachtScorer();
   private final DiceRoller diceRoller;
 
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
-
-  private int score = 0;
+  private Scoreboard scoreboard = new Scoreboard();
 
   public Game() {
     diceRoller = new DiceRoller();
@@ -25,22 +23,22 @@ public class Game {
   }
 
   public int score() {
-    return score;
+    return scoreboard.score();
   }
 
   public void assignRollToNumberOnesCategory() {
-    score += yachtScorer.scoreAsOnes(lastRoll);
+    scoreboard.scoreAsOnes(lastRoll);
   }
 
   public void assignRollToFullHouseCategory() {
-    score += yachtScorer.scoreAsFullHouse(lastRoll);
+    scoreboard.scoreAsFullHouse(lastRoll);
   }
 
   public void assignRollToNumberSixesCategory() {
-    score += yachtScorer.scoreAsSixes(lastRoll);
+    scoreboard.scoreAsSixes(lastRoll);
   }
 
-  public void assignRollToNumberThreesCategory() {
-    score += yachtScorer.scoreAsThrees(lastRoll);
+  public void assignRollTo(ScoreCategory scoreCategory) {
+    scoreboard.scoreAs(scoreCategory, lastRoll);
   }
 }
