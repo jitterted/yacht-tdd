@@ -30,7 +30,11 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 [X] Check that the score is being rendered as desired
 
-[ ] Refactor the YachtController category assignment code
+[X] Refactor the YachtController category assignment code
+
+[ ] Add scoring for the remaining categories to Scoreboard (and ScoreCategory)
+
+[ ] Bounce back out a layer to front-end web to see what functionality we need next
 
 [ ] Full House validation is broken (see disabled test)
 
