@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +40,11 @@ public class YachtController {
 
   @PostMapping("/select-category")
   public String assignRollToCategory(@RequestParam("category") String category) {
-    if (category.equals("threes")) {
+
+    ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
+    if (scoreCategory == ScoreCategory.THREES) {
       game.assignRollToNumberThreesCategory();
-    } else if (category.equalsIgnoreCase("ones")) {
+    } else if (scoreCategory == ScoreCategory.ONES) {
       game.assignRollToNumberOnesCategory();
     } else {
       game.assignRollToFullHouseCategory();

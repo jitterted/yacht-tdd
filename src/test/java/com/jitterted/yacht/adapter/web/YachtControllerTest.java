@@ -2,6 +2,7 @@ package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.StubDiceRoller;
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -32,7 +33,7 @@ public class YachtControllerTest {
     YachtController yachtController = new YachtController(game);
     yachtController.rollDice();
 
-    yachtController.assignRollToCategory("threes");
+    yachtController.assignRollToCategory(ScoreCategory.THREES.toString());
 
     Model model = new ConcurrentModel();
     yachtController.rollResult(model);
@@ -46,7 +47,7 @@ public class YachtControllerTest {
     YachtController yachtController = new YachtController(game);
     yachtController.rollDice();
 
-    yachtController.assignRollToCategory("fullhouse");
+    yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
 
     assertThat(game.score())
         .isEqualTo(4 + 4 + 2 + 2 + 2);
@@ -59,7 +60,7 @@ public class YachtControllerTest {
     YachtController yachtController = new YachtController(game);
     yachtController.rollDice();
 
-    yachtController.assignRollToCategory("ones");
+    yachtController.assignRollToCategory(ScoreCategory.ONES.toString());
 
     assertThat(game.score())
         .isEqualTo(1 + 1 + 1);
