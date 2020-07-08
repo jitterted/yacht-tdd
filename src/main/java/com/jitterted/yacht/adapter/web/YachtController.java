@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
@@ -35,7 +36,16 @@ public class YachtController {
                       .map(String::valueOf)
                       .collect(Collectors.joining(" "));
     model.addAttribute("roll", roll);
-    return "roll-result.html";
+    model.addAttribute("categories", viewOf(game.scoredCategories()));
+    return "roll-result";
+  }
+
+  private List<ScoreCategoryView> viewOf(List<ScoreCategory> scoredCategories) {
+    ScoreCategoryView view = new ScoreCategoryView();
+    view.setDescription("THREEs");
+    view.setDiceRoll("1 3 3 3 4");
+    view.setScore("9");
+    return List.of(view);
   }
 
   @PostMapping("/select-category")

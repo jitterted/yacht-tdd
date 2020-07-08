@@ -1,5 +1,7 @@
 package com.jitterted.yacht.domain;
 
+import java.util.List;
+
 public class Game {
   private final DiceRoller diceRoller;
   private final Scoreboard scoreboard = new Scoreboard();
@@ -28,5 +30,9 @@ public class Game {
 
   public void assignRollTo(ScoreCategory scoreCategory) {
     scoreboard.scoreAs(scoreCategory, lastRoll);
+  }
+
+  public List<ScoreCategory> scoredCategories() {
+    return null;
   }
 }

@@ -5,11 +5,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Choose Scoring Category</title>
+  <style>
+    table {
+      border: solid thin;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: solid thin;
+      padding: 0.5rem 2rem;
+    }
+
+    td {
+      text-align: left;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
 
 <h1>Roll Results</h1>
 <h3>Current Score: <span th:text="${score}">125</span></h3>
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Roll</th>
+    <th>Score</th>
+  </tr>
+  <tr th:each="category : ${categories}">
+    <td th:text="${category.description}">FULL HOUSE</td>
+    <td th:text="${category.diceRoll}">1 2 3 4 5</td>
+    <td th:text="${category.score}">1</td>
+  </tr>
+</table>
+<hr/>
 <div style="font-family: '.SF NS Display'; font-weight: bold; font-size: x-large">
   You rolled a <span th:text="${roll}">9 9 9 9 9</span>
 </div>
