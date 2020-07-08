@@ -40,8 +40,9 @@ public class ScoreboardCategoryTest {
     scoreboard.scoreAs(ScoreCategory.FIVES, diceRollFives);
 
     assertThat(scoreboard.scoredCategories())
-        .containsExactly(new ScoredCategory(ScoreCategory.SIXES, diceRollSixes, 6),
-                         new ScoredCategory(ScoreCategory.FIVES, diceRollFives, 10));
+        .containsOnlyOnce(
+            new ScoredCategory(ScoreCategory.SIXES, diceRollSixes, 6),
+            new ScoredCategory(ScoreCategory.FIVES, diceRollFives, 10));
   }
 
 }
