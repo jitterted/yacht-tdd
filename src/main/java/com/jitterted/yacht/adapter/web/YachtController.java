@@ -32,21 +32,15 @@ public class YachtController {
   @GetMapping("/rollresult")
   public String rollResult(Model model) {
     model.addAttribute("score", String.valueOf(game.score()));
-    String roll = game.lastRoll()
-                      .stream()
-                      .map(String::valueOf)
-                      .collect(Collectors.joining(" "));
-    model.addAttribute("roll", roll);
+    model.addAttribute("roll", RollView.from(game.lastRoll()));
     model.addAttribute("categories", viewOf(game.scoredCategories()));
     return "roll-result";
   }
 
-  private List<ScoreCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
-    ScoreCategoryView view = new ScoreCategoryView();
-    view.setDescription("THREEs");
-    view.setDiceRoll("1 3 3 3 4");
-    view.setScore("9");
-    return List.of(view);
+  private List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
+    return scoredCategories.stream()
+                           .map(ScoredCategoryView::from)
+                           .collect(Collectors.toList());
   }
 
   @PostMapping("/select-category")
