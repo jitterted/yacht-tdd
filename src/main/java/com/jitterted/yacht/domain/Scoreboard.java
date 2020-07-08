@@ -28,7 +28,7 @@ public class Scoreboard {
     return scoredCategories
         .entrySet()
         .stream()
-        .mapToInt(entry -> scorerMap.get(entry.getKey()).apply(entry.getValue()))
+        .mapToInt(this::scoreFor)
         .sum();
   }
 
@@ -39,14 +39,17 @@ public class Scoreboard {
   public List<ScoredCategory> scoredCategories() {
     return scoredCategories.entrySet()
                            .stream()
-                           .map((entry -> new ScoredCategory(
-                               entry.getKey(),
-                               entry.getValue(),
-                               scoreFor(entry.getKey(), entry.getValue()))))
+                           .map((this::scoredCategoryFrom))
                            .collect(Collectors.toList());
   }
 
-  private int scoreFor(ScoreCategory scoreCategory, DiceRoll diceRoll) {
-    return scorerMap.get(scoreCategory).apply(diceRoll);
+  private ScoredCategory scoredCategoryFrom(Map.Entry<ScoreCategory, DiceRoll> entry) {
+    return new ScoredCategory(entry.getKey(),
+                              entry.getValue(),
+                              scoreFor(entry));
+  }
+
+  private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {
+    return scorerMap.get(entry.getKey()).apply(entry.getValue());
   }
 }
