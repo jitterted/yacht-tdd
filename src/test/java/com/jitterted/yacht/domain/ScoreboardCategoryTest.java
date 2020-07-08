@@ -12,10 +12,35 @@ public class ScoreboardCategoryTest {
     DiceRoll diceRoll = DiceRoll.of(6, 4, 4, 3, 4);
     Game game = new Game(new StubDiceRoller(diceRoll));
 
+    game.rollDice();
     game.assignRollTo(ScoreCategory.FOURS);
 
     assertThat(game.scoredCategories())
         .containsOnlyOnce(new ScoredCategory(ScoreCategory.FOURS, DiceRoll.of(6, 4, 4, 3, 4), 12));
+  }
+
+  @Test
+  public void assignSingleRollToScoreboardReturnsScoreForThatCategory() throws Exception {
+    Scoreboard scoreboard = new Scoreboard();
+
+    DiceRoll diceRoll = DiceRoll.of(6, 4, 4, 3, 4);
+    scoreboard.scoreAs(ScoreCategory.FOURS, diceRoll);
+
+    assertThat(scoreboard.scoredCategories())
+        .containsOnlyOnce(new ScoredCategory(ScoreCategory.FOURS, DiceRoll.of(6, 4, 4, 3, 4), 12));
+  }
+
+  @Test
+  public void assignTwoRollsToSeparateCategoriesReturnsTwoScoredCategories() throws Exception {
+    Scoreboard scoreboard = new Scoreboard();
+
+    DiceRoll diceRollSixes = DiceRoll.of(6, 4, 4, 3, 4);
+    scoreboard.scoreAs(ScoreCategory.SIXES, diceRollSixes);
+    DiceRoll diceRollFives = DiceRoll.of(5, 4, 5, 3, 4);
+    scoreboard.scoreAs(ScoreCategory.FIVES, diceRollFives);
+
+    assertThat(scoreboard.scoredCategories())
+        .hasSize(2);
   }
 
 }

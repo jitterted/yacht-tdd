@@ -1,14 +1,18 @@
 package com.jitterted.yacht.domain;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Scoreboard {
   private int score = 0;
   private final YachtScorer yachtScorer = new YachtScorer();
   private final Map<ScoreCategory, Consumer<DiceRoll>> categoryHandlerMap = new EnumMap<>(ScoreCategory.class);
+
+  private final Map<ScoreCategory, DiceRoll> scoredCategories = new HashMap<>();
 
   public Scoreboard() {
     categoryHandlerMap.put(ScoreCategory.ONES, this::scoreAsOnes);
@@ -24,7 +28,7 @@ public class Scoreboard {
     return score;
   }
 
-  public void scoreAsOnes(DiceRoll lastRoll) {
+  private void scoreAsOnes(DiceRoll lastRoll) {
     score += yachtScorer.scoreAsOnes(lastRoll);
   }
 
@@ -32,7 +36,7 @@ public class Scoreboard {
     score += yachtScorer.scoreAsTwos(diceRoll);
   }
 
-  public void scoreAsThrees(DiceRoll lastRoll) {
+  private void scoreAsThrees(DiceRoll lastRoll) {
     score += yachtScorer.scoreAsThrees(lastRoll);
   }
 
@@ -44,24 +48,26 @@ public class Scoreboard {
     score += yachtScorer.scoreAsFives(diceRoll);
   }
 
-  public void scoreAsSixes(DiceRoll lastRoll) {
+  private void scoreAsSixes(DiceRoll lastRoll) {
     score += yachtScorer.scoreAsSixes(lastRoll);
   }
 
-  public void scoreAsFullHouse(DiceRoll lastRoll) {
+  private void scoreAsFullHouse(DiceRoll lastRoll) {
     score += yachtScorer.scoreAsFullHouse(lastRoll);
   }
 
-  public void scoreAs(ScoreCategory scoreCategory, DiceRoll lastRoll) {
-    categoryHandlerMap.get(scoreCategory).accept(lastRoll);
+  public void scoreAs(ScoreCategory scoreCategory, DiceRoll diceRoll) {
+    scoredCategories.put(scoreCategory, diceRoll);
+    categoryHandlerMap.get(scoreCategory).accept(diceRoll);
   }
 
   public List<ScoredCategory> scoredCategories() {
-    ScoredCategory scoredCategory = new ScoredCategory(
-        ScoreCategory.FOURS,
-        DiceRoll.of(6, 4, 4, 3, 4),
-        12
-    );
-    return List.of(scoredCategory);
+    return scoredCategories.entrySet()
+                           .stream()
+                           .map((entry -> new ScoredCategory(
+                               entry.getKey(),
+                               entry.getValue(),
+                               12)))
+                           .collect(Collectors.toList());
   }
 }

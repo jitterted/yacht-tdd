@@ -42,4 +42,12 @@ public class ScoredCategory {
     result = 31 * result + score;
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "ScoredCategory: " +
+        "scoreCategory=" + scoreCategory +
+        ", diceRoll=" + diceRoll +
+        ", score=" + score;
+  }
 }
