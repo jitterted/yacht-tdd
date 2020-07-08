@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,7 @@ public class YachtController {
 
   private List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
     return scoredCategories.stream()
+                           .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
                            .map(ScoredCategoryView::from)
                            .collect(Collectors.toList());
   }

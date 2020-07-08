@@ -58,7 +58,7 @@ public class YachtScoringFullHouseTest {
         .isZero();
   }
 
-  @Disabled
+  @Disabled("Disabled until we finish exploring other areas, see TODO")
   public void rollOf66554ScoresAs0() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
 

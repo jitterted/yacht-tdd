@@ -32,13 +32,15 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 [X] Refactor the YachtController category assignment code
 
-[ ] Add scoring for the remaining categories to Scoreboard (and ScoreCategory)
+[X] Add scoring for the remaining categories to Scoreboard (and ScoreCategory)
 
-[ ] Bounce back out a layer to front-end web to see what functionality we need next
+[X] Bounce back out a layer to front-end web to see what functionality we need next
 
 [ ] Full House validation is broken (see disabled test)
 
 [ ] Categories can currently be assigned to multiple times, 
     need to constrain to only once per category per round
+    
+   [ ] Need to reflect this constraint in the user interface 
   
 * Introduce "Die" as a value object (to replace Integer)
