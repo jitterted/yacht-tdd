@@ -32,7 +32,7 @@ public class Game {
     scoreboard.scoreAs(scoreCategory, lastRoll);
   }
 
-  public List<ScoreCategory> scoredCategories() {
-    return null;
+  public List<ScoredCategory> scoredCategories() {
+    return scoreboard.scoredCategories();
   }
 }

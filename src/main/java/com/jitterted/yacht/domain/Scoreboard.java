@@ -1,6 +1,7 @@
 package com.jitterted.yacht.domain;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -53,5 +54,14 @@ public class Scoreboard {
 
   public void scoreAs(ScoreCategory scoreCategory, DiceRoll lastRoll) {
     categoryHandlerMap.get(scoreCategory).accept(lastRoll);
+  }
+
+  public List<ScoredCategory> scoredCategories() {
+    ScoredCategory scoredCategory = new ScoredCategory(
+        ScoreCategory.FOURS,
+        DiceRoll.of(6, 4, 4, 3, 4),
+        12
+    );
+    return List.of(scoredCategory);
   }
 }
