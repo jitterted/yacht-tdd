@@ -11,7 +11,10 @@ public class Scoreboard {
 
   public Scoreboard() {
     categoryHandlerMap.put(ScoreCategory.ONES, this::scoreAsOnes);
+    categoryHandlerMap.put(ScoreCategory.TWOS, this::scoreAsTwos);
     categoryHandlerMap.put(ScoreCategory.THREES, this::scoreAsThrees);
+    categoryHandlerMap.put(ScoreCategory.FOURS, this::scoreAsFours);
+    categoryHandlerMap.put(ScoreCategory.FIVES, this::scoreAsFives);
     categoryHandlerMap.put(ScoreCategory.SIXES, this::scoreAsSixes);
     categoryHandlerMap.put(ScoreCategory.FULLHOUSE, this::scoreAsFullHouse);
   }
@@ -24,16 +27,28 @@ public class Scoreboard {
     score += yachtScorer.scoreAsOnes(lastRoll);
   }
 
-  public void scoreAsFullHouse(DiceRoll lastRoll) {
-    score += yachtScorer.scoreAsFullHouse(lastRoll);
+  private void scoreAsTwos(DiceRoll diceRoll) {
+    score += yachtScorer.scoreAsTwos(diceRoll);
+  }
+
+  public void scoreAsThrees(DiceRoll lastRoll) {
+    score += yachtScorer.scoreAsThrees(lastRoll);
+  }
+
+  private void scoreAsFours(DiceRoll diceRoll) {
+    score += yachtScorer.scoreAsFours(diceRoll);
+  }
+
+  private void scoreAsFives(DiceRoll diceRoll) {
+    score += yachtScorer.scoreAsFives(diceRoll);
   }
 
   public void scoreAsSixes(DiceRoll lastRoll) {
     score += yachtScorer.scoreAsSixes(lastRoll);
   }
 
-  public void scoreAsThrees(DiceRoll lastRoll) {
-    score += yachtScorer.scoreAsThrees(lastRoll);
+  public void scoreAsFullHouse(DiceRoll lastRoll) {
+    score += yachtScorer.scoreAsFullHouse(lastRoll);
   }
 
   public void scoreAs(ScoreCategory scoreCategory, DiceRoll lastRoll) {
