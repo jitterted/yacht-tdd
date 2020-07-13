@@ -1,6 +1,5 @@
 package com.jitterted.yacht.domain;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -8,7 +7,7 @@ import static org.assertj.core.api.Assertions.*;
 public class YachtScoringFullHouseTest {
 
   @Test
-  public void nonFullHouseRollScoresZero() throws Exception {
+  public void straightRollScoresZero() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
 
     int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(1, 2, 3, 4, 5));
@@ -55,10 +54,11 @@ public class YachtScoringFullHouseTest {
     int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(5, 5, 5, 5, 5));
 
     assertThat(score)
+        .as("A Yacht (all five dice same number) cannot be scored on Full House, i.e., is zero")
         .isZero();
   }
 
-  @Disabled("Disabled until we finish exploring other areas, see TODO")
+  @Test
   public void rollOf66554ScoresAs0() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
 
