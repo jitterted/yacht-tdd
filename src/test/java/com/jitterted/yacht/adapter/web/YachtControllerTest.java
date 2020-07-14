@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class YachtControllerTest {
@@ -21,7 +23,7 @@ public class YachtControllerTest {
     yachtController.rollResult(model);
 
     assertThat(model.getAttribute("roll"))
-        .isEqualTo("3 1 4 1 5");
+        .isEqualTo(List.of(3, 1, 4, 1, 5));
 
     assertThat(model.getAttribute("score"))
         .isEqualTo("0");

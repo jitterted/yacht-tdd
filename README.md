@@ -38,17 +38,34 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 [X] Full House validation is broken (see disabled test)
 
+[X] Add die selection (checkbox) to the UI to select the dice to "hold back" from a re-roll
+   * We get a list of the indexes of the dice to keep
+
+[ ] Re-roll 1 or all 5 of the dice, up to 3 times per round
+    Rule: After 3 rolls, must assign to a category
+    
+   * Scenario:
+        player rolls 6,6,3,2,1
+        player holds 6,6 and re-rolls the other 3 dice
+        player rolls 6,5,4
+        player holds 6,6,6 and re-rolls the other 2 dice
+        player rolls 3,3
+        dice roll to be assigned is now 6,6,6,3,3
+        since that's all re-rolls allowed, must assign to category (e.g., Full House)
+
 [ ] Constrain to only assign roll to category once per round
 
    [ ] Need to reflect this constraint in the user interface 
 
-[ ] Re-roll 1 or all 5 of the dice, up to 3 times per round
+[ ] Game is over when all categories have been assigned
 
 [ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
      * 3-of-a-kind scores sum of dice
      * little straight (1-5) scores 30
      * big straight (2-6) scores 30
      * choice scores sum of dice, and Yacht (5-of-a-kind) scores 50 
+
+
 
 [ ] Change full house to score 25 (as per https://www.mathsisfun.com/games/yacht-dice-game.html)
   

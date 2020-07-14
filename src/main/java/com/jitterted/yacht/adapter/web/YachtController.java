@@ -33,10 +33,31 @@ public class YachtController {
   @GetMapping("/rollresult")
   public String rollResult(Model model) {
     model.addAttribute("score", String.valueOf(game.score()));
-    model.addAttribute("roll", RollView.from(game.lastRoll()));
+    model.addAttribute("roll", RollView.listOf(game.lastRoll()));
     model.addAttribute("categories", viewOf(game.scoredCategories()));
+
+    model.addAttribute("keep", new Keep());
     return "roll-result";
   }
+
+  static class Keep {
+    private List<Integer> diceIndexesToKeep;
+
+    public List<Integer> getDiceIndexesToKeep() {
+      return diceIndexesToKeep;
+    }
+
+    public void setDiceIndexesToKeep(List<Integer> diceIndexesToKeep) {
+      this.diceIndexesToKeep = diceIndexesToKeep;
+    }
+  }
+
+  @PostMapping("/re-roll")
+  public String reRoll(Keep keep) {
+    System.out.println("Selected Dice to Keep:" + keep.getDiceIndexesToKeep());
+    return "redirect:/rollresult";
+  }
+
 
   private List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
     return scoredCategories.stream()

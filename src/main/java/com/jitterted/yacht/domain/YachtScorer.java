@@ -50,25 +50,25 @@ public class YachtScorer {
         && numberOfDiceOccurringTwoOrThreeTimes == 2;
   }
 
+  private Map<Integer, Long> createDieToCountMap(DiceRoll roll) {
+    return roll.stream()
+               .collect(
+                   Collectors.groupingBy(
+                       Function.identity(),
+                       Collectors.counting()
+                   )
+               );
+  }
+
   private boolean hasTwoUniqueDice(Map<Integer, Long> dieToCountMap) {
     return dieToCountMap.size() == 2;
   }
 
   private long countForDieOccurringTwoOrThreeTimes(Map<Integer, Long> dieToCountMap) {
     return dieToCountMap.entrySet()
-                 .stream()
-                 .filter(this::twoOrThreeOccurrences)
-                 .count();
-  }
-
-  private Map<Integer, Long> createDieToCountMap(DiceRoll roll) {
-    return roll.stream()
-        .collect(
-            Collectors.groupingBy(
-                Function.identity(),
-                Collectors.counting()
-            )
-        );
+                        .stream()
+                        .filter(this::twoOrThreeOccurrences)
+                        .count();
   }
 
   private boolean twoOrThreeOccurrences(Map.Entry<Integer, Long> e) {

@@ -39,9 +39,16 @@
   </tr>
 </table>
 <hr/>
-<div style="font-family: '.SF NS Display'; font-weight: bold; font-size: x-large">
-  You rolled a <span th:text="${roll}">9 9 9 9 9</span>
-</div>
+<form action="#" th:action="re-roll" method="post">
+  <div style="font-family: '.SF NS Display'; font-weight: bold; font-size: x-large">
+    You rolled a <span th:text="${roll}">9 9 9 9 9</span>
+    <div th:each="die, iterationStatus : ${roll}">
+      <input th:type="checkbox" th:field="*{keep.diceIndexesToKeep}" th:value="${iterationStatus.index}">
+      <span th:text="${die}">9</span>
+    </div>
+  </div>
+  <button type="submit">Re-roll</button>
+</form>
 <br/>
 <form action="#" th:action="select-category" method="post">
   <button name='category' value='ones'>Score in ONEs Category</button>

@@ -16,16 +16,22 @@ public class YachtScoringFullHouseTest {
         .isZero();
   }
 
+  /**
+   * This is one of two cases for not being a full house, but one of the dice occurs twice or more
+   */
   @Test
-  public void rollOf33355ScoresAs19() throws Exception {
+  public void rollOf66554ScoresAs0() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
 
-    int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(3, 3, 3, 5, 5));
+    int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(6, 6, 5, 5, 4));
 
     assertThat(score)
-        .isEqualTo(3 + 3 + 3 + 5 + 5);
+        .isZero();
   }
 
+  /**
+   * This is one of two cases for not being a full house, but one of the dice occurs twice or more
+   */
   @Test
   public void rollOf51111ScoreAs0() throws Exception {
     YachtScorer yachtScorer = new YachtScorer();
@@ -34,6 +40,16 @@ public class YachtScoringFullHouseTest {
 
     assertThat(score)
         .isZero();
+  }
+
+  @Test
+  public void rollOf33355ScoresAs19() throws Exception {
+    YachtScorer yachtScorer = new YachtScorer();
+
+    int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(3, 3, 3, 5, 5));
+
+    assertThat(score)
+        .isEqualTo(3 + 3 + 3 + 5 + 5);
   }
 
   @Test
@@ -55,16 +71,6 @@ public class YachtScoringFullHouseTest {
 
     assertThat(score)
         .as("A Yacht (all five dice same number) cannot be scored on Full House, i.e., is zero")
-        .isZero();
-  }
-
-  @Test
-  public void rollOf66554ScoresAs0() throws Exception {
-    YachtScorer yachtScorer = new YachtScorer();
-
-    int score = yachtScorer.scoreAsFullHouse(DiceRoll.of(6, 6, 5, 5, 4));
-
-    assertThat(score)
         .isZero();
   }
 }
