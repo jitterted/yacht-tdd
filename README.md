@@ -46,7 +46,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
         * We're getting indexes to avoid cheating
       -> translate to [6,6] and send it to the Game and have it roll 3 additional dice
 
-[ ] Rule: After 2 re-rolls (3 total rolls), must assign to a category
+[X] Rule: After 2 re-rolls (3 total rolls)
     
    * Scenario:
         player rolls 6,6,3,2,1 [roll 1]
@@ -57,6 +57,10 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
         dice roll to be assigned is now 6,6,6,3,3
         since that's all re-rolls allowed, must assign to category (e.g., Full House)
 
+## Next Time
+
+[ ] Rule: Must assign roll to category before doing a new roll
+ 
 [ ] Rule: can only assign roll to a category once per round
 
    [ ] Need to reflect this constraint in the user interface 
