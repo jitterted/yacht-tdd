@@ -40,21 +40,10 @@ public class YachtController {
     return "roll-result";
   }
 
-  static class Keep {
-    private List<Integer> diceIndexesToKeep;
-
-    public List<Integer> getDiceIndexesToKeep() {
-      return diceIndexesToKeep;
-    }
-
-    public void setDiceIndexesToKeep(List<Integer> diceIndexesToKeep) {
-      this.diceIndexesToKeep = diceIndexesToKeep;
-    }
-  }
-
   @PostMapping("/re-roll")
   public String reRoll(Keep keep) {
-    System.out.println("Selected Dice to Keep:" + keep.getDiceIndexesToKeep());
+    List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
+    game.reRoll(keptDice);
     return "redirect:/rollresult";
   }
 

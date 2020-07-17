@@ -27,14 +27,12 @@ public class GameTest {
 
   @Test
   public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
-    DiceRoll diceRoll = DiceRoll.of(6, 5, 4, 3, 2);
-    Game game = new Game(new StubDiceRoller(diceRoll));
+    Game game = new Game(new StubDiceRoller(DiceRoll.of(6, 5, 4, 3, 2)));
 
     game.rollDice();
 
     assertThat(game.lastRoll())
-        .isEqualTo(diceRoll);
+        .isEqualTo(DiceRoll.of(2, 3, 4, 5, 6));
   }
-
 
 }

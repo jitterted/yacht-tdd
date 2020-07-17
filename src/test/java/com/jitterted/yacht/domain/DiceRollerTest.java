@@ -23,4 +23,26 @@ public class DiceRollerTest {
     assertThat(diceRoller.roll())
         .isEqualTo(DiceRoll.of(5, 1, 4, 2, 3));
   }
+
+  @Test
+  public void reRollKeepingTwoDiceResultsInNewRollIncludingKeptDice() throws Exception {
+    DiceRoller diceRoller = new DiceRoller(new StubDieRoller(List.of(1, 2, 5)));
+    List<Integer> keptDice = List.of(3, 3);
+
+    DiceRoll diceRoll = diceRoller.reRoll(keptDice);
+
+    assertThat(diceRoll)
+        .isEqualTo(DiceRoll.of(3, 3, 1, 2, 5));
+  }
+
+  @Test
+  public void reRollKeepingFourDiceResultsInNewRollIncludingKeptDice() throws Exception {
+    DiceRoller diceRoller = new DiceRoller(new StubDieRoller(List.of(4)));
+    List<Integer> keptDice = List.of(1, 1, 2, 2);
+
+    DiceRoll diceRoll = diceRoller.reRoll(keptDice);
+
+    assertThat(diceRoll)
+        .isEqualTo(DiceRoll.of(1, 1, 2, 2, 4));
+  }
 }

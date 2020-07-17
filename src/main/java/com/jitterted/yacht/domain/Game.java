@@ -20,6 +20,10 @@ public class Game {
     lastRoll = diceRoller.roll();
   }
 
+  public void reRoll(List<Integer> keptDice) {
+    lastRoll = diceRoller.reRoll(keptDice);
+  }
+
   public DiceRoll lastRoll() {
     return lastRoll;
   }

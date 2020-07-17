@@ -1,5 +1,6 @@
 package com.jitterted.yacht.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -45,11 +46,21 @@ public class DiceRoll {
 
     DiceRoll diceRoll = (DiceRoll) o;
 
-    return dice.equals(diceRoll.dice);
+    // compare without caring about the order
+    var myDiceSorted = new ArrayList<>(dice);
+    myDiceSorted.sort(Integer::compareTo);
+    var otherDiceSorted = new ArrayList<>(diceRoll.dice);
+    otherDiceSorted.sort(Integer::compareTo);
+
+    return myDiceSorted.equals(otherDiceSorted);
   }
 
   @Override
   public int hashCode() {
     return dice.hashCode();
+  }
+
+  public int get(int index) {
+    return dice.get(index);
   }
 }
