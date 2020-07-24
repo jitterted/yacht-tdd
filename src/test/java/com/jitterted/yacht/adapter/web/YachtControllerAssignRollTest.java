@@ -11,7 +11,6 @@ import static org.assertj.core.api.Assertions.*;
 
 public class YachtControllerAssignRollTest {
 
-
   @Test
   public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
     Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 3, 3, 5, 5));

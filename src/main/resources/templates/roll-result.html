@@ -6,6 +6,11 @@
   <meta charset="UTF-8">
   <title>Choose Scoring Category</title>
   <style>
+    body {
+      color: yellow;
+      background-color: blue;
+    }
+
     table {
       border: solid thin;
       border-collapse: collapse;
@@ -54,31 +59,34 @@
   <button th:disabled="${!canReRoll}" type="submit">Re-roll</button>
 </form>
 <br/>
-<form action="#" th:action="select-category" method="post">
-  <button name='category' value='ones'>Score in ONEs Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='twos'>Score in TWOs Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='threes'>Score in THREEs Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='fours'>Score in FOURs Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='fives'>Score in FIVEs Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='sixes'>Score in SIXes Category</button>
-  <br/>
-  <br/>
-  <button name='category' value='fullhouse'>Score in FULL HOUSE Category</button>
-</form>
+<div>
+  <form action="#" th:action="select-category" method="post">
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='ones'>Score in ONEs Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='twos'>Score in TWOs Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='threes'>Score in THREEs Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='fours'>Score in FOURs Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='fives'>Score in FIVEs Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='sixes'>Score in SIXes Category</button>
+    <br/>
+    <br/>
+    <button name='category' th:disabled="${rollAssignedToCategory}" value='fullhouse'>Score in FULL HOUSE Category
+    </button>
+  </form>
+</div>
 <br/>
 <hr/>
 <form action="/rolldice" method="post">
-  <button>Roll Dice</button>
+  <button th:disabled="${!rollAssignedToCategory}">Roll Dice</button>
 </form>
 
 </body>

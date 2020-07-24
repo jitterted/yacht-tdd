@@ -10,6 +10,7 @@ public class Game {
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
   private int numberOfRolls;
+  private boolean lastRollAssignedToCategory;
 
   public Game() {
     diceRoller = new DiceRoller();
@@ -20,6 +21,7 @@ public class Game {
   }
 
   public void rollDice() {
+    lastRollAssignedToCategory = false;
     numberOfRolls = 1;
     lastRoll = diceRoller.roll();
   }
@@ -38,6 +40,7 @@ public class Game {
   }
 
   public void assignRollTo(ScoreCategory scoreCategory) {
+    lastRollAssignedToCategory = true;
     scoreboard.scoreAs(scoreCategory, lastRoll);
   }
 
@@ -45,7 +48,14 @@ public class Game {
     return scoreboard.scoredCategories();
   }
 
-  public Boolean canReRoll() {
+  public boolean canReRoll() {
+    if (lastRollAssignedToCategory()) {
+      return false;
+    }
     return numberOfRolls < MAX_NUMBER_OF_ROLLS_PER_TURN;
+  }
+
+  public boolean lastRollAssignedToCategory() {
+    return lastRollAssignedToCategory;
   }
 }

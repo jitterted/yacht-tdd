@@ -36,6 +36,7 @@ public class YachtController {
     model.addAttribute("roll", RollView.listOf(game.lastRoll()));
     model.addAttribute("categories", viewOf(game.scoredCategories()));
     model.addAttribute("canReRoll", game.canReRoll());
+    model.addAttribute("rollAssignedToCategory", game.lastRollAssignedToCategory());
 
     model.addAttribute("keep", new Keep());
     return "roll-result";

@@ -70,4 +70,46 @@ public class GameTest {
         .isFalse();
   }
 
+  @Test
+  public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+
+    assertThat(game.lastRollAssignedToCategory())
+        .isFalse();
+  }
+
+  @Test
+  public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+
+    game.assignRollTo(ScoreCategory.FULLHOUSE);
+
+    assertThat(game.lastRollAssignedToCategory())
+        .isTrue();
+  }
+
+  @Test
+  public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+    game.assignRollTo(ScoreCategory.FULLHOUSE);
+
+    game.rollDice();
+
+    assertThat(game.lastRollAssignedToCategory())
+        .isFalse();
+  }
+
+  @Test
+  public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+
+    game.assignRollTo(ScoreCategory.FULLHOUSE);
+
+    assertThat(game.canReRoll())
+        .isFalse();
+  }
 }

@@ -59,11 +59,15 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Time
 
-[ ] Rule: Must assign roll to category before doing a new roll
- 
+[X] Rule: Must assign roll to category before doing a new roll
+
+[ ] Rule: Can't re-roll after assigned to category before new roll
+
+   [X] Implement UI constraint for this rule
+
 [ ] Rule: can only assign roll to a category once per round
 
-   [ ] Need to reflect this constraint in the user interface 
+   [X] Need to reflect this constraint in the user interface 
 
 [ ] Rule: Game is over when all categories have been assigned
 
@@ -73,7 +77,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
      * big straight (2-6) scores 30
      * choice scores sum of dice, and Yacht (5-of-a-kind) scores 50 
 
-
+[ ] Pre-check the dice that were held from previous roll? Or pre-check all dice?
 
 [ ] Change full house to score 25 (as per https://www.mathsisfun.com/games/yacht-dice-game.html)
   
