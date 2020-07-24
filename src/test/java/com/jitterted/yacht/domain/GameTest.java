@@ -10,6 +10,14 @@ import static org.assertj.core.api.Assertions.*;
 public class GameTest {
 
   @Test
+  public void newGameResultsInScoreOfZero() throws Exception {
+    Game game = new Game();
+
+    assertThat(game.score())
+        .isZero();
+  }
+
+  @Test
   public void rollDiceThenQueryLastRollReturnsThatRoll() throws Exception {
     Game game = new Game();
 
@@ -17,14 +25,6 @@ public class GameTest {
 
     assertThat(game.lastRoll())
         .isNotNull();
-  }
-
-  @Test
-  public void newGameResultsInScoreOfZero() throws Exception {
-    Game game = new Game();
-
-    assertThat(game.score())
-        .isZero();
   }
 
   @Test
@@ -70,46 +70,4 @@ public class GameTest {
         .isFalse();
   }
 
-  @Test
-  public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
-    Game game = new Game();
-    game.rollDice();
-
-    assertThat(game.lastRollAssignedToCategory())
-        .isFalse();
-  }
-
-  @Test
-  public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
-    Game game = new Game();
-    game.rollDice();
-
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
-
-    assertThat(game.lastRollAssignedToCategory())
-        .isTrue();
-  }
-
-  @Test
-  public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
-    Game game = new Game();
-    game.rollDice();
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
-
-    game.rollDice();
-
-    assertThat(game.lastRollAssignedToCategory())
-        .isFalse();
-  }
-
-  @Test
-  public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
-    Game game = new Game();
-    game.rollDice();
-
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
-
-    assertThat(game.canReRoll())
-        .isFalse();
-  }
 }

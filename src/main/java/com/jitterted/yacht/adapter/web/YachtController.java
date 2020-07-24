@@ -62,6 +62,9 @@ public class YachtController {
     ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
     game.assignRollTo(scoreCategory);
 
+    if (game.allCategoriesAssigned()) {
+      return "redirect:/game-over";
+    }
     return "redirect:/rollresult";
   }
 }

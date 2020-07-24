@@ -58,4 +58,8 @@ public class Game {
   public boolean lastRollAssignedToCategory() {
     return lastRollAssignedToCategory;
   }
+
+  public boolean allCategoriesAssigned() {
+    return scoreboard.scoredCategories().size() == ScoreCategory.values().length;
+  }
 }

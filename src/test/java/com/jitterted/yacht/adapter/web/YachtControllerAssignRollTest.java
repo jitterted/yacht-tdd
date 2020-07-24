@@ -50,4 +50,25 @@ public class YachtControllerAssignRollTest {
         .isEqualTo(1 + 1 + 1);
   }
 
+  @Test
+  public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
+    Game game = new Game();
+    YachtController yachtController = new YachtController(game);
+
+    String viewName = rollAndAssignForAllCategories(game, yachtController);
+
+    assertThat(viewName)
+        .isEqualTo("redirect:/game-over");
+  }
+
+  private String rollAndAssignForAllCategories(Game game, YachtController yachtController) {
+    String viewName = null;
+    for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+      game.rollDice();
+      viewName = yachtController.assignRollToCategory(scoreCategory.toString());
+    }
+    return viewName;
+  }
+
+
 }
