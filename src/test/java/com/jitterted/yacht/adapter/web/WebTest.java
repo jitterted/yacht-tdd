@@ -54,10 +54,11 @@ public class WebTest {
   }
 
   @Test
-  public void gameOverPageDisplayScoreboard() throws Exception {
+  public void gameOverPageDisplaysScoreboard() throws Exception {
     mockMvc.perform(get("/game-over"))
            .andExpect(status().isOk())
-           .andExpect(model().attributeExists("score"));
+           .andExpect(model().attributeExists("score"))
+           .andExpect(model().attributeExists("categories"));
 
   }
 }
