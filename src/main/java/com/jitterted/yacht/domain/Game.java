@@ -5,7 +5,7 @@ import java.util.List;
 public class Game {
   private static final int MAX_NUMBER_OF_ROLLS_PER_TURN = 3;
   private final DiceRoller diceRoller;
-  private final Scoreboard scoreboard = new Scoreboard();
+  public final Scoreboard scoreboard = new Scoreboard();
 
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
@@ -59,7 +59,4 @@ public class Game {
     return lastRollAssignedToCategory;
   }
 
-  public boolean allCategoriesAssigned() {
-    return scoreboard.scoredCategories().size() == ScoreCategory.values().length;
-  }
 }

@@ -43,6 +43,10 @@ public class Scoreboard {
                            .collect(Collectors.toList());
   }
 
+  public boolean allCategoriesAssigned() {
+    return scoredCategories.size() == ScoreCategory.values().length;
+  }
+
   private ScoredCategory scoredCategoryFrom(Map.Entry<ScoreCategory, DiceRoll> entry) {
     return new ScoredCategory(entry.getKey(),
                               entry.getValue(),

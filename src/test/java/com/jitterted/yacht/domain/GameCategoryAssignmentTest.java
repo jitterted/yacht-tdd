@@ -53,7 +53,7 @@ public class GameCategoryAssignmentTest {
   public void newGameThenAllCategoriesAreNotAssigned() throws Exception {
     Game game = new Game();
 
-    assertThat(game.allCategoriesAssigned())
+    assertThat(game.scoreboard.allCategoriesAssigned())
         .isFalse();
   }
 
@@ -63,7 +63,7 @@ public class GameCategoryAssignmentTest {
 
     assignRollToAllCategories(game);
 
-    assertThat(game.allCategoriesAssigned())
+    assertThat(game.scoreboard.allCategoriesAssigned())
         .isTrue();
   }
 
