@@ -3,13 +3,13 @@ package com.jitterted.yacht.domain;
 import java.util.List;
 
 public class Game {
-  private static final int MAX_NUMBER_OF_ROLLS_PER_TURN = 3;
+
   private final DiceRoller diceRoller;
   public final Scoreboard scoreboard = new Scoreboard();
 
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
-  private int numberOfRolls;
+  private Rolls rolls;
   private boolean lastRollAssignedToCategory;
 
   public Game() {
@@ -22,12 +22,12 @@ public class Game {
 
   public void rollDice() {
     lastRollAssignedToCategory = false;
-    numberOfRolls = 1;
+    rolls = Rolls.start();
     lastRoll = diceRoller.roll();
   }
 
   public void reRoll(List<Integer> keptDice) {
-    numberOfRolls++;
+    rolls.increment();
     lastRoll = diceRoller.reRoll(keptDice);
   }
 
@@ -52,7 +52,7 @@ public class Game {
     if (lastRollAssignedToCategory()) {
       return false;
     }
-    return numberOfRolls < MAX_NUMBER_OF_ROLLS_PER_TURN;
+    return rolls.canReRoll();
   }
 
   public boolean lastRollAssignedToCategory() {
