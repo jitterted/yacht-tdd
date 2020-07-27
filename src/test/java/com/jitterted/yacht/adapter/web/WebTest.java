@@ -59,6 +59,5 @@ public class WebTest {
            .andExpect(status().isOk())
            .andExpect(model().attributeExists("score"))
            .andExpect(model().attributeExists("categories"));
-
   }
 }

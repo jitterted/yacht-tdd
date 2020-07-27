@@ -42,10 +42,6 @@ public class YachtController {
     return "roll-result";
   }
 
-  private void addCategoriesTo(Model model) {
-    model.addAttribute("categories", viewOf(game.scoredCategories()));
-  }
-
   @PostMapping("/re-roll")
   public String reRoll(Keep keep) {
     List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
@@ -53,13 +49,6 @@ public class YachtController {
     return "redirect:/rollresult";
   }
 
-
-  private List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
-    return scoredCategories.stream()
-                           .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
-                           .map(ScoredCategoryView::from)
-                           .collect(Collectors.toList());
-  }
 
   @PostMapping("/select-category")
   public String assignRollToCategory(@RequestParam("category") String category) {
@@ -77,6 +66,17 @@ public class YachtController {
     addCurrentScoreTo(model);
     addCategoriesTo(model);
     return "game-over";
+  }
+
+  private List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
+    return scoredCategories.stream()
+                           .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
+                           .map(ScoredCategoryView::from)
+                           .collect(Collectors.toList());
+  }
+
+  private void addCategoriesTo(Model model) {
+    model.addAttribute("categories", viewOf(game.scoredCategories()));
   }
 
   private void addCurrentScoreTo(Model model) {
