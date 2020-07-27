@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +56,8 @@ public class WebTest {
   @Test
   public void gameOverPageDisplayScoreboard() throws Exception {
     mockMvc.perform(get("/game-over"))
-           .andExpect(status().isOk());
+           .andExpect(status().isOk())
+           .andExpect(model().attributeExists("score"));
 
   }
 }

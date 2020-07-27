@@ -69,7 +69,9 @@ public class YachtController {
   }
 
   @GetMapping("/game-over")
-  public String displayGameOverPage() {
+  public String displayGameOverPage(Model model) {
+    model.addAttribute("score", String.valueOf(game.score()));
+
     return "game-over";
   }
 }
