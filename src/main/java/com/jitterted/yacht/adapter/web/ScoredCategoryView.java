@@ -2,6 +2,10 @@ package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.domain.ScoredCategory;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ScoredCategoryView {
   private String description;
   private String diceRoll;
@@ -17,6 +21,13 @@ public class ScoredCategoryView {
     this.description = description;
     this.diceRoll = diceRoll;
     this.score = score;
+  }
+
+  static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
+    return scoredCategories.stream()
+                           .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
+                           .map(ScoredCategoryView::from)
+                           .collect(Collectors.toList());
   }
 
   public String getDescription() {

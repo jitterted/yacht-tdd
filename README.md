@@ -69,11 +69,11 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
    [ ] Need to reflect this constraint in the user interface 
 
-[ ] Rule: Game is over when all categories have been assigned - UI will take the player to "game over" page when done
+[X] Rule: Game is over when all categories have been assigned - UI will take the player to "game over" page when done
 
    [X] Implemented this rule at the domain Game level
    [X] Create "game over" page
-   [ ] Don't forget to refactor Game!!
+   [X] Don't forget to refactor Game!!
    
 [ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
      * 3-of-a-kind scores sum of dice
