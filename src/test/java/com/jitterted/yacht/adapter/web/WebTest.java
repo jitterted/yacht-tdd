@@ -52,4 +52,10 @@ public class WebTest {
            .andExpect(redirectedUrl("/rollresult"));
   }
 
+  @Test
+  public void gameOverPageDisplayScoreboard() throws Exception {
+    mockMvc.perform(get("/game-over"))
+           .andExpect(status().isOk());
+
+  }
 }

@@ -67,4 +67,9 @@ public class YachtController {
     }
     return "redirect:/rollresult";
   }
+
+  @GetMapping("/game-over")
+  public String displayGameOverPage() {
+    return "game-over";
+  }
 }
