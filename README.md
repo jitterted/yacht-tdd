@@ -59,22 +59,25 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Time
 
-[X] Rule: Must assign roll to category before doing a new roll
+[ ] Rule: can only assign roll to a category once per round
+
+   [ ] Need to reflect this constraint in the user interface 
+
+[ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're
+    easily confused.
 
 [ ] Rule: Can't re-roll after assigned to category before new roll
 
    [X] Implement UI constraint for this rule
 
-[ ] Rule: can only assign roll to a category once per round
-
-   [ ] Need to reflect this constraint in the user interface 
+[X] Rule: Must assign roll to category before doing a new roll
 
 [X] Rule: Game is over when all categories have been assigned - UI will take the player to "game over" page when done
 
    [X] Implemented this rule at the domain Game level
    [X] Create "game over" page
    [X] Don't forget to refactor Game!!
-   
+
 [ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
      * 3-of-a-kind scores sum of dice
      * little straight (1-5) scores 30

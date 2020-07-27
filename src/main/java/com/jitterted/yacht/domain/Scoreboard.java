@@ -1,5 +1,6 @@
 package com.jitterted.yacht.domain;
 
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +38,21 @@ public class Scoreboard {
   }
 
   public List<ScoredCategory> scoredCategories() {
-    return scoredCategories.entrySet()
-                           .stream()
-                           .map((this::scoredCategoryFrom))
-                           .collect(Collectors.toList());
+    return Arrays.stream(ScoreCategory.values())
+                 .map(sc -> scoredCategoryFor(sc))
+                 .collect(Collectors.toList());
+//    return scoredCategories.entrySet()
+//                           .stream()
+//                           .map(this::scoredCategoryFrom)
+//                           .collect(Collectors.toList());
+  }
+
+  private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
+    if (scoredCategories.containsKey(scoreCategory)) {
+      DiceRoll diceRoll = scoredCategories.get(scoreCategory);
+      return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
+    }
+    return new ScoredCategory(scoreCategory, null, 0);
   }
 
   public boolean allCategoriesAssigned() {
