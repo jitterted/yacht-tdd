@@ -12,6 +12,9 @@ public class RollView {
   }
 
   public static String asOneString(DiceRoll diceRoll) {
+    if (diceRoll == null) {
+      return "";
+    }
     return diceRoll
         .stream()
         .map(String::valueOf)
