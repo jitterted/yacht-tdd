@@ -24,6 +24,10 @@ public class DiceRoll {
     return new DiceRoll(dieRolls);
   }
 
+  public static DiceRoll empty() {
+    return from(Collections.emptyList());
+  }
+
   public int countFor(int dieValue) {
     return (int) dice.stream()
                      .filter(die -> die == dieValue)

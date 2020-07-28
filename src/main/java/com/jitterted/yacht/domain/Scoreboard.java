@@ -39,12 +39,8 @@ public class Scoreboard {
 
   public List<ScoredCategory> scoredCategories() {
     return Arrays.stream(ScoreCategory.values())
-                 .map(sc -> scoredCategoryFor(sc))
+                 .map(this::scoredCategoryFor)
                  .collect(Collectors.toList());
-//    return scoredCategories.entrySet()
-//                           .stream()
-//                           .map(this::scoredCategoryFrom)
-//                           .collect(Collectors.toList());
   }
 
   private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
@@ -52,17 +48,11 @@ public class Scoreboard {
       DiceRoll diceRoll = scoredCategories.get(scoreCategory);
       return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
     }
-    return new ScoredCategory(scoreCategory, null, 0);
+    return new ScoredCategory(scoreCategory, DiceRoll.empty(), 0);
   }
 
   public boolean allCategoriesAssigned() {
     return scoredCategories.size() == ScoreCategory.values().length;
-  }
-
-  private ScoredCategory scoredCategoryFrom(Map.Entry<ScoreCategory, DiceRoll> entry) {
-    return new ScoredCategory(entry.getKey(),
-                              entry.getValue(),
-                              scoreFor(entry));
   }
 
   private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {

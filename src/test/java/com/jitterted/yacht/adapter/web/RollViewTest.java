@@ -19,7 +19,7 @@ public class RollViewTest {
 
   @Test
   public void rollViewForNonExistentRollIsEmptyString() throws Exception {
-    DiceRoll diceRoll = null;
+    DiceRoll diceRoll = DiceRoll.empty();
 
     String rollView = RollView.forScoreboard(diceRoll);
 

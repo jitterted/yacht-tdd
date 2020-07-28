@@ -12,9 +12,6 @@ public class RollView {
   }
 
   public static String forScoreboard(DiceRoll diceRoll) {
-    if (diceRoll == null) {
-      return "";
-    }
     return diceRoll
         .stream()
         .map(String::valueOf)
