@@ -59,7 +59,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Time
 
-[ ] Rule: can only assign roll to a category once per round
+[ ] Rule: a category can only be used (have a dice roll assigned to it) once per round
 
    [ ] Need to reflect this constraint in the user interface 
 
