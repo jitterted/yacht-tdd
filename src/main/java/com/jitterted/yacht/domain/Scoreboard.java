@@ -10,11 +10,22 @@ import java.util.stream.Collectors;
 
 public class Scoreboard {
 
-  private final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
+  private static final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
 
   private final Map<ScoreCategory, DiceRoll> scoredCategories = new HashMap<>();
 
   public Scoreboard() {
+    populateScorerMap();
+    populateScoredCategoriesMap();
+  }
+
+  private void populateScoredCategoriesMap() {
+    for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+      scoredCategories.put(scoreCategory, DiceRoll.empty());
+    }
+  }
+
+  private void populateScorerMap() {
     YachtScorer yachtScorer = new YachtScorer();
     scorerMap.put(ScoreCategory.ONES, yachtScorer::scoreAsOnes);
     scorerMap.put(ScoreCategory.TWOS, yachtScorer::scoreAsTwos);
@@ -44,15 +55,14 @@ public class Scoreboard {
   }
 
   private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
-    if (scoredCategories.containsKey(scoreCategory)) {
-      DiceRoll diceRoll = scoredCategories.get(scoreCategory);
-      return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
-    }
-    return new ScoredCategory(scoreCategory, DiceRoll.empty(), 0);
+    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
+    return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
   }
 
   public boolean allCategoriesAssigned() {
-    return scoredCategories.size() == ScoreCategory.values().length;
+    return scoredCategories.values()
+                           .stream()
+                           .noneMatch(DiceRoll::isEmpty);
   }
 
   private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {

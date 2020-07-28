@@ -67,4 +67,8 @@ public class DiceRoll {
   public int get(int index) {
     return dice.get(index);
   }
+
+  public boolean isEmpty() {
+    return dice.isEmpty();
+  }
 }
