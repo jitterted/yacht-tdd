@@ -11,7 +11,7 @@ public class RollView {
     return diceRoll.stream().collect(Collectors.toList());
   }
 
-  public static String asOneString(DiceRoll diceRoll) {
+  public static String forScoreboard(DiceRoll diceRoll) {
     if (diceRoll == null) {
       return "";
     }

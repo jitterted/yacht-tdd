@@ -13,7 +13,7 @@ public class ScoredCategoryView {
 
   public static ScoredCategoryView from(ScoredCategory scoredCategory) {
     return new ScoredCategoryView(scoredCategory.scoreCategory().toString(),
-                                  RollView.asOneString(scoredCategory.diceRoll()),
+                                  RollView.forScoreboard(scoredCategory.diceRoll()),
                                   String.valueOf(scoredCategory.score()));
   }
 
