@@ -59,12 +59,14 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Time
 
-[ ] Rule: a category can only be used (have a dice roll assigned to it) once per round
-
-   [ ] Need to reflect this constraint in the user interface 
+[ ] "Undefined Behavior": Game doesn't restart when going to "home" page
 
 [ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're
     easily confused.
+
+[ ] Rule: a category can only be used (have a dice roll assigned to it) once per round
+
+   [X] Need to reflect this constraint in the user interface 
 
 [ ] Rule: Can't re-roll after assigned to category before new roll
 
@@ -79,13 +81,14 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
    [X] Don't forget to refactor Game!!
 
 [ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
-     * 3-of-a-kind scores sum of dice
-     * little straight (1-5) scores 30
-     * big straight (2-6) scores 30
-     * choice scores sum of dice, and Yacht (5-of-a-kind) scores 50 
+     * Three-of-a-kind: score = sum of dice
+     * Little Straight (1-5) score = 30
+     * Big Straight (2-6) score = 30
+     * Choice score = sum of dice
+     * Yacht (5-of-a-kind) score = 50 
 
 [ ] Pre-check the dice that were held from previous roll? Or pre-check all dice?
 
 [ ] Change full house to score 25 (as per https://www.mathsisfun.com/games/yacht-dice-game.html)
   
-* Introduce "Die" as a value object (to replace Integer)
+[ ] Introduce "Die" as a value object (to replace Integer)

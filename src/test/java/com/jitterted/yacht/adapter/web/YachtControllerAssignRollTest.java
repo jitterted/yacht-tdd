@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings({"unchecked", "ConstantConditions"})
 public class YachtControllerAssignRollTest {
 
   @Test
@@ -61,6 +64,34 @@ public class YachtControllerAssignRollTest {
         .isEqualTo("redirect:/game-over");
   }
 
+  @Test
+  public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
+    Game game = new Game();
+    YachtController yachtController = new YachtController(game);
+    rollAndAssignForAllCategories(game, yachtController);
+
+    Model model = new ConcurrentModel();
+    yachtController.rollResult(model);
+    List<ScoredCategoryView> categories = (List<ScoredCategoryView>) model.getAttribute("categories");
+
+    assertThat(categories.stream().allMatch(ScoredCategoryView::isRollAssigned))
+        .isTrue();
+  }
+
+  @Test
+  public void newGameAllCategoriesAreUnassigned() throws Exception {
+    Game game = new Game();
+    YachtController yachtController = new YachtController(game);
+
+    Model model = new ConcurrentModel();
+    yachtController.rollResult(model);
+
+    List<ScoredCategoryView> categories = (List<ScoredCategoryView>) model.getAttribute("categories");
+
+    assertThat(categories.stream().noneMatch(ScoredCategoryView::isRollAssigned))
+        .isTrue();
+  }
+
   private String rollAndAssignForAllCategories(Game game, YachtController yachtController) {
     String viewName = null;
     for (ScoreCategory scoreCategory : ScoreCategory.values()) {
@@ -69,6 +100,5 @@ public class YachtControllerAssignRollTest {
     }
     return viewName;
   }
-
 
 }

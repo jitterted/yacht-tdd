@@ -44,7 +44,7 @@
             th:value="${ category.description }"
             th:text="${ category.description }"
             name='category'
-            th:disabled="${rollAssignedToCategory}"
+            th:disabled="${ category.rollAssigned }"
         >Category Name
         </button>
       </td>

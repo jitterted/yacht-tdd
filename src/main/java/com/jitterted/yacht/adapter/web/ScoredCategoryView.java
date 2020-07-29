@@ -7,20 +7,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ScoredCategoryView {
-  private String description;
-  private String diceRoll;
-  private String score;
+  private final String description;
+  private final String diceRoll;
+  private final String score;
+  private final boolean rollAssigned;
 
   public static ScoredCategoryView from(ScoredCategory scoredCategory) {
     return new ScoredCategoryView(scoredCategory.scoreCategory().toString(),
                                   RollView.forScoreboard(scoredCategory.diceRoll()),
-                                  String.valueOf(scoredCategory.score()));
+                                  String.valueOf(scoredCategory.score()),
+                                  !scoredCategory.diceRoll().isEmpty());
   }
 
-  public ScoredCategoryView(String description, String diceRoll, String score) {
+  public ScoredCategoryView(String description, String diceRoll, String score, boolean rollAssigned) {
     this.description = description;
     this.diceRoll = diceRoll;
     this.score = score;
+    this.rollAssigned = rollAssigned;
   }
 
   static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
@@ -30,27 +33,20 @@ public class ScoredCategoryView {
                            .collect(Collectors.toList());
   }
 
-  public String getDescription() {
-    return description;
+  public boolean isRollAssigned() {
+    return rollAssigned;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public String getDescription() {
+    return description;
   }
 
   public String getDiceRoll() {
     return diceRoll;
   }
 
-  public void setDiceRoll(String diceRoll) {
-    this.diceRoll = diceRoll;
-  }
-
   public String getScore() {
     return score;
   }
 
-  public void setScore(String score) {
-    this.score = score;
-  }
 }
