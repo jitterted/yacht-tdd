@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 
 public class YachtScorer {
 
+  private static final DiceRoll LITTLE_STRAIGHT = DiceRoll.of(1, 2, 3, 4, 5);
+  private static final DiceRoll BIG_STRAIGHT = DiceRoll.of(2, 3, 4, 5, 6);
+
   public int scoreAsOnes(DiceRoll roll) {
     return calculateScore(roll, 1);
   }
@@ -95,4 +98,11 @@ public class YachtScorer {
     return die.getKey() * 4;
   }
 
+  public int scoreAsLittleStraight(DiceRoll diceRoll) {
+    return diceRoll.equals(LITTLE_STRAIGHT) ? 30 : 0;
+  }
+
+  public int scoreAsBigStraight(DiceRoll diceRoll) {
+    return diceRoll.equals(BIG_STRAIGHT) ? 30 : 0;
+  }
 }
