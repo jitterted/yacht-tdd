@@ -81,7 +81,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
    [X] Don't forget to refactor Game!!
 
 [ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
-     * Three-of-a-kind: score = sum of dice
+     * Four-of-a-kind: score = sum of the four dice
      * Little Straight (1-5) score = 30
      * Big Straight (2-6) score = 30
      * Choice score = sum of dice

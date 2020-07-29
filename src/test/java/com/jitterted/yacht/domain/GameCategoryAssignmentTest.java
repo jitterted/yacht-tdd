@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.*;
 
 public class GameCategoryAssignmentTest {
 
+  private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = ScoreCategory.FULLHOUSE;
+
   @Test
   public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
     Game game = new Game();
@@ -20,7 +22,7 @@ public class GameCategoryAssignmentTest {
     Game game = new Game();
     game.rollDice();
 
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
+    game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
     assertThat(game.lastRollAssignedToCategory())
         .isTrue();
@@ -30,7 +32,7 @@ public class GameCategoryAssignmentTest {
   public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
     Game game = new Game();
     game.rollDice();
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
+    game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
     game.rollDice();
 
@@ -43,7 +45,7 @@ public class GameCategoryAssignmentTest {
     Game game = new Game();
     game.rollDice();
 
-    game.assignRollTo(ScoreCategory.FULLHOUSE);
+    game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
     assertThat(game.canReRoll())
         .isFalse();

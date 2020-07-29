@@ -78,4 +78,21 @@ public class YachtScorer {
   private int calculateScore(DiceRoll dice, int scoreCategory) {
     return dice.countFor(scoreCategory) * scoreCategory;
   }
+
+  public int scoreAsFourOfAKind(DiceRoll diceRoll) {
+    return createDieToCountMap(diceRoll).entrySet()
+                                        .stream()
+                                        .filter(this::fourOrFiveOccurrences)
+                                        .mapToInt(this::multiplyDieValueTimesFour)
+                                        .sum();
+  }
+
+  private boolean fourOrFiveOccurrences(Map.Entry<Integer, Long> die) {
+    return die.getValue() >= 4;
+  }
+
+  private int multiplyDieValueTimesFour(Map.Entry<Integer, Long> die) {
+    return die.getKey() * 4;
+  }
+
 }
