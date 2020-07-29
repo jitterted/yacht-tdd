@@ -7,5 +7,6 @@ public enum ScoreCategory {
   FOURS,
   FIVES,
   SIXES,
-  FULLHOUSE
+  FULLHOUSE,
+  FOUROFAKIND,
 }
