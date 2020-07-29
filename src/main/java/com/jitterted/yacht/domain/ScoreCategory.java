@@ -9,4 +9,6 @@ public enum ScoreCategory {
   SIXES,
   FULLHOUSE,
   FOUROFAKIND,
+  LITTLESTRAIGHT,
+  BIGSTRAIGHT,
 }
