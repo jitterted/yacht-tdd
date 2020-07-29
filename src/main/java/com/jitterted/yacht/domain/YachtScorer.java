@@ -90,12 +90,12 @@ public class YachtScorer {
                                         .sum();
   }
 
-  private boolean fourOrFiveOccurrences(Map.Entry<Integer, Long> die) {
-    return die.getValue() >= 4;
-  }
-
-  private int multiplyDieValueTimesFour(Map.Entry<Integer, Long> die) {
-    return die.getKey() * 4;
+  public int scoreAsYacht(DiceRoll diceRoll) {
+    return createDieToCountMap(diceRoll).entrySet()
+                                        .stream()
+                                        .filter(die -> die.getValue() == 5)
+                                        .mapToInt(die -> die.getKey() * 5)
+                                        .sum();
   }
 
   public int scoreAsLittleStraight(DiceRoll diceRoll) {
@@ -104,5 +104,17 @@ public class YachtScorer {
 
   public int scoreAsBigStraight(DiceRoll diceRoll) {
     return diceRoll.equals(BIG_STRAIGHT) ? 30 : 0;
+  }
+
+  public int scoreAsChoice(DiceRoll diceRoll) {
+    return diceRoll.stream().mapToInt(Integer::intValue).sum();
+  }
+
+  private boolean fourOrFiveOccurrences(Map.Entry<Integer, Long> die) {
+    return die.getValue() >= 4;
+  }
+
+  private int multiplyDieValueTimesFour(Map.Entry<Integer, Long> die) {
+    return die.getKey() * 4;
   }
 }
