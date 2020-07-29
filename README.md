@@ -64,6 +64,8 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 [ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're
     easily confused.
 
+[ ] Refactoring: Instead of dieToCountMap() returning a Map, transform to list of object that has .dieValue() and .count() to provide more meaning than .getKey() and .getValue(), which comes from the EntrySet that we're currently getting off of the Map.
+
 [ ] Rule: a category can only be used (have a dice roll assigned to it) once per round
 
    [X] Need to reflect this constraint in the user interface 
@@ -80,7 +82,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
    [X] Create "game over" page
    [X] Don't forget to refactor Game!!
 
-[ ] Add other scoring categories (should total 12 categories, which means 12 rounds): 
+[X] Add other scoring categories (should total 12 categories, which means 12 rounds): 
      * Four-of-a-kind: score = sum of the four dice
      * Little Straight (1-5) score = 30
      * Big Straight (2-6) score = 30

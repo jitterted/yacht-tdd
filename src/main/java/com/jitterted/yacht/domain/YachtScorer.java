@@ -83,18 +83,18 @@ public class YachtScorer {
   }
 
   public int scoreAsFourOfAKind(DiceRoll diceRoll) {
-    return createDieToCountMap(diceRoll).entrySet()
-                                        .stream()
-                                        .filter(this::fourOrFiveOccurrences)
-                                        .mapToInt(this::multiplyDieValueTimesFour)
-                                        .sum();
+    return calculateScoreOfAKind(diceRoll, 4);
   }
 
   public int scoreAsYacht(DiceRoll diceRoll) {
+    return calculateScoreOfAKind(diceRoll, 5);
+  }
+
+  private int calculateScoreOfAKind(DiceRoll diceRoll, int kind) {
     return createDieToCountMap(diceRoll).entrySet()
                                         .stream()
-                                        .filter(die -> die.getValue() == 5)
-                                        .mapToInt(die -> die.getKey() * 5)
+                                        .filter(die -> occursAtLeast(kind, die))
+                                        .mapToInt(die -> multiply(kind, die))
                                         .sum();
   }
 
@@ -110,11 +110,12 @@ public class YachtScorer {
     return diceRoll.stream().mapToInt(Integer::intValue).sum();
   }
 
-  private boolean fourOrFiveOccurrences(Map.Entry<Integer, Long> die) {
-    return die.getValue() >= 4;
+  private int multiply(int kind, Map.Entry<Integer, Long> die) {
+    return die.getKey() * kind;
   }
 
-  private int multiplyDieValueTimesFour(Map.Entry<Integer, Long> die) {
-    return die.getKey() * 4;
+  private boolean occursAtLeast(int kind, Map.Entry<Integer, Long> die) {
+    return die.getValue() >= kind;
   }
+
 }
