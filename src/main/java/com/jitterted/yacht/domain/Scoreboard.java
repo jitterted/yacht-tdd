@@ -37,6 +37,8 @@ public class Scoreboard {
     scorerMap.put(ScoreCategory.FOUROFAKIND, yachtScorer::scoreAsFourOfAKind);
     scorerMap.put(ScoreCategory.LITTLESTRAIGHT, yachtScorer::scoreAsLittleStraight);
     scorerMap.put(ScoreCategory.BIGSTRAIGHT, yachtScorer::scoreAsBigStraight);
+    scorerMap.put(ScoreCategory.CHOICE, yachtScorer::scoreAsChoice);
+    scorerMap.put(ScoreCategory.YACHT, yachtScorer::scoreAsYacht);
   }
 
   public int score() {

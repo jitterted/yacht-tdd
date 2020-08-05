@@ -66,5 +66,6 @@ public class Game {
 
   public void start() {
     scoreboard = new Scoreboard();
+    lastRollAssignedToCategory = true;
   }
 }

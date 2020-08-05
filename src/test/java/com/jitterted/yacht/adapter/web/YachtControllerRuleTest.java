@@ -11,6 +11,17 @@ import static org.assertj.core.api.Assertions.*;
 public class YachtControllerRuleTest {
 
   @Test
+  public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
+    Game game = new Game();
+    YachtController yachtController = new YachtController(game);
+
+    yachtController.startGame();
+
+    assertThat(game.lastRollAssignedToCategory())
+        .isTrue();
+  }
+
+  @Test
   public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
     YachtController yachtController = new YachtController(new Game());
     yachtController.rollDice();
@@ -23,7 +34,7 @@ public class YachtControllerRuleTest {
   }
 
   @Test
-  public void giveRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
+  public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
     YachtController yachtController = new YachtController(new Game());
     yachtController.rollDice();
 

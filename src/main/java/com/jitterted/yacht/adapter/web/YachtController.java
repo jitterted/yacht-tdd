@@ -24,7 +24,6 @@ public class YachtController {
   @PostMapping("/start-game")
   public String startGame() {
     game.start();
-    game.rollDice();
     return "redirect:/rollresult";
   }
 

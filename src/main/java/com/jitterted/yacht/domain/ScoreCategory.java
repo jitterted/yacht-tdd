@@ -11,4 +11,6 @@ public enum ScoreCategory {
   FOUROFAKIND,
   LITTLESTRAIGHT,
   BIGSTRAIGHT,
+  CHOICE,
+  YACHT,
 }
