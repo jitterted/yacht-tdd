@@ -21,6 +21,13 @@ public class YachtController {
     this.game = game;
   }
 
+  @PostMapping("/start-game")
+  public String startGame() {
+    game.start();
+    game.rollDice();
+    return "redirect:/rollresult";
+  }
+
   @PostMapping("/rolldice")
   public String rollDice() {
     game.rollDice();

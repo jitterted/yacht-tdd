@@ -73,7 +73,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 ## Next Time
 
-[ ] "Undefined Behavior": Game doesn't restart when going to "home" page
+[X] "Undefined Behavior": Game doesn't restart when going to "home" page
 
 [ ] Forgot these scoring categories:
      * Choice score = sum of dice
