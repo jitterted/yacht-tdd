@@ -5,7 +5,7 @@ import java.util.List;
 public class Game {
 
   private final DiceRoller diceRoller;
-  private final Scoreboard scoreboard = new Scoreboard();
+  private Scoreboard scoreboard;
 
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
@@ -13,10 +13,11 @@ public class Game {
   private boolean lastRollAssignedToCategory;
 
   public Game() {
-    diceRoller = new DiceRoller();
+    this(new DiceRoller());
   }
 
   public Game(DiceRoller diceRoller) {
+    this.scoreboard = new Scoreboard();
     this.diceRoller = diceRoller;
   }
 
@@ -61,5 +62,9 @@ public class Game {
 
   public boolean isOver() {
     return scoreboard.isComplete();
+  }
+
+  public void start() {
+    scoreboard = new Scoreboard();
   }
 }

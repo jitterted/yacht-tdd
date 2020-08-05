@@ -35,4 +35,20 @@ public class GameTest {
         .isNotNull();
   }
 
+  @Test
+  public void gameStartClearsScoreboard() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+    game.assignRollTo(ScoreCategory.ONES);
+
+    game.start();
+
+    boolean noRollsAssigned = game.scoredCategories()
+                                  .stream()
+                                  .map(ScoredCategory::diceRoll)
+                                  .allMatch(DiceRoll::isEmpty);
+    assertThat(noRollsAssigned)
+        .isTrue();
+  }
+
 }
