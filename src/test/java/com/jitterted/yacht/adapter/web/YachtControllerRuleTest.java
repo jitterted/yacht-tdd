@@ -17,7 +17,7 @@ public class YachtControllerRuleTest {
 
     yachtController.startGame();
 
-    assertThat(game.lastRollAssignedToCategory())
+    assertThat(game.roundCompleted())
         .isTrue();
   }
 
@@ -29,7 +29,7 @@ public class YachtControllerRuleTest {
     Model model = new ConcurrentModel();
     yachtController.rollResult(model);
 
-    assertThat(model.getAttribute("rollAssignedToCategory"))
+    assertThat(model.getAttribute("roundCompleted"))
         .isEqualTo(Boolean.FALSE);
   }
 
@@ -43,7 +43,7 @@ public class YachtControllerRuleTest {
     Model model = new ConcurrentModel();
     yachtController.rollResult(model);
 
-    assertThat(model.getAttribute("rollAssignedToCategory"))
+    assertThat(model.getAttribute("roundCompleted"))
         .isEqualTo(Boolean.TRUE);
   }
 }

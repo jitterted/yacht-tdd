@@ -13,7 +13,7 @@ public class GameCategoryAssignmentTest {
     Game game = new Game();
     game.rollDice();
 
-    assertThat(game.lastRollAssignedToCategory())
+    assertThat(game.roundCompleted())
         .isFalse();
   }
 
@@ -24,7 +24,7 @@ public class GameCategoryAssignmentTest {
 
     game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
-    assertThat(game.lastRollAssignedToCategory())
+    assertThat(game.roundCompleted())
         .isTrue();
   }
 
@@ -36,7 +36,7 @@ public class GameCategoryAssignmentTest {
 
     game.rollDice();
 
-    assertThat(game.lastRollAssignedToCategory())
+    assertThat(game.roundCompleted())
         .isFalse();
   }
 

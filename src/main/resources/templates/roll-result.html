@@ -53,7 +53,7 @@
     </tr>
   </table>
 </form>
-<form action="#" th:action="re-roll" method="post" th:if="${!rollAssignedToCategory}">
+<form action="#" th:action="re-roll" method="post" th:if="${!roundCompleted}">
   <hr/>
   <div style="font-family: '.SF NS Display'; font-weight: bold; font-size: x-large; margin-bottom: 1rem;">
     You rolled:
@@ -72,7 +72,7 @@
 <hr/>
 <br/>
 <form action="/rolldice" method="post">
-  <button th:disabled="${!rollAssignedToCategory}">Roll Dice</button>
+  <button th:disabled="${!roundCompleted}">Roll Dice</button>
 </form>
 
 </body>

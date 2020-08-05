@@ -10,7 +10,7 @@ public class Game {
   private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
   private Rolls rolls = Rolls.start();
-  private boolean lastRollAssignedToCategory;
+  private boolean roundCompleted;
 
   public Game() {
     this(new DiceRoller());
@@ -22,7 +22,7 @@ public class Game {
   }
 
   public void rollDice() {
-    lastRollAssignedToCategory = false;
+    roundCompleted = false;
     rolls = Rolls.start();
     lastRoll = diceRoller.roll();
   }
@@ -41,7 +41,7 @@ public class Game {
   }
 
   public void assignRollTo(ScoreCategory scoreCategory) {
-    lastRollAssignedToCategory = true;
+    roundCompleted = true;
     scoreboard.scoreAs(scoreCategory, lastRoll);
   }
 
@@ -50,14 +50,14 @@ public class Game {
   }
 
   public boolean canReRoll() {
-    if (lastRollAssignedToCategory()) {
+    if (roundCompleted()) {
       return false;
     }
     return rolls.canReRoll();
   }
 
-  public boolean lastRollAssignedToCategory() {
-    return lastRollAssignedToCategory;
+  public boolean roundCompleted() {
+    return roundCompleted;
   }
 
   public boolean isOver() {
@@ -66,6 +66,6 @@ public class Game {
 
   public void start() {
     scoreboard = new Scoreboard();
-    lastRollAssignedToCategory = true;
+    roundCompleted = true;
   }
 }

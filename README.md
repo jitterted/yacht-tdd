@@ -70,17 +70,16 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
      * Little Straight (1-5) score = 30
      * Big Straight (2-6) score = 30
 
-
-## Next Time
-
 [X] "Undefined Behavior": Game doesn't restart when going to "home" page
 
 [X] Forgot these scoring categories:
      * Choice score = sum of dice
      * Yacht (5-of-a-kind) score = 50 
 
-[ ] Rename the lastRollAssigned variable as it no longer seems to make sense in the context of 
+[X] Rename the lastRollAssigned variable as it no longer seems to make sense in the context of 
     the roll-result page, also see YachtControllerRuleTest.newGameDoesNotRollDiceSoNoRollToAssign
+
+## Next Time
 
 [ ] Refactor to consolidate the 3 places we have to modify code in order to add a scoring category
 
