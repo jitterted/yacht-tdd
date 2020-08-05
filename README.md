@@ -26,7 +26,7 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
     1. Repeat from 1. until no categories are left unassigned
     1. Show final score
 
-## To Do
+## Done
 
 [X] Check that the score is being rendered as desired
 
@@ -57,9 +57,27 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
         dice roll to be assigned is now 6,6,6,3,3
         since that's all re-rolls allowed, must assign to category (e.g., Full House)
 
+[X] Rule: Must assign roll to category before doing a new roll
+
+[X] Rule: Game is over when all categories have been assigned - UI will take the player to "game over" page when done
+
+   [X] Implemented this rule at the domain Game level
+   [X] Create "game over" page
+   [X] Don't forget to refactor Game!!
+
+[X] Add other scoring categories (should total 12 categories, which means 12 rounds): 
+     * Four-of-a-kind: score = sum of the four dice
+     * Little Straight (1-5) score = 30
+     * Big Straight (2-6) score = 30
+
+
 ## Next Time
 
 [ ] "Undefined Behavior": Game doesn't restart when going to "home" page
+
+[ ] Forgot these scoring categories:
+     * Choice score = sum of dice
+     * Yacht (5-of-a-kind) score = 50 
 
 [ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're
     easily confused.
@@ -73,21 +91,6 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 [ ] Rule: Can't re-roll after assigned to category before new roll
 
    [X] Implement UI constraint for this rule
-
-[X] Rule: Must assign roll to category before doing a new roll
-
-[X] Rule: Game is over when all categories have been assigned - UI will take the player to "game over" page when done
-
-   [X] Implemented this rule at the domain Game level
-   [X] Create "game over" page
-   [X] Don't forget to refactor Game!!
-
-[X] Add other scoring categories (should total 12 categories, which means 12 rounds): 
-     * Four-of-a-kind: score = sum of the four dice
-     * Little Straight (1-5) score = 30
-     * Big Straight (2-6) score = 30
-     * Choice score = sum of dice
-     * Yacht (5-of-a-kind) score = 50 
 
 [ ] Pre-check the dice that were held from previous roll? Or pre-check all dice?
 
