@@ -57,15 +57,21 @@ public class Scoreboard {
                  .collect(Collectors.toList());
   }
 
-  private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
-    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
-    return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
-  }
-
-  public boolean allCategoriesAssigned() {
+  public boolean isComplete() {
     return scoredCategories.values()
                            .stream()
                            .noneMatch(DiceRoll::isEmpty);
+  }
+
+  public boolean isEmpty() {
+    return scoredCategories.values()
+                           .stream()
+                           .allMatch(DiceRoll::isEmpty);
+  }
+
+  private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
+    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
+    return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
   }
 
   private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {

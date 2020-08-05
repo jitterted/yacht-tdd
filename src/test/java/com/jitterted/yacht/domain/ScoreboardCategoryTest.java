@@ -15,6 +15,25 @@ public class ScoreboardCategoryTest {
   }
 
   @Test
+  public void newScoreboardIsEmpty() throws Exception {
+    Scoreboard scoreboard = new Scoreboard();
+
+    assertThat(scoreboard.isEmpty())
+        .isTrue();
+  }
+
+  @Test
+  public void scoreboardWithAssignedCategoryIsNotEmpty() throws Exception {
+    Scoreboard scoreboard = new Scoreboard();
+
+    DiceRoll diceRoll = DiceRoll.of(4, 4, 4, 3, 4);
+    scoreboard.scoreAs(ScoreCategory.FOURS, diceRoll);
+
+    assertThat(scoreboard.isEmpty())
+        .isFalse();
+  }
+
+  @Test
   public void assignSingleRollToScoreboardReturnsScoreForThatCategory() throws Exception {
     Scoreboard scoreboard = new Scoreboard();
 

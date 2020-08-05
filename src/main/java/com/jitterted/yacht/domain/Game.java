@@ -60,6 +60,6 @@ public class Game {
   }
 
   public boolean isOver() {
-    return scoreboard.allCategoriesAssigned();
+    return scoreboard.isComplete();
   }
 }
