@@ -51,10 +51,7 @@ public class Scoreboard {
   }
 
   public void scoreAs(ScoreCategory scoreCategory, DiceRoll diceRoll) {
-    ScoredCategory scoredCategory = scoredCategoryMap.get(scoreCategory);
-    if (scoredCategory.isAssigned()) {
-      throw new IllegalStateException();
-    }
+    checkCategoryUnassigned(scoreCategory);
     scoredCategoryMap.put(scoreCategory,
                           new ScoredCategory(scoreCategory,
                                              diceRoll,
@@ -81,6 +78,13 @@ public class Scoreboard {
 
   private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
     return scoredCategoryMap.get(scoreCategory);
+  }
+
+  private void checkCategoryUnassigned(ScoreCategory scoreCategory) {
+    ScoredCategory scoredCategory = scoredCategoryMap.get(scoreCategory);
+    if (scoredCategory.isAssigned()) {
+      throw new IllegalStateException();
+    }
   }
 
 }

@@ -16,7 +16,7 @@ public class ScoredCategoryView {
     return new ScoredCategoryView(scoredCategory.scoreCategory().toString(),
                                   RollView.forScoreboard(scoredCategory.diceRoll()),
                                   String.valueOf(scoredCategory.score()),
-                                  !scoredCategory.diceRoll().isEmpty());
+                                  scoredCategory.isAssigned());
   }
 
   public ScoredCategoryView(String description, String diceRoll, String score, boolean rollAssigned) {

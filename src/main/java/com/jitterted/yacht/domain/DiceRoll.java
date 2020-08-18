@@ -69,7 +69,7 @@ public class DiceRoll {
     return dice.get(index);
   }
 
-  public boolean isEmpty() {
+  boolean isEmpty() {
     return dice.isEmpty();
   }
 }
