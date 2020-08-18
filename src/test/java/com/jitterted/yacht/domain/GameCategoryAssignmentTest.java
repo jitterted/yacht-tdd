@@ -69,6 +69,17 @@ public class GameCategoryAssignmentTest {
         .isTrue();
   }
 
+  @Test
+  public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
+    Game game = new Game();
+    game.rollDice();
+    game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
+    game.rollDice();
+
+    assertThatThrownBy(() -> game.assignRollTo(ARBITRARY_SCORE_CATEGORY))
+        .isInstanceOf(IllegalStateException.class);
+  }
+
   private void assignRollToAllCategories(Game game) {
     for (ScoreCategory scoreCategory : ScoreCategory.values()) {
       game.rollDice();

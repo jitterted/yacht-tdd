@@ -79,4 +79,9 @@ public class Scoreboard {
   private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {
     return scorerMap.get(entry.getKey()).apply(entry.getValue());
   }
+
+  public boolean isAssigned(ScoreCategory scoreCategory) {
+    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
+    return !diceRoll.isEmpty();
+  }
 }
