@@ -41,11 +41,8 @@ public class Game {
   }
 
   public void assignRollTo(ScoreCategory scoreCategory) {
-    if (scoreboard.isAssigned(scoreCategory)) {
-      throw new IllegalStateException();
-    }
-    roundCompleted = true;
     scoreboard.scoreAs(scoreCategory, lastRoll);
+    roundCompleted = true;
   }
 
   public List<ScoredCategory> scoredCategories() {

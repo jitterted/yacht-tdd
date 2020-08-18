@@ -12,7 +12,7 @@ public class Scoreboard {
 
   private static final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
 
-  private final Map<ScoreCategory, DiceRoll> scoredCategories = new HashMap<>();
+  private final Map<ScoreCategory, ScoredCategory> scoredCategoryMap = new HashMap<>();
 
   public Scoreboard() {
     populateScorerMap();
@@ -21,7 +21,8 @@ public class Scoreboard {
 
   private void populateScoredCategoriesMap() {
     for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-      scoredCategories.put(scoreCategory, DiceRoll.empty());
+      scoredCategoryMap.put(scoreCategory,
+                            ScoredCategory.createUnassignedScoredCategoryFor(scoreCategory));
     }
   }
 
@@ -42,15 +43,22 @@ public class Scoreboard {
   }
 
   public int score() {
-    return scoredCategories
-        .entrySet()
+    return scoredCategoryMap
+        .values()
         .stream()
-        .mapToInt(this::scoreFor)
+        .mapToInt(ScoredCategory::score)
         .sum();
   }
 
   public void scoreAs(ScoreCategory scoreCategory, DiceRoll diceRoll) {
-    scoredCategories.put(scoreCategory, diceRoll);
+    ScoredCategory scoredCategory = scoredCategoryMap.get(scoreCategory);
+    if (scoredCategory.isAssigned()) {
+      throw new IllegalStateException();
+    }
+    scoredCategoryMap.put(scoreCategory,
+                          new ScoredCategory(scoreCategory,
+                                             diceRoll,
+                                             scorerMap.get(scoreCategory).apply(diceRoll)));
   }
 
   public List<ScoredCategory> scoredCategories() {
@@ -60,28 +68,19 @@ public class Scoreboard {
   }
 
   public boolean isComplete() {
-    return scoredCategories.values()
-                           .stream()
-                           .noneMatch(DiceRoll::isEmpty);
+    return scoredCategoryMap.values()
+                            .stream()
+                            .allMatch(ScoredCategory::isAssigned);
   }
 
   public boolean isEmpty() {
-    return scoredCategories.values()
-                           .stream()
-                           .allMatch(DiceRoll::isEmpty);
+    return scoredCategoryMap.values()
+                            .stream()
+                            .noneMatch(ScoredCategory::isAssigned);
   }
 
   private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
-    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
-    return new ScoredCategory(scoreCategory, diceRoll, scorerMap.get(scoreCategory).apply(diceRoll));
+    return scoredCategoryMap.get(scoreCategory);
   }
 
-  private int scoreFor(Map.Entry<ScoreCategory, DiceRoll> entry) {
-    return scorerMap.get(entry.getKey()).apply(entry.getValue());
-  }
-
-  public boolean isAssigned(ScoreCategory scoreCategory) {
-    DiceRoll diceRoll = scoredCategories.get(scoreCategory);
-    return !diceRoll.isEmpty();
-  }
 }

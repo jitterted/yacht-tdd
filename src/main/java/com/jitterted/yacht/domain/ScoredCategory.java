@@ -11,6 +11,10 @@ public class ScoredCategory {
     this.score = score;
   }
 
+  public static ScoredCategory createUnassignedScoredCategoryFor(ScoreCategory scoreCategory) {
+    return new ScoredCategory(scoreCategory, DiceRoll.empty(), 0);
+  }
+
   public ScoreCategory scoreCategory() {
     return scoreCategory;
   }
@@ -21,6 +25,10 @@ public class ScoredCategory {
 
   public int score() {
     return score;
+  }
+
+  public boolean isAssigned() {
+    return !diceRoll().isEmpty();
   }
 
   @Override

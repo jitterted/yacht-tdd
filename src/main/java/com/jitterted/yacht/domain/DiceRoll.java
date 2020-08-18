@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class DiceRoll {
+  private static final DiceRoll NON_EXISTENT_DICE_ROLL = from(Collections.emptyList());
   private final List<Integer> dice;
 
   private DiceRoll(int die1, int die2, int die3, int die4, int die5) {
@@ -25,7 +26,7 @@ public class DiceRoll {
   }
 
   public static DiceRoll empty() {
-    return from(Collections.emptyList());
+    return NON_EXISTENT_DICE_ROLL;
   }
 
   public int countFor(int dieValue) {
