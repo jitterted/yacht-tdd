@@ -26,7 +26,7 @@ public class ScoredCategoryView {
     this.rollAssigned = rollAssigned;
   }
 
-  static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
+  public static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
     return scoredCategories.stream()
                            .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
                            .map(ScoredCategoryView::from)

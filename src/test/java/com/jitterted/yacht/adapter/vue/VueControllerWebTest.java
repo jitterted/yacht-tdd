@@ -33,4 +33,12 @@ public class VueControllerWebTest {
     mockMvc.perform(post("/api/roll-dice"))
            .andExpect(status().is2xxSuccessful());
   }
+
+  @Test
+  public void requestForScoreCategoriesReturnsCategories() throws Exception {
+    mockMvc.perform(get("/api/score-categories"))
+           .andExpect(status().is2xxSuccessful())
+           .andExpect(jsonPath("$.categories").isArray())
+           .andExpect(jsonPath("$.totalScore").isNotEmpty());
+  }
 }

@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.vue;
 
+import com.jitterted.yacht.adapter.web.ScoredCategoryView;
 import com.jitterted.yacht.domain.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,5 +31,11 @@ public class VueController {
   @PostMapping("roll-dice")
   public void rollDice() {
     game.rollDice();
+  }
+
+  @GetMapping("score-categories")
+  public ScoreCategoriesDto scoringCategories() {
+    return new ScoreCategoriesDto(game.score(),
+                                  ScoredCategoryView.viewOf(game.scoredCategories()));
   }
 }

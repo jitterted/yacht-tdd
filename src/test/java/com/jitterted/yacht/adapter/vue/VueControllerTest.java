@@ -3,6 +3,7 @@ package com.jitterted.yacht.adapter.vue;
 import com.jitterted.yacht.StubDiceRoller;
 import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
@@ -53,6 +54,20 @@ public class VueControllerTest {
 
     assertThat(dto.getRoll())
         .isEqualTo("DiceRoll: [2, 3, 4, 5, 6]");
+  }
+
+  @Test
+  public void scoreCategoriesReturnsScoredCategories() throws Exception {
+    Game game = new Game();
+    VueController vueController = new VueController(game);
+    vueController.startGame();
+
+    ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
+
+    assertThat(scoreCategoriesDto.getTotalScore())
+        .isZero();
+    assertThat(scoreCategoriesDto.getCategories())
+        .hasSize(ScoreCategory.values().length);
   }
 
 }
