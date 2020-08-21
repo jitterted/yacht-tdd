@@ -1,5 +1,7 @@
 package com.jitterted.yacht.adapter.vue;
 
+import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +39,20 @@ public class VueControllerTest {
     DiceRollDto dto = vueController.lastRoll();
 
     assertThat(dto.getRoll())
-        .isEqualTo("DiceRoll: [0, 0, 0, 0, 0]");
+        .isEqualTo("DiceRoll: []");
+  }
+
+  @Test
+  public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
+    Game game = new Game(new StubDiceRoller(DiceRoll.of(2, 3, 4, 5, 6)));
+    VueController vueController = new VueController(game);
+    vueController.startGame();
+
+    vueController.rollDice();
+    DiceRollDto dto = vueController.lastRoll();
+
+    assertThat(dto.getRoll())
+        .isEqualTo("DiceRoll: [2, 3, 4, 5, 6]");
   }
 
 }

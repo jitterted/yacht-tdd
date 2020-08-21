@@ -65,6 +65,7 @@ public class Game {
   }
 
   public void start() {
+    lastRoll = DiceRoll.empty();
     scoreboard = new Scoreboard();
     roundCompleted = true;
   }

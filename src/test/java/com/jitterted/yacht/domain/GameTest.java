@@ -51,4 +51,16 @@ public class GameTest {
         .isTrue();
   }
 
+  @Test
+  public void gameStartResetsLastDiceRollToEmpty() throws Exception {
+    Game game = new Game();
+    game.start();
+    game.rollDice();
+
+    game.start();
+
+    assertThat(game.lastRoll())
+        .isEqualTo(DiceRoll.empty());
+  }
+
 }

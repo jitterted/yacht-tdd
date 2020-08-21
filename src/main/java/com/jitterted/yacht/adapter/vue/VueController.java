@@ -26,4 +26,9 @@ public class VueController {
   public DiceRollDto lastRoll() {
     return DiceRollDto.from(game.lastRoll());
   }
+
+  @PostMapping("roll-dice")
+  public void rollDice() {
+    game.rollDice();
+  }
 }
