@@ -79,6 +79,10 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 [X] Rename the lastRollAssigned variable as it no longer seems to make sense in the context of 
     the roll-result page, also see YachtControllerRuleTest.newGameDoesNotRollDiceSoNoRollToAssign
 
+[X] Rule: a category can only be used (have a dice roll assigned to it) once per round
+
+   [X] Need to reflect this constraint in the user interface 
+
 ## Next Time
 
 [ ] Refactor to consolidate the 3 places we have to modify code in order to add a scoring category
@@ -87,10 +91,6 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
     easily confused.
 
 [ ] Refactoring: Instead of dieToCountMap() returning a Map, transform to list of object that has .dieValue() and .count() to provide more meaning than .getKey() and .getValue(), which comes from the EntrySet that we're currently getting off of the Map.
-
-[ ] Rule: a category can only be used (have a dice roll assigned to it) once per round
-
-   [X] Need to reflect this constraint in the user interface 
 
 [ ] Rule: Can't re-roll after assigned to category before new roll
 
