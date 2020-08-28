@@ -6,6 +6,8 @@ import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 
 public class VueControllerTest {
@@ -68,6 +70,20 @@ public class VueControllerTest {
         .isZero();
     assertThat(scoreCategoriesDto.getCategories())
         .hasSize(ScoreCategory.values().length);
+  }
+
+  @Test
+  public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
+    Game game = new Game(new StubDiceRoller(DiceRoll.of(6, 6, 5, 5, 5)));
+    VueController vueController = new VueController(game);
+    vueController.startGame();
+    vueController.rollDice();
+
+    vueController.assignRollToCategory(Map.of("category", "SIXES"));
+
+    ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
+    assertThat(scoreCategoriesDto.getTotalScore())
+        .isEqualTo(6 + 6);
   }
 
 }

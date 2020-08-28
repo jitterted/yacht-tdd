@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,5 +41,13 @@ public class VueControllerWebTest {
            .andExpect(status().is2xxSuccessful())
            .andExpect(jsonPath("$.categories").isArray())
            .andExpect(jsonPath("$.totalScore").isNotEmpty());
+  }
+
+  @Test
+  public void postToAssignCategorySucceeds() throws Exception {
+    mockMvc.perform(post("/api/assign-roll")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"category\": \"FIVES\"}"))
+           .andExpect(status().is2xxSuccessful());
   }
 }
