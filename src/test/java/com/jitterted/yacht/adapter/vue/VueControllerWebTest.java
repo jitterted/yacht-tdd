@@ -26,7 +26,7 @@ public class VueControllerWebTest {
            .andExpect(status().is2xxSuccessful());
     mockMvc.perform(get("/api/last-roll"))
            .andExpect(status().is2xxSuccessful())
-           .andExpect(jsonPath("$.roll").value("DiceRoll: []"));
+           .andExpect(jsonPath("$.roll").isArray());
   }
 
   @Test

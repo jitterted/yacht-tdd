@@ -6,6 +6,7 @@ import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -42,7 +43,7 @@ public class VueControllerTest {
     DiceRollDto dto = vueController.lastRoll();
 
     assertThat(dto.getRoll())
-        .isEqualTo("DiceRoll: []");
+        .isEmpty();
   }
 
   @Test
@@ -55,7 +56,7 @@ public class VueControllerTest {
     DiceRollDto dto = vueController.lastRoll();
 
     assertThat(dto.getRoll())
-        .isEqualTo("DiceRoll: [2, 3, 4, 5, 6]");
+        .isEqualTo(List.of(2, 3, 4, 5, 6));
   }
 
   @Test
