@@ -41,8 +41,8 @@ jobs:
       # uses: stCarolas/setup-maven@9ec7040da00873e1eb3b3d1ef9b7443b8e8c4df1
       uses: stCarolas/setup-maven@v1
       with:
-        # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0
-        maven-version: 3.6.x
+        # Version of Maven to use (no wildcards, must be existing version)
+        maven-version: 3.6.3
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
