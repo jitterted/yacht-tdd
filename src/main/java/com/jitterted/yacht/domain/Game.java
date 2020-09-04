@@ -28,8 +28,15 @@ public class Game {
   }
 
   public void reRoll(List<Integer> keptDice) {
+    requireRerollsRemaining();
     rolls.increment();
     lastRoll = diceRoller.reRoll(keptDice);
+  }
+
+  private void requireRerollsRemaining() {
+    if (!canReRoll()) {
+      throw new TooManyRollsException();
+    }
   }
 
   public DiceRoll lastRoll() {

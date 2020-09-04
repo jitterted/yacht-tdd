@@ -41,4 +41,18 @@ public class GameRollTest {
         .isFalse();
   }
 
+  @Test
+  public void attemptToRollTotalOfFourTimesThrowsException() throws Exception {
+    Game game = new Game();
+
+    game.rollDice();
+    game.reRoll(Collections.emptyList());
+    game.reRoll(Collections.emptyList());
+
+    assertThatThrownBy(() -> {
+      game.reRoll(Collections.emptyList());
+    })
+        .isInstanceOf(TooManyRollsException.class);
+  }
+
 }

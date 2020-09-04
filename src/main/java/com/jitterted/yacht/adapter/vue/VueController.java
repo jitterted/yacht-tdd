@@ -4,12 +4,16 @@ import com.jitterted.yacht.adapter.web.ScoredCategoryView;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
+import com.jitterted.yacht.domain.TooManyRollsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -54,8 +58,13 @@ public class VueController {
   }
 
   @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void reroll(Keep keep) {
+  public void reroll(@RequestBody Keep keep) {
     List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
     game.reRoll(keptDice);
+  }
+
+  @ExceptionHandler(TooManyRollsException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void onTooManyRollsException() {
   }
 }
