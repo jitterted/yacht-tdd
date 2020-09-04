@@ -50,4 +50,12 @@ public class VueControllerWebTest {
                         .content("{\"category\": \"FIVES\"}"))
            .andExpect(status().is2xxSuccessful());
   }
+
+  @Test
+  public void postToReRollWithListOfDieIndexesToKeep() throws Exception {
+    mockMvc.perform(post("/api/reroll")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"diceIndexesToKeep\": [1,2,5]}"))
+           .andExpect(status().is2xxSuccessful());
+  }
 }

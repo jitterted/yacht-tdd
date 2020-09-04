@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.vue;
 
 import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class VueControllerTest {
 
@@ -85,6 +88,22 @@ public class VueControllerTest {
     ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
     assertThat(scoreCategoriesDto.getTotalScore())
         .isEqualTo(6 + 6);
+  }
+
+  @Test
+  public void keepDiceReRollsTheNonKeptDiceUsingSpy() throws Exception {
+    Game spyGame = spy(Game.class);
+    VueController vueController = new VueController(spyGame);
+    vueController.startGame();
+    vueController.rollDice();
+
+    Keep keep = new Keep();
+    keep.setDiceIndexesToKeep(List.of(1, 2, 4));
+    List<Integer> keptDiceValues = keep.diceValuesFrom(spyGame.lastRoll());
+
+    vueController.reroll(keep);
+
+    verify(spyGame).reRoll(keptDiceValues);
   }
 
 }

@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.vue;
 
 import com.jitterted.yacht.adapter.web.ScoredCategoryView;
+import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,5 +51,11 @@ public class VueController {
     String scoreCategoryString = map.get("category");
     ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
     game.assignRollTo(scoreCategory);
+  }
+
+  @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void reroll(Keep keep) {
+    List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
+    game.reRoll(keptDice);
   }
 }

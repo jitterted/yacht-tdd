@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.web;
 
+import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.beans.factory.annotation.Autowired;

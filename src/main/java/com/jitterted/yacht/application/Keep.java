@@ -1,11 +1,11 @@
-package com.jitterted.yacht.adapter.web;
+package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.domain.DiceRoll;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-class Keep {
+public class Keep {
   private List<Integer> diceIndexesToKeep;
 
   public List<Integer> getDiceIndexesToKeep() {
