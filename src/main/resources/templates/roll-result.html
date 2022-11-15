@@ -56,8 +56,8 @@
 <form action="#" th:action="re-roll" method="post" th:if="${!roundCompleted}">
   <hr/>
   <div style="font-family: '.SF NS Display'; font-weight: bold; font-size: x-large; margin-bottom: 1rem;">
-    You rolled:
-    <span th:each="die, iterationStatus : ${roll}">
+      You rolled (check to keep):
+      <span th:each="die, iterationStatus : ${roll}">
       <input type="checkbox"
              th:if="${canReRoll}"
              th:type="checkbox"

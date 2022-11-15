@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Scoreboard {
 
-  private static final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
+  private final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
 
   private final Map<ScoreCategory, ScoredCategory> scoredCategoryMap = new HashMap<>();
 
