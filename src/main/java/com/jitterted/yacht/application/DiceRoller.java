@@ -1,4 +1,7 @@
-package com.jitterted.yacht.domain;
+package com.jitterted.yacht.application;
+
+import com.jitterted.yacht.application.port.DieRoller;
+import com.jitterted.yacht.domain.DiceRoll;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,10 +10,6 @@ import java.util.List;
 public class DiceRoller {
     private static final int YACHT_DICE_COUNT = 5;
     private final DieRoller dieRoller;
-
-    public DiceRoller() {
-        dieRoller = new RandomDieRoller();
-    }
 
     public DiceRoller(DieRoller dieRoller) {
         this.dieRoller = dieRoller;

@@ -4,7 +4,7 @@
     <useClassPathOnly/>
     <extension name="coverage" sample_coverage="false">
       <pattern>
-        <option name="PATTERN" value="com.jitterted.yacht.domain.*"/>
+        <option name="PATTERN" value="com.jitterted.yacht.application.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
     </extension>
@@ -13,7 +13,7 @@
     <option name="METHOD_NAME" value=""/>
     <option name="TEST_OBJECT" value="tags"/>
     <option name="PARAMETERS" value=""/>
-    <tag value="!spring"/>
+    <tag value="!spring &amp; !architecture"/>
     <method v="2">
       <option name="Make" enabled="true"/>
     </method>

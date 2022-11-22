@@ -1,4 +1,6 @@
-package com.jitterted.yacht.domain;
+package com.jitterted.yacht.adapter.out.dieroller;
+
+import com.jitterted.yacht.application.port.DieRoller;
 
 import java.util.Random;
 

@@ -1,7 +1,9 @@
 package com.jitterted.yacht.adapter.web;
 
-import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
+import com.jitterted.yacht.application.port.StubDieRoller;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -16,7 +18,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
-        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(1, 3, 3, 5, 5));
+        GameService gameService = createGameServiceWithDieRollsOf(1, 3, 3, 5, 5);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
@@ -29,9 +31,15 @@ public class YachtControllerAssignRollTest {
                 .isEqualTo(String.valueOf(3 + 3));
     }
 
+    private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
+        StubDieRoller dieRoller = new StubDieRoller(List.of(dies));
+        DiceRoller diceRoller = new DiceRoller(dieRoller);
+        return new GameService(diceRoller);
+    }
+
     @Test
     public void assignDiceRoll22244ToFullHouseResultsInScoreOf6() throws Exception {
-        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(4, 4, 2, 2, 2));
+        GameService gameService = createGameServiceWithDieRollsOf(4, 4, 2, 2, 2);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
@@ -44,7 +52,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignDiceRoll11123ToOnesResultsInScoreOf3() throws Exception {
-        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(1, 1, 1, 2, 3));
+        GameService gameService = createGameServiceWithDieRollsOf(1, 1, 1, 2, 3);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
@@ -57,7 +65,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService();
+        GameService gameService = new GameService(new DiceRoller(new RandomDieRoller()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -69,7 +77,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
-        GameService gameService = new GameService();
+        GameService gameService = new GameService(new DiceRoller(new RandomDieRoller()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -84,7 +92,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        YachtController yachtController = new YachtController(new GameService());
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(new RandomDieRoller())));
         yachtController.startGame();
 
         Model model = new ConcurrentModel();

@@ -1,7 +1,6 @@
 package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.domain.DiceRoll;
-import com.jitterted.yacht.domain.DiceRoller;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
@@ -11,10 +10,6 @@ import java.util.List;
 public class GameService {
     private Game game;
     private final DiceRoller diceRoller;
-
-    public GameService() {
-        this.diceRoller = new DiceRoller();
-    }
 
     public GameService(DiceRoller diceRoller) {
         this.diceRoller = diceRoller;

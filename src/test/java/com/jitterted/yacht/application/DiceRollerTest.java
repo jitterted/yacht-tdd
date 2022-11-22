@@ -1,5 +1,8 @@
-package com.jitterted.yacht.domain;
+package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.application.port.DieRoller;
+import com.jitterted.yacht.application.port.StubDieRoller;
+import com.jitterted.yacht.domain.DiceRoll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;

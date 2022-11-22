@@ -1,5 +1,7 @@
 package com.jitterted.yacht.domain;
 
+import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.application.DiceRoller;
 import org.junit.jupiter.api.Test;
 
 import static com.jitterted.yacht.domain.ScoreCategory.FULLHOUSE;
@@ -11,7 +13,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
 
         assertThat(game.roundCompleted())
@@ -20,7 +22,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
@@ -31,7 +33,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -43,7 +45,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
@@ -54,7 +56,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newGameThenGameIsNotOver() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         assertThat(game.isOver())
                 .isFalse();
@@ -62,7 +64,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void assigningToAllCategoriesEndsTheGame() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         assignRollToAllCategories(game);
 
@@ -72,7 +74,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
         game.rollDice();
@@ -83,7 +85,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     void assignedRollCanNotBeReAssigned() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
         game.rollDice();
         game.assignRollTo(ScoreCategory.FOURS);
 

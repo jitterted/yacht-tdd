@@ -4,7 +4,7 @@
     <useClassPathOnly/>
     <extension name="coverage" sample_coverage="false">
       <pattern>
-        <option name="PATTERN" value="com.jitterted.yacht.domain.*"/>
+        <option name="PATTERN" value="com.jitterted.yacht.application.*"/>
         <option name="ENABLED" value="true"/>
       </pattern>
     </extension>

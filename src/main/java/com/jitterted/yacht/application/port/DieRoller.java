@@ -1,4 +1,4 @@
-package com.jitterted.yacht.domain;
+package com.jitterted.yacht.application.port;
 
 public interface DieRoller {
     int roll();

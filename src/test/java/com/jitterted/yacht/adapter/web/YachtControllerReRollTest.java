@@ -1,10 +1,11 @@
 package com.jitterted.yacht.adapter.web;
 
+import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.domain.DiceRoller;
-import com.jitterted.yacht.domain.DieRoller;
-import com.jitterted.yacht.domain.StubDieRoller;
+import com.jitterted.yacht.application.port.DieRoller;
+import com.jitterted.yacht.application.port.StubDieRoller;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -35,7 +36,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
-        YachtController yachtController = new YachtController(new GameService());
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(new RandomDieRoller())));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
@@ -52,7 +53,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
-        YachtController yachtController = new YachtController(new GameService());
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(new RandomDieRoller())));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 

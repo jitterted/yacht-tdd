@@ -1,5 +1,7 @@
 package com.jitterted.yacht.domain;
 
+import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.application.DiceRoller;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -10,7 +12,7 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollThenCanReRollIsTrue() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         game.rollDice();
 
@@ -20,7 +22,7 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollAndOneReRollThenCanReRollIsTrue() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         game.rollDice();
         game.reRoll(Collections.emptyList());
@@ -31,7 +33,7 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollAndTwoReRollsThenCanReRollIsFalse() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         game.rollDice();
         game.reRoll(Collections.emptyList());
@@ -43,7 +45,7 @@ public class GameRollTest {
 
     @Test
     public void attemptToRollTotalOfFourTimesThrowsException() throws Exception {
-        Game game = new Game();
+        Game game = new Game(new DiceRoller(new RandomDieRoller()));
 
         game.rollDice();
         game.reRoll(Collections.emptyList());

@@ -1,5 +1,7 @@
 package com.jitterted.yacht;
 
+import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.Game;
 import org.springframework.boot.SpringApplication;
@@ -15,12 +17,12 @@ public class YachtApplication {
 
     @Bean
     public GameService createGameService() {
-        return new GameService();
+        return new GameService(new DiceRoller(new RandomDieRoller()));
     }
 
     @Bean
     public Game createGame() {
-        return new Game();
+        return new Game(new DiceRoller(new RandomDieRoller()));
     }
 
 }

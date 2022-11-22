@@ -1,10 +1,13 @@
 package com.jitterted.yacht.domain;
 
+import com.jitterted.yacht.application.DiceRoller;
+
 import java.util.List;
 
 public class Game {
 
-    private final DiceRoller diceRoller;  // external collaborator
+    @Deprecated  // Domain should not reference this Application Service class
+    private final DiceRoller diceRoller;
 
     private final Scoreboard scoreboard = new Scoreboard();
 
@@ -13,10 +16,6 @@ public class Game {
     private Rolls rolls = Rolls.start();
 
     private boolean roundCompleted;
-
-    public Game() {
-        this(new DiceRoller());
-    }
 
     public Game(DiceRoller diceRoller) {
         this.diceRoller = diceRoller;

@@ -10,7 +10,9 @@ box "Inbound Adapter" #c0d0e0
 end box
 
 box "Application" #F3B467
-    participant "GameService \n <<Service>>" as service
+    participant "GameService \n <<Service>>" as gameService
+    participant "DiceRoller \n <<Service>>" as diceRoller
+    participant "DieRoller \n <<Port>>" as dieRoller
 end box
 
 box "Domain" #EDDE00
@@ -18,18 +20,27 @@ box "Domain" #EDDE00
     entity "Scoreboard\n<<Entity>>" as scoreboard
 end box
 
+box "Outbound Adapter" #C3B5D9
+    boundary "RandomDieRoller" as random
+end box
+
 player -> browser: Clicks [New Game]
 browser -> controller: POST /start-game
-controller -> service : start()
-service -> game : new
+controller -> gameService : start()
+gameService -> game : new
 game -> scoreboard: new
 game <-- scoreboard : Scoreboard
-game --> service : Game
+game --> gameService : Game
 controller -> browser: ScoreboardView
 player -> browser: Click [Roll Dice]
 browser -> controller: POST /rolldice
-controller -> game: rollDice
-game -> scoreboard: updateDiceRoll
+controller -> gameService: rollDice
+gameService -> diceRoller : roll()
+diceRoller -> dieRoller : roll()
+dieRoller -> random : roll()
+dieRoller <-- random : int
+diceRoller --> gameService : DiceRoll
+gameService -> game : rollDice(DiceRoll)
 controller -> browser: ScoreboardView
 note left: 'Ask for Category'
 player -> browser: Click [Some Category]
