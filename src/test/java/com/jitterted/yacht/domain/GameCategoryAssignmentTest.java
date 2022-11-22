@@ -14,7 +14,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
 
         assertThat(game.roundCompleted())
@@ -24,7 +24,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
@@ -36,7 +36,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -49,7 +49,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
@@ -60,7 +60,7 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newGameThenGameIsNotOver() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        Game game = new Game();
 
         assertThat(game.isOver())
                 .isFalse();
@@ -69,7 +69,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void assigningToAllCategoriesEndsTheGame() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         assignRollToAllCategories(game, diceRoller);
 
@@ -80,7 +80,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
         game.rollDice(diceRoller.roll());
@@ -92,7 +92,7 @@ public class GameCategoryAssignmentTest {
     @Test
     void assignedRollCanNotBeReAssigned() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
         game.rollDice(diceRoller.roll());
         game.assignRollTo(ScoreCategory.FOURS);
 

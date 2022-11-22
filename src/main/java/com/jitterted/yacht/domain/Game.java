@@ -1,13 +1,8 @@
 package com.jitterted.yacht.domain;
 
-import com.jitterted.yacht.application.DiceRoller;
-
 import java.util.List;
 
 public class Game {
-
-    @Deprecated  // Domain should not reference this Application Service class
-    private final DiceRoller diceRoller;
 
     private final Scoreboard scoreboard = new Scoreboard();
 
@@ -17,22 +12,21 @@ public class Game {
 
     private boolean roundCompleted;
 
-    public Game(DiceRoller diceRoller) {
-        this.diceRoller = diceRoller;
+    public Game() {
         lastRoll = DiceRoll.empty();
         roundCompleted = true;
     }
 
-    public void rollDice(DiceRoll roll) {
+    public void rollDice(DiceRoll diceRoll) {
         roundCompleted = false;
         rolls = Rolls.start();
-        lastRoll = roll;
+        lastRoll = diceRoll;
     }
 
-    public void reRoll(List<Integer> keptDice) {
+    public void reRoll(DiceRoll diceRoll) {
         requireRerollsRemaining();
         rolls.increment();
-        lastRoll = diceRoller.reRoll(keptDice);
+        lastRoll = diceRoll;
     }
 
     private void requireRerollsRemaining() {

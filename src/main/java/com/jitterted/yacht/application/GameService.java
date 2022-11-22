@@ -16,7 +16,7 @@ public class GameService {
     }
 
     public void start() {
-        game = new Game(diceRoller);
+        game = new Game();
     }
 
     public void rollDice() {
@@ -36,7 +36,7 @@ public class GameService {
     }
 
     public void reRoll(List<Integer> keptDice) {
-        game.reRoll(keptDice);
+        game.reRoll(diceRoller.reRoll(keptDice));
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {

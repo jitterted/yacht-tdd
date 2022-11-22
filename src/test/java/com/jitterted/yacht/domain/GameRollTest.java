@@ -13,7 +13,7 @@ public class GameRollTest {
     @Test
     public void afterInitialRollThenCanReRollIsTrue() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
 
@@ -24,10 +24,10 @@ public class GameRollTest {
     @Test
     public void afterInitialRollAndOneReRollThenCanReRollIsTrue() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
-        game.reRoll(Collections.emptyList());
+        game.reRoll(diceRoller.reRoll(Collections.emptyList()));
 
         assertThat(game.canReRoll())
                 .isTrue();
@@ -36,11 +36,11 @@ public class GameRollTest {
     @Test
     public void afterInitialRollAndTwoReRollsThenCanReRollIsFalse() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
-        game.reRoll(Collections.emptyList());
-        game.reRoll(Collections.emptyList());
+        game.reRoll(diceRoller.reRoll(Collections.emptyList()));
+        game.reRoll(diceRoller.reRoll(Collections.emptyList()));
 
         assertThat(game.canReRoll())
                 .isFalse();
@@ -49,14 +49,14 @@ public class GameRollTest {
     @Test
     public void attemptToRollTotalOfFourTimesThrowsException() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
-        game.reRoll(Collections.emptyList());
-        game.reRoll(Collections.emptyList());
+        game.reRoll(diceRoller.reRoll(Collections.emptyList()));
+        game.reRoll(diceRoller.reRoll(Collections.emptyList()));
 
         assertThatThrownBy(() -> {
-            game.reRoll(Collections.emptyList());
+            game.reRoll(diceRoller.reRoll(Collections.emptyList()));
         })
                 .isInstanceOf(TooManyRollsException.class);
     }

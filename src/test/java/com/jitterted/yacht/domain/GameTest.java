@@ -13,7 +13,7 @@ public class GameTest {
 
     @Test
     public void newGameResultsInScoreOfZero() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        Game game = new Game();
 
         assertThat(game.score())
                 .isZero();
@@ -22,7 +22,7 @@ public class GameTest {
     @Test
     public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new StubDieRoller(List.of(6, 5, 4, 3, 2)));
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
 
@@ -33,7 +33,7 @@ public class GameTest {
     @Test
     public void rollDiceThenQueryLastRollReturnsThatRoll() throws Exception {
         DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
-        Game game = new Game(diceRoller);
+        Game game = new Game();
 
         game.rollDice(diceRoller.roll());
 
