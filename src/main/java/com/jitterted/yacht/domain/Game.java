@@ -6,9 +6,9 @@ public class Game {
 
     private final DiceRoller diceRoller;  // external collaborator
 
-    private Scoreboard scoreboard;
+    private final Scoreboard scoreboard = new Scoreboard();
 
-    private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
+    private DiceRoll lastRoll;
 
     private Rolls rolls = Rolls.start();
 
@@ -19,8 +19,9 @@ public class Game {
     }
 
     public Game(DiceRoller diceRoller) {
-        this.scoreboard = new Scoreboard();
         this.diceRoller = diceRoller;
+        lastRoll = DiceRoll.empty();
+        roundCompleted = true;
     }
 
     public void rollDice() {
@@ -80,9 +81,4 @@ public class Game {
         return scoreboard.isComplete();
     }
 
-    public void start() {
-        lastRoll = DiceRoll.empty();
-        scoreboard = new Scoreboard();
-        roundCompleted = true;
-    }
 }

@@ -22,7 +22,6 @@ public class GameService {
 
     public void start() {
         game = new Game(diceRoller);
-        game.start();
     }
 
     public void rollDice() {

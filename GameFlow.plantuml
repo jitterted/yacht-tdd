@@ -22,10 +22,9 @@ player -> browser: Clicks [New Game]
 browser -> controller: POST /start-game
 controller -> service : start()
 service -> game : new
-game --> service : Game
-service -> game : start()
 game -> scoreboard: new
 game <-- scoreboard : Scoreboard
+game --> service : Game
 controller -> browser: ScoreboardView
 player -> browser: Click [Roll Dice]
 browser -> controller: POST /rolldice
