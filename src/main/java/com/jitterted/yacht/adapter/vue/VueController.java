@@ -22,49 +22,49 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class VueController {
-  private final Game game;
+    private final Game game;
 
-  @Autowired
-  public VueController(Game game) {
-    this.game = game;
-  }
+    @Autowired
+    public VueController(Game game) {
+        this.game = game;
+    }
 
-  @PostMapping("start-game")
-  public void startGame() {
-    game.start();
-  }
+    @PostMapping("start-game")
+    public void startGame() {
+        game.start();
+    }
 
-  @GetMapping("last-roll")
-  public DiceRollDto lastRoll() {
-    return DiceRollDto.from(game.lastRoll());
-  }
+    @GetMapping("last-roll")
+    public DiceRollDto lastRoll() {
+        return DiceRollDto.from(game.lastRoll());
+    }
 
-  @PostMapping("roll-dice")
-  public void rollDice() {
-    game.rollDice();
-  }
+    @PostMapping("roll-dice")
+    public void rollDice() {
+        game.rollDice();
+    }
 
-  @GetMapping("score-categories")
-  public ScoreCategoriesDto scoringCategories() {
-    return new ScoreCategoriesDto(game.score(),
-                                  ScoredCategoryView.viewOf(game.scoredCategories()));
-  }
+    @GetMapping("score-categories")
+    public ScoreCategoriesDto scoringCategories() {
+        return new ScoreCategoriesDto(game.score(),
+                                      ScoredCategoryView.viewOf(game.scoredCategories()));
+    }
 
-  @PostMapping(value = "assign-roll", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void assignRollToCategory(@RequestBody Map<String, String> map) {
-    String scoreCategoryString = map.get("category");
-    ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
-    game.assignRollTo(scoreCategory);
-  }
+    @PostMapping(value = "assign-roll", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void assignRollToCategory(@RequestBody Map<String, String> map) {
+        String scoreCategoryString = map.get("category");
+        ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
+        game.assignRollTo(scoreCategory);
+    }
 
-  @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void reroll(@RequestBody Keep keep) {
-    List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
-    game.reRoll(keptDice);
-  }
+    @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void reroll(@RequestBody Keep keep) {
+        List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
+        game.reRoll(keptDice);
+    }
 
-  @ExceptionHandler(TooManyRollsException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public void onTooManyRollsException() {
-  }
+    @ExceptionHandler(TooManyRollsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void onTooManyRollsException() {
+    }
 }

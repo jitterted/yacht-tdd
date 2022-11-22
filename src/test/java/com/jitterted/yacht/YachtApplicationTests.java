@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Tag("spring")
 class YachtApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

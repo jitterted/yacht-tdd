@@ -17,60 +17,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @Tag("spring")
 public class VueControllerWebTest {
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  public void postToStartGameStartsTheGame() throws Exception {
-    mockMvc.perform(post("/api/start-game"))
-           .andExpect(status().is2xxSuccessful());
-    mockMvc.perform(get("/api/last-roll"))
-           .andExpect(status().is2xxSuccessful())
-           .andExpect(jsonPath("$.roll").isArray());
-  }
+    @Test
+    public void postToStartGameStartsTheGame() throws Exception {
+        mockMvc.perform(post("/api/start-game"))
+               .andExpect(status().is2xxSuccessful());
+        mockMvc.perform(get("/api/last-roll"))
+               .andExpect(status().is2xxSuccessful())
+               .andExpect(jsonPath("$.roll").isArray());
+    }
 
-  @Test
-  public void postToRollDiceSucceeds() throws Exception {
-    mockMvc.perform(post("/api/roll-dice"))
-           .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    public void postToRollDiceSucceeds() throws Exception {
+        mockMvc.perform(post("/api/roll-dice"))
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void requestForScoreCategoriesReturnsCategories() throws Exception {
-    mockMvc.perform(get("/api/score-categories"))
-           .andExpect(status().is2xxSuccessful())
-           .andExpect(jsonPath("$.categories").isArray())
-           .andExpect(jsonPath("$.totalScore").isNotEmpty());
-  }
+    @Test
+    public void requestForScoreCategoriesReturnsCategories() throws Exception {
+        mockMvc.perform(get("/api/score-categories"))
+               .andExpect(status().is2xxSuccessful())
+               .andExpect(jsonPath("$.categories").isArray())
+               .andExpect(jsonPath("$.totalScore").isNotEmpty());
+    }
 
-  @Test
-  public void postToAssignCategorySucceeds() throws Exception {
-    mockMvc.perform(post("/api/assign-roll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"category\": \"FIVES\"}"))
-           .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    public void postToAssignCategorySucceeds() throws Exception {
+        mockMvc.perform(post("/api/assign-roll")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"category\": \"FIVES\"}"))
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void postToReRollWithListOfDieIndexesToKeep() throws Exception {
-    mockMvc.perform(post("/api/reroll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"diceIndexesToKeep\": [1,2,3]}"))
-           .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    public void postToReRollWithListOfDieIndexesToKeep() throws Exception {
+        mockMvc.perform(post("/api/reroll")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"diceIndexesToKeep\": [1,2,3]}"))
+               .andExpect(status().is2xxSuccessful());
+    }
 
-  @Test
-  public void tooManyRollsResultsInBadRequestStatusCode() throws Exception {
-    mockMvc.perform(post("/api/roll-dice"));
-    mockMvc.perform(post("/api/reroll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"diceIndexesToKeep\": [1,2,3]}"));
-    mockMvc.perform(post("/api/reroll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"diceIndexesToKeep\": [1,2,3]}"));
-    mockMvc.perform(post("/api/reroll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"diceIndexesToKeep\": [1,2,3]}"))
-           .andExpect(status().isBadRequest());
-  }
+    @Test
+    public void tooManyRollsResultsInBadRequestStatusCode() throws Exception {
+        mockMvc.perform(post("/api/roll-dice"));
+        mockMvc.perform(post("/api/reroll")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"diceIndexesToKeep\": [1,2,3]}"));
+        mockMvc.perform(post("/api/reroll")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"diceIndexesToKeep\": [1,2,3]}"));
+        mockMvc.perform(post("/api/reroll")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"diceIndexesToKeep\": [1,2,3]}"))
+               .andExpect(status().isBadRequest());
+    }
 }

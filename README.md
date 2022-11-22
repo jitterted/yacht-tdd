@@ -1,18 +1,33 @@
 # The Game of Yacht
 
+This is a dice game similar to Yahtzee™.
+Scoring rules are based on the description at https://www.mathsisfun.com/games/yacht-dice-game.html and more details
+at https://en.wikipedia.org/wiki/Yacht_(dice_game).
+
 ## Terminology
 
-GAME has PLAYERs, each of whom have a SCOREBOARD that contains ROLLs and SCORE and CATEGORYs
-that are used/not yet used.
+GAME has PLAYERs, each of whom have a SCOREBOARD that contains ROLLs and SCORE and CATEGORYs that are used/not yet used.
 We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs in the SCOREBOARD.
 
-## Next Steps
+## Playing the Game
 
-* Create a representation of a Game that stores the state of their part of the game,
-  i.e., current score, which categories have been used, the rolls of the game, etc.
+### Start the Game
 
-* From the UI have a way to create a Player, initially could just be anonymous and
-  a new player is created whenever a "Start Game" button is clicked.
+* Within IntelliJ IDEA: Run the `YachtApplication` class
+
+* From the command line: Use `./mvnw spring-boot:run` (or Windows: `mvnw spring-boot:run`).
+
+### Open in Browser
+
+In your browser, go to: http://localhost:9090/
+
+## Development Next Steps
+
+* Create a representation of a Game that stores the state of their part of the game, i.e., current score, which
+  categories have been used, the rolls of the game, etc.
+
+* From the UI have a way to create a Player, initially could just be anonymous and a new player is created whenever a "
+  Start Game" button is clicked.
 
 ## Game Flow
 
@@ -21,10 +36,20 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
     * Clear their "scoreboard"
 * Start Yacht Game
     1. Roll Dice
-    1. Choose a category for scoring
-    1. Update score
-    1. Repeat from 1. until no categories are left unassigned
-    1. Show final score
+    2. Choose a category for scoring
+    3. Update score
+    4. Repeat from 1. until no categories are left unassigned
+    5. Show final score
+
+## Related Projects
+
+### Vue
+
+The Vue (2.x) front-end repository is at: https://github.com/jitterted/vue-yacht
+
+### JavaFX/TornadoFX
+
+A desktop app version is at: https://github.com/jitterted/tornado-yacht
 
 ## Done
 
@@ -74,27 +99,30 @@ We know when a GAME is over when all PLAYERs have filled all of their CATEGORYs 
 
 [X] Forgot these scoring categories:
      * Choice score = sum of dice
-     * Yacht (5-of-a-kind) score = 50 
+     * Yacht (5-of-a-kind) score = 50
 
-[X] Rename the lastRollAssigned variable as it no longer seems to make sense in the context of 
-    the roll-result page, also see YachtControllerRuleTest.newGameDoesNotRollDiceSoNoRollToAssign
+[X] Rename the lastRollAssigned variable as it no longer seems to make sense in the context of
+the roll-result page, also see YachtControllerRuleTest.newGameDoesNotRollDiceSoNoRollToAssign
 
 [X] Rule: a category can only be used (have a dice roll assigned to it) once per round
 
-   [X] Need to reflect this constraint in the user interface 
+[X] Need to reflect this constraint in the user interface
 
 ## Next Time
 
+[ ] BUG: Should not be able to assign a roll to a category once it's already been assigned.
+
 [ ] Refactor to consolidate the 3 places we have to modify code in order to add a scoring category
 
-[ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're
-    easily confused.
+[ ] Think about naming of ScoreCategory (the enum) vs. ScoredCategory (with a "d") as they're easily confused.
 
-[ ] Refactoring: Instead of dieToCountMap() returning a Map, transform to list of object that has .dieValue() and .count() to provide more meaning than .getKey() and .getValue(), which comes from the EntrySet that we're currently getting off of the Map.
+[ ] Refactoring: Instead of dieToCountMap() returning a Map, transform to list of object that has .dieValue() and
+.count() to provide more meaning than .getKey() and .getValue(), which comes from the EntrySet that we're currently
+getting off of the Map.
 
 [ ] Rule: Can't re-roll after assigned to category before new roll
 
-   [X] Implement UI constraint for this rule
+[X] Implement UI constraint for this rule
 
 [ ] Pre-check the dice that were held from previous roll? Or pre-check all dice?
 

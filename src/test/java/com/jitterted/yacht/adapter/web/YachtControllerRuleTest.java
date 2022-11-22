@@ -10,40 +10,40 @@ import static org.assertj.core.api.Assertions.*;
 
 public class YachtControllerRuleTest {
 
-  @Test
-  public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
-    Game game = new Game();
-    YachtController yachtController = new YachtController(game);
+    @Test
+    public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
+        Game game = new Game();
+        YachtController yachtController = new YachtController(game);
 
-    yachtController.startGame();
+        yachtController.startGame();
 
-    assertThat(game.roundCompleted())
-        .isTrue();
-  }
+        assertThat(game.roundCompleted())
+                .isTrue();
+    }
 
-  @Test
-  public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
-    YachtController yachtController = new YachtController(new Game());
-    yachtController.rollDice();
+    @Test
+    public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
+        YachtController yachtController = new YachtController(new Game());
+        yachtController.rollDice();
 
-    Model model = new ConcurrentModel();
-    yachtController.rollResult(model);
+        Model model = new ConcurrentModel();
+        yachtController.rollResult(model);
 
-    assertThat(model.getAttribute("roundCompleted"))
-        .isEqualTo(Boolean.FALSE);
-  }
+        assertThat(model.getAttribute("roundCompleted"))
+                .isEqualTo(Boolean.FALSE);
+    }
 
-  @Test
-  public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
-    YachtController yachtController = new YachtController(new Game());
-    yachtController.rollDice();
+    @Test
+    public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
+        YachtController yachtController = new YachtController(new Game());
+        yachtController.rollDice();
 
-    yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
+        yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
 
-    Model model = new ConcurrentModel();
-    yachtController.rollResult(model);
+        Model model = new ConcurrentModel();
+        yachtController.rollResult(model);
 
-    assertThat(model.getAttribute("roundCompleted"))
-        .isEqualTo(Boolean.TRUE);
-  }
+        assertThat(model.getAttribute("roundCompleted"))
+                .isEqualTo(Boolean.TRUE);
+    }
 }

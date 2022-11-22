@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class YachtApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(YachtApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(YachtApplication.class, args);
+    }
 
-	@Bean
-	public Game createGame() {
-		return new Game();
-	}
+    @Bean
+    public Game createGame() {
+        return new Game();
+    }
 
 }

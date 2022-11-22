@@ -6,21 +6,21 @@ import com.jitterted.yacht.domain.DiceRoll;
 import java.util.List;
 
 public class DiceRollDto {
-  private List<Integer> roll;
+    private List<Integer> roll;
 
-  private DiceRollDto(List<Integer> roll) {
-    this.roll = roll;
-  }
+    private DiceRollDto(List<Integer> roll) {
+        this.roll = roll;
+    }
 
-  public static DiceRollDto from(DiceRoll diceRoll) {
-    return new DiceRollDto(RollView.listOf(diceRoll));
-  }
+    public static DiceRollDto from(DiceRoll diceRoll) {
+        return new DiceRollDto(RollView.listOf(diceRoll));
+    }
 
-  public List<Integer> getRoll() {
-    return roll;
-  }
+    public List<Integer> getRoll() {
+        return roll;
+    }
 
-  public void setRoll(List<Integer> roll) {
-    this.roll = roll;
-  }
+    public void setRoll(List<Integer> roll) {
+        this.roll = roll;
+    }
 }

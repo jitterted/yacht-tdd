@@ -1,16 +1,30 @@
 @startuml
 
-actor User
-User -> Browser: Clicks [New Game]
-Browser -> GameController: POST "NEW_GAME"
+box "External World" #f6f6f6
+    actor Player
+    boundary Browser
+end box
+
+box "Inbound Adapter" #c0d0e0
+    boundary GameController
+end box
+box "Application" #F3B467
+    participant "AddQuestionService \n <<Service>>" as service
+end box
+
+Player -> Browser: Clicks [New Game]
+Browser -> GameController: POST /start-game
+GameController -> Game: start()
+Game -> Scoreboard: new
+Game <-- Scoreboard : scoreboard
 GameController -> Browser: ScoreboardView
-User -> Browser: Click [Roll Dice]
+Player -> Browser: Click [Roll Dice]
 Browser -> GameController: POST "ROLL_DICE"
 GameController -> Game: rollDice
 Game -> Scoreboard: updateDiceRoll
 GameController -> Browser: ScoreboardView
 note left: 'Ask for Category'
-User -> Browser: Click [Some Category]
+Player -> Browser: Click [Some Category]
 Browser -> GameController: POST "CATEGORY_x"
 GameController -> Game: assign DiceRoll\nto Category
 

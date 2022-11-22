@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 
 public class RollView {
 
-  public static List<Integer> listOf(DiceRoll diceRoll) {
-    return diceRoll.stream().collect(Collectors.toList());
-  }
+    public static List<Integer> listOf(DiceRoll diceRoll) {
+        return diceRoll.stream().collect(Collectors.toList());
+    }
 
-  public static String forScoreboard(DiceRoll diceRoll) {
-    return diceRoll
-        .stream()
-        .map(String::valueOf)
-        .collect(Collectors.joining(" "));
-  }
+    public static String forScoreboard(DiceRoll diceRoll) {
+        return diceRoll
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" "));
+    }
 }

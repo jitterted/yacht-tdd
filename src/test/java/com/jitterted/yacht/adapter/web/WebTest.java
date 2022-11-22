@@ -17,41 +17,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("spring")
 public class WebTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Test
-  public void getOfHomePageIsStatus200() throws Exception {
-    mockMvc.perform(get("/index.html"))
-           .andExpect(status().is2xxSuccessful()
-           );
-  }
+    @Test
+    public void getOfHomePageIsStatus200() throws Exception {
+        mockMvc.perform(get("/index.html"))
+               .andExpect(status().is2xxSuccessful()
+               );
+    }
 
-  @Test
-  public void postToRollDiceShowsRollResult() throws Exception {
-    MvcResult mvcResult = mockMvc.perform(post("/rolldice"))
-                                 .andExpect(status().is3xxRedirection())
-                                 .andExpect(redirectedUrl("/rollresult"))
-                                 .andReturn();
+    @Test
+    public void postToRollDiceShowsRollResult() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(post("/rolldice"))
+                                     .andExpect(status().is3xxRedirection())
+                                     .andExpect(redirectedUrl("/rollresult"))
+                                     .andReturn();
 
-    String redirectedUrl = mvcResult.getResponse().getRedirectedUrl();
-    mockMvc.perform(get(redirectedUrl))
-           .andExpect(status().isOk());
-  }
+        String redirectedUrl = mvcResult.getResponse().getRedirectedUrl();
+        mockMvc.perform(get(redirectedUrl))
+               .andExpect(status().isOk());
+    }
 
-  @Test
-  public void postToSelectCategoryScoresRollResultForThatCategory() throws Exception {
-    mockMvc.perform(post("/select-category")
-                        .param("category", "threes"))
-           .andExpect(status().is3xxRedirection())
-           .andExpect(redirectedUrl("/rollresult"));
-  }
+    @Test
+    public void postToSelectCategoryScoresRollResultForThatCategory() throws Exception {
+        mockMvc.perform(post("/select-category")
+                                .param("category", "threes"))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(redirectedUrl("/rollresult"));
+    }
 
-  @Test
-  public void gameOverPageDisplaysScoreboard() throws Exception {
-    mockMvc.perform(get("/game-over"))
-           .andExpect(status().isOk())
-           .andExpect(model().attributeExists("score"))
-           .andExpect(model().attributeExists("categories"));
-  }
+    @Test
+    public void gameOverPageDisplaysScoreboard() throws Exception {
+        mockMvc.perform(get("/game-over"))
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists("score"))
+               .andExpect(model().attributeExists("categories"));
+    }
 }

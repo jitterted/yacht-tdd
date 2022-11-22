@@ -6,20 +6,20 @@ import static org.assertj.core.api.Assertions.*;
 
 public class DiceRollEmptyTest {
 
-  @Test
-  public void nonEmptyDiceRollIsNotEmpty() throws Exception {
-    DiceRoll diceRoll = DiceRoll.of(1, 2, 3, 4, 5);
+    @Test
+    public void nonEmptyDiceRollIsNotEmpty() throws Exception {
+        DiceRoll diceRoll = DiceRoll.of(1, 2, 3, 4, 5);
 
-    assertThat(diceRoll.isEmpty())
-        .isFalse();
-  }
+        assertThat(diceRoll.isEmpty())
+                .isFalse();
+    }
 
-  @Test
-  public void emptyDiceRollIsEmpty() throws Exception {
-    DiceRoll diceRoll = DiceRoll.empty();
+    @Test
+    public void emptyDiceRollIsEmpty() throws Exception {
+        DiceRoll diceRoll = DiceRoll.empty();
 
-    assertThat(diceRoll.isEmpty())
-        .isTrue();
-  }
+        assertThat(diceRoll.isEmpty())
+                .isTrue();
+    }
 
 }

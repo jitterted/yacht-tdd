@@ -16,94 +16,94 @@ import static org.mockito.Mockito.verify;
 
 public class VueControllerTest {
 
-  @Test
-  public void newControllerResultsInGameNotYetStarted() throws Exception {
-    Game game = new Game();
+    @Test
+    public void newControllerResultsInGameNotYetStarted() throws Exception {
+        Game game = new Game();
 
-    VueController vueController = new VueController(game);
+        VueController vueController = new VueController(game);
 
-    assertThat(game.roundCompleted())
-        .isFalse();
-  }
+        assertThat(game.roundCompleted())
+                .isFalse();
+    }
 
-  @Test
-  public void postToStartGameStartsGame() throws Exception {
-    Game game = new Game();
-    VueController vueController = new VueController(game);
+    @Test
+    public void postToStartGameStartsGame() throws Exception {
+        Game game = new Game();
+        VueController vueController = new VueController(game);
 
-    vueController.startGame();
+        vueController.startGame();
 
-    assertThat(game.roundCompleted())
-        .isTrue();
-  }
+        assertThat(game.roundCompleted())
+                .isTrue();
+    }
 
-  @Test
-  public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
-    Game game = new Game();
-    VueController vueController = new VueController(game);
-    vueController.startGame();
+    @Test
+    public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
+        Game game = new Game();
+        VueController vueController = new VueController(game);
+        vueController.startGame();
 
-    DiceRollDto dto = vueController.lastRoll();
+        DiceRollDto dto = vueController.lastRoll();
 
-    assertThat(dto.getRoll())
-        .isEmpty();
-  }
+        assertThat(dto.getRoll())
+                .isEmpty();
+    }
 
-  @Test
-  public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
-    Game game = new Game(new StubDiceRoller(DiceRoll.of(2, 3, 4, 5, 6)));
-    VueController vueController = new VueController(game);
-    vueController.startGame();
+    @Test
+    public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
+        Game game = new Game(new StubDiceRoller(DiceRoll.of(2, 3, 4, 5, 6)));
+        VueController vueController = new VueController(game);
+        vueController.startGame();
 
-    vueController.rollDice();
-    DiceRollDto dto = vueController.lastRoll();
+        vueController.rollDice();
+        DiceRollDto dto = vueController.lastRoll();
 
-    assertThat(dto.getRoll())
-        .isEqualTo(List.of(2, 3, 4, 5, 6));
-  }
+        assertThat(dto.getRoll())
+                .isEqualTo(List.of(2, 3, 4, 5, 6));
+    }
 
-  @Test
-  public void scoreCategoriesReturnsScoredCategories() throws Exception {
-    Game game = new Game();
-    VueController vueController = new VueController(game);
-    vueController.startGame();
+    @Test
+    public void scoreCategoriesReturnsScoredCategories() throws Exception {
+        Game game = new Game();
+        VueController vueController = new VueController(game);
+        vueController.startGame();
 
-    ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
+        ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
 
-    assertThat(scoreCategoriesDto.getTotalScore())
-        .isZero();
-    assertThat(scoreCategoriesDto.getCategories())
-        .hasSize(ScoreCategory.values().length);
-  }
+        assertThat(scoreCategoriesDto.getTotalScore())
+                .isZero();
+        assertThat(scoreCategoriesDto.getCategories())
+                .hasSize(ScoreCategory.values().length);
+    }
 
-  @Test
-  public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
-    Game game = new Game(new StubDiceRoller(DiceRoll.of(6, 6, 5, 5, 5)));
-    VueController vueController = new VueController(game);
-    vueController.startGame();
-    vueController.rollDice();
+    @Test
+    public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
+        Game game = new Game(new StubDiceRoller(DiceRoll.of(6, 6, 5, 5, 5)));
+        VueController vueController = new VueController(game);
+        vueController.startGame();
+        vueController.rollDice();
 
-    vueController.assignRollToCategory(Map.of("category", "SIXES"));
+        vueController.assignRollToCategory(Map.of("category", "SIXES"));
 
-    ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
-    assertThat(scoreCategoriesDto.getTotalScore())
-        .isEqualTo(6 + 6);
-  }
+        ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
+        assertThat(scoreCategoriesDto.getTotalScore())
+                .isEqualTo(6 + 6);
+    }
 
-  @Test
-  public void keepDiceReRollsTheNonKeptDiceUsingSpy() throws Exception {
-    Game spyGame = spy(Game.class);
-    VueController vueController = new VueController(spyGame);
-    vueController.startGame();
-    vueController.rollDice();
+    @Test
+    public void keepDiceReRollsTheNonKeptDiceUsingSpy() throws Exception {
+        Game spyGame = spy(Game.class);
+        VueController vueController = new VueController(spyGame);
+        vueController.startGame();
+        vueController.rollDice();
 
-    Keep keep = new Keep();
-    keep.setDiceIndexesToKeep(List.of(1, 2, 4));
-    List<Integer> keptDiceValues = keep.diceValuesFrom(spyGame.lastRoll());
+        Keep keep = new Keep();
+        keep.setDiceIndexesToKeep(List.of(1, 2, 4));
+        List<Integer> keptDiceValues = keep.diceValuesFrom(spyGame.lastRoll());
 
-    vueController.reroll(keep);
+        vueController.reroll(keep);
 
-    verify(spyGame).reRoll(keptDiceValues);
-  }
+        verify(spyGame).reRoll(keptDiceValues);
+    }
 
 }
