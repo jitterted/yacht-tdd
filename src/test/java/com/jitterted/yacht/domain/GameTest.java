@@ -21,9 +21,10 @@ public class GameTest {
 
     @Test
     public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
-        Game game = new Game(new DiceRoller(new StubDieRoller(List.of(6, 5, 4, 3, 2))));
+        DiceRoller diceRoller = new DiceRoller(new StubDieRoller(List.of(6, 5, 4, 3, 2)));
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
 
         assertThat(game.lastRoll())
                 .isEqualTo(DiceRoll.of(2, 3, 4, 5, 6));
@@ -31,9 +32,10 @@ public class GameTest {
 
     @Test
     public void rollDiceThenQueryLastRollReturnsThatRoll() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
 
         assertThat(game.lastRoll())
                 .isNotNull();

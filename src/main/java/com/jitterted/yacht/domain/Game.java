@@ -23,10 +23,10 @@ public class Game {
         roundCompleted = true;
     }
 
-    public void rollDice() {
+    public void rollDice(DiceRoll roll) {
         roundCompleted = false;
         rolls = Rolls.start();
-        lastRoll = diceRoller.roll();
+        lastRoll = roll;
     }
 
     public void reRoll(List<Integer> keptDice) {

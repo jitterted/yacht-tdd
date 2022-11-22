@@ -12,9 +12,10 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollThenCanReRollIsTrue() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
 
         assertThat(game.canReRoll())
                 .isTrue();
@@ -22,9 +23,10 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollAndOneReRollThenCanReRollIsTrue() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
         game.reRoll(Collections.emptyList());
 
         assertThat(game.canReRoll())
@@ -33,9 +35,10 @@ public class GameRollTest {
 
     @Test
     public void afterInitialRollAndTwoReRollsThenCanReRollIsFalse() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
         game.reRoll(Collections.emptyList());
         game.reRoll(Collections.emptyList());
 
@@ -45,9 +48,10 @@ public class GameRollTest {
 
     @Test
     public void attemptToRollTotalOfFourTimesThrowsException() throws Exception {
-        Game game = new Game(new DiceRoller(new RandomDieRoller()));
+        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
+        Game game = new Game(diceRoller);
 
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
         game.reRoll(Collections.emptyList());
         game.reRoll(Collections.emptyList());
 

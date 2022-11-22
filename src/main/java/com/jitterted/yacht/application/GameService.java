@@ -20,7 +20,7 @@ public class GameService {
     }
 
     public void rollDice() {
-        game.rollDice();
+        game.rollDice(diceRoller.roll());
     }
 
     public DiceRoll lastRoll() {
