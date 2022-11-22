@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.web;
 
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,32 +15,32 @@ import java.util.List;
 @Controller
 public class YachtController {
 
-    private final Game game;
+    private final GameService gameService;
 
     @Autowired
-    public YachtController(Game game) {
-        this.game = game;
+    public YachtController(GameService gameService) {
+        this.gameService = gameService;
     }
 
     @PostMapping("/start-game")
     public String startGame() {
-        game.start();
+        gameService.start();
         return "redirect:/rollresult";
     }
 
     @PostMapping("/rolldice")
     public String rollDice() {
-        game.rollDice();
+        gameService.rollDice();
         return "redirect:/rollresult";
     }
 
     @GetMapping("/rollresult")
     public String rollResult(Model model) {
         addCurrentScoreTo(model);
-        model.addAttribute("roll", RollView.listOf(game.lastRoll()));
+        model.addAttribute("roll", RollView.listOf(gameService.lastRoll()));
         addCategoriesTo(model);
-        model.addAttribute("canReRoll", game.canReRoll());
-        model.addAttribute("roundCompleted", game.roundCompleted());
+        model.addAttribute("canReRoll", gameService.canReRoll());
+        model.addAttribute("roundCompleted", gameService.roundCompleted());
         model.addAttribute("keep", new Keep());
         model.addAttribute("categoryNames", ScoreCategory.values());
         return "roll-result";
@@ -48,8 +48,8 @@ public class YachtController {
 
     @PostMapping("/re-roll")
     public String reRoll(Keep keep) {
-        List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
-        game.reRoll(keptDice);
+        List<Integer> keptDice = keep.diceValuesFrom(gameService.lastRoll());
+        gameService.reRoll(keptDice);
         return "redirect:/rollresult";
     }
 
@@ -57,9 +57,9 @@ public class YachtController {
     @PostMapping("/select-category")
     public String assignRollToCategory(@RequestParam("category") String category) {
         ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
-        game.assignRollTo(scoreCategory);
+        gameService.assignRollTo(scoreCategory);
 
-        if (game.isOver()) {
+        if (gameService.isOver()) {
             return "redirect:/game-over";
         }
         return "redirect:/rollresult";
@@ -73,10 +73,10 @@ public class YachtController {
     }
 
     private void addCategoriesTo(Model model) {
-        model.addAttribute("categories", ScoredCategoryView.viewOf(game.scoredCategories()));
+        model.addAttribute("categories", ScoredCategoryView.viewOf(gameService.scoredCategories()));
     }
 
     private void addCurrentScoreTo(Model model) {
-        model.addAttribute("score", String.valueOf(game.score()));
+        model.addAttribute("score", String.valueOf(gameService.score()));
     }
 }

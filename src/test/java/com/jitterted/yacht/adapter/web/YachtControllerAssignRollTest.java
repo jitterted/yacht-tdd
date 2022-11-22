@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
         Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 3, 3, 5, 5));
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.THREES.toString());
@@ -31,7 +32,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignDiceRoll22244ToFullHouseResultsInScoreOf6() throws Exception {
         Game game = new Game(StubDiceRoller.createDiceRollerFor(4, 4, 2, 2, 2));
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
@@ -44,7 +45,7 @@ public class YachtControllerAssignRollTest {
     public void assignDiceRoll11123ToOnesResultsInScoreOf3() throws Exception {
         Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 1, 1, 2, 3));
 
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.ONES.toString());
@@ -56,7 +57,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
         Game game = new Game();
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
 
         String viewName = rollAndAssignForAllCategories(game, yachtController);
 
@@ -67,7 +68,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
         Game game = new Game();
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         rollAndAssignForAllCategories(game, yachtController);
 
         Model model = new ConcurrentModel();
@@ -81,7 +82,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
         Game game = new Game();
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
 
         Model model = new ConcurrentModel();
         yachtController.rollResult(model);

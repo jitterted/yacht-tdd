@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.web;
 
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.DiceRoller;
 import com.jitterted.yacht.domain.Game;
@@ -17,7 +18,7 @@ public class YachtControllerReRollTest {
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {
         Game game = new Game(new DiceRoller(new StubDieRoller(List.of(3, 1, 4, 1, 5, 3, 2, 6))));
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();
@@ -33,7 +34,7 @@ public class YachtControllerReRollTest {
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
         Game game = new Game();
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();   // roll 1
@@ -50,7 +51,7 @@ public class YachtControllerReRollTest {
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
         Game game = new Game();
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();   // roll 1

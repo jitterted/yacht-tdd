@@ -11,6 +11,7 @@ public class Game {
     private DiceRoll lastRoll = DiceRoll.of(0, 0, 0, 0, 0);
 
     private Rolls rolls = Rolls.start();
+
     private boolean roundCompleted;
 
     public Game() {

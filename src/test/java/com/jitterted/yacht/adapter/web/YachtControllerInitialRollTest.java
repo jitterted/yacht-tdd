@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.Game;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -15,7 +16,7 @@ public class YachtControllerInitialRollTest {
     @Test
     public void initialDiceRollReturnsRollInResultsPage() throws Exception {
         Game game = new Game(StubDiceRoller.createDiceRollerFor(3, 1, 4, 1, 5));
-        YachtController yachtController = new YachtController(game);
+        YachtController yachtController = new YachtController(new GameService(game));
 
         yachtController.rollDice();
         Model model = new ConcurrentModel();
