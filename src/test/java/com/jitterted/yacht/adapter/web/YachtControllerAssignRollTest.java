@@ -65,7 +65,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(new RandomDieRoller()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -77,7 +77,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(new RandomDieRoller()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -92,7 +92,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(new RandomDieRoller())));
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(RandomDieRoller.create())));
         yachtController.startGame();
 
         Model model = new ConcurrentModel();
