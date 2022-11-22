@@ -1,8 +1,8 @@
 package com.jitterted.yacht.adapter.vue;
 
 import com.jitterted.yacht.adapter.web.ScoredCategoryView;
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.TooManyRollsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,45 +22,45 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class VueController {
-    private final Game game;
+    private final GameService gameService;
 
     @Autowired
-    public VueController(Game game) {
-        this.game = game;
+    public VueController(GameService gameService) {
+        this.gameService = gameService;
     }
 
     @PostMapping("start-game")
     public void startGame() {
-        game.start();
+        gameService.start();
     }
 
     @GetMapping("last-roll")
     public DiceRollDto lastRoll() {
-        return DiceRollDto.from(game.lastRoll());
+        return DiceRollDto.from(gameService.lastRoll());
     }
 
     @PostMapping("roll-dice")
     public void rollDice() {
-        game.rollDice();
+        gameService.rollDice();
     }
 
     @GetMapping("score-categories")
     public ScoreCategoriesDto scoringCategories() {
-        return new ScoreCategoriesDto(game.score(),
-                                      ScoredCategoryView.viewOf(game.scoredCategories()));
+        return new ScoreCategoriesDto(gameService.score(),
+                                      ScoredCategoryView.viewOf(gameService.scoredCategories()));
     }
 
     @PostMapping(value = "assign-roll", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void assignRollToCategory(@RequestBody Map<String, String> map) {
         String scoreCategoryString = map.get("category");
         ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
-        game.assignRollTo(scoreCategory);
+        gameService.assignRollTo(scoreCategory);
     }
 
     @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void reroll(@RequestBody Keep keep) {
-        List<Integer> keptDice = keep.diceValuesFrom(game.lastRoll());
-        game.reRoll(keptDice);
+        List<Integer> keptDice = keep.diceValuesFrom(gameService.lastRoll());
+        gameService.reRoll(keptDice);
     }
 
     @ExceptionHandler(TooManyRollsException.class)

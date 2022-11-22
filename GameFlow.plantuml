@@ -1,12 +1,12 @@
 @startuml
 
 box "External World" #f6f6f6
-    actor Player
-    boundary Browser
+    actor Player as player
+    boundary Browser as browser
 end box
 
 box "Inbound Adapter" #c0d0e0
-    boundary GameController
+    boundary YachtController as controller
 end box
 
 box "Application" #F3B467
@@ -14,24 +14,27 @@ box "Application" #F3B467
 end box
 
 box "Domain" #EDDE00
-    entity "Game\n<<Aggregate Root>>" as Game
-    entity "Scoreboard\n<<Entity>>" as Scoreboard
+    entity "Game\n<<Aggregate Root>>" as game
+    entity "Scoreboard\n<<Entity>>" as scoreboard
 end box
 
-Player -> Browser: Clicks [New Game]
-Browser -> GameController: POST /start-game
-GameController -> Game: start()
-Game -> Scoreboard: new
-Game <-- Scoreboard : scoreboard
-GameController -> Browser: ScoreboardView
-Player -> Browser: Click [Roll Dice]
-Browser -> GameController: POST /rolldice
-GameController -> Game: rollDice
-Game -> Scoreboard: updateDiceRoll
-GameController -> Browser: ScoreboardView
+player -> browser: Clicks [New Game]
+browser -> controller: POST /start-game
+controller -> service : start()
+service -> game : new
+game --> service : Game
+service -> game : start()
+game -> scoreboard: new
+game <-- scoreboard : Scoreboard
+controller -> browser: ScoreboardView
+player -> browser: Click [Roll Dice]
+browser -> controller: POST /rolldice
+controller -> game: rollDice
+game -> scoreboard: updateDiceRoll
+controller -> browser: ScoreboardView
 note left: 'Ask for Category'
-Player -> Browser: Click [Some Category]
-Browser -> GameController: POST /select-category
-GameController -> Game: assign DiceRoll\nto Category
+player -> browser: Click [Some Category]
+browser -> controller: POST /select-category
+controller -> game: assign DiceRoll\nto Category
 
 @enduml

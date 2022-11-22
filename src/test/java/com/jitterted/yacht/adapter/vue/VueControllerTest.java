@@ -1,9 +1,9 @@
 package com.jitterted.yacht.adapter.vue;
 
 import com.jitterted.yacht.StubDiceRoller;
+import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.DiceRoll;
-import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
@@ -17,30 +17,31 @@ import static org.mockito.Mockito.verify;
 public class VueControllerTest {
 
     @Test
-    public void newControllerResultsInGameNotYetStarted() throws Exception {
-        Game game = new Game();
+    public void callingStateOnNonStartedGameThrowsException() throws Exception {
+        GameService gameService = new GameService();
 
-        VueController vueController = new VueController(game);
+        VueController vueController = new VueController(gameService);
 
-        assertThat(game.roundCompleted())
-                .isFalse();
+        assertThatThrownBy(() -> {
+            gameService.roundCompleted();
+        }).isInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void postToStartGameStartsGame() throws Exception {
-        Game game = new Game();
-        VueController vueController = new VueController(game);
+        GameService gameService = new GameService();
+        VueController vueController = new VueController(gameService);
 
         vueController.startGame();
 
-        assertThat(game.roundCompleted())
+        assertThat(gameService.roundCompleted())
                 .isTrue();
     }
 
     @Test
     public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
-        Game game = new Game();
-        VueController vueController = new VueController(game);
+        GameService gameService = new GameService();
+        VueController vueController = new VueController(gameService);
         vueController.startGame();
 
         DiceRollDto dto = vueController.lastRoll();
@@ -51,8 +52,9 @@ public class VueControllerTest {
 
     @Test
     public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
-        Game game = new Game(new StubDiceRoller(DiceRoll.of(2, 3, 4, 5, 6)));
-        VueController vueController = new VueController(game);
+        GameService gameService = new GameService(new StubDiceRoller(DiceRoll.of(2, 3, 4, 5, 6)));
+        VueController vueController = new VueController(gameService);
+
         vueController.startGame();
 
         vueController.rollDice();
@@ -64,8 +66,8 @@ public class VueControllerTest {
 
     @Test
     public void scoreCategoriesReturnsScoredCategories() throws Exception {
-        Game game = new Game();
-        VueController vueController = new VueController(game);
+        GameService gameService = new GameService();
+        VueController vueController = new VueController(gameService);
         vueController.startGame();
 
         ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
@@ -78,8 +80,8 @@ public class VueControllerTest {
 
     @Test
     public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
-        Game game = new Game(new StubDiceRoller(DiceRoll.of(6, 6, 5, 5, 5)));
-        VueController vueController = new VueController(game);
+        GameService gameService = new GameService(new StubDiceRoller(DiceRoll.of(6, 6, 5, 5, 5)));
+        VueController vueController = new VueController(gameService);
         vueController.startGame();
         vueController.rollDice();
 
@@ -92,18 +94,18 @@ public class VueControllerTest {
 
     @Test
     public void keepDiceReRollsTheNonKeptDiceUsingSpy() throws Exception {
-        Game spyGame = spy(Game.class);
-        VueController vueController = new VueController(spyGame);
+        GameService spyGameService = spy(GameService.class);
+        VueController vueController = new VueController(spyGameService);
         vueController.startGame();
         vueController.rollDice();
 
         Keep keep = new Keep();
         keep.setDiceIndexesToKeep(List.of(1, 2, 4));
-        List<Integer> keptDiceValues = keep.diceValuesFrom(spyGame.lastRoll());
+        List<Integer> keptDiceValues = keep.diceValuesFrom(spyGameService.lastRoll());
 
         vueController.reroll(keep);
 
-        verify(spyGame).reRoll(keptDiceValues);
+        verify(spyGameService).reRoll(keptDiceValues);
     }
 
 }
