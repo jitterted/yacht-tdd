@@ -1,11 +1,12 @@
 package com.jitterted.yacht.adapter.web;
 
+import com.jitterted.yacht.application.GameService;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,6 +21,9 @@ public class WebTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    GameService gameService;
+
     @Test
     public void getOfHomePageIsStatus200() throws Exception {
         mockMvc.perform(get("/index.html"))
@@ -28,15 +32,10 @@ public class WebTest {
     }
 
     @Test
-    public void postToRollDiceShowsRollResult() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(post("/rolldice"))
-                                     .andExpect(status().is3xxRedirection())
-                                     .andExpect(redirectedUrl("/rollresult"))
-                                     .andReturn();
-
-        String redirectedUrl = mvcResult.getResponse().getRedirectedUrl();
-        mockMvc.perform(get(redirectedUrl))
-               .andExpect(status().isOk());
+    public void postToRollDiceRedirectsToRollResult() throws Exception {
+        mockMvc.perform(post("/rolldice"))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(redirectedUrl("/rollresult"));
     }
 
     @Test

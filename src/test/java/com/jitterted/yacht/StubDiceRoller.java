@@ -10,7 +10,7 @@ public class StubDiceRoller extends DiceRoller {
 
     private final Iterator<DiceRoll> diceRollIterator;
 
-    public static StubDiceRoller createDiceRollerFor(int die1, int die2, int die3, int die4, int die5) {
+    public static DiceRoller createDiceRollerFor(int die1, int die2, int die3, int die4, int die5) {
         return new StubDiceRoller(DiceRoll.of(die1, die2, die3, die4, die5));
     }
 

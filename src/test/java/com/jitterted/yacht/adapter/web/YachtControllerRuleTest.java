@@ -1,7 +1,6 @@
 package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.application.GameService;
-import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -13,19 +12,20 @@ public class YachtControllerRuleTest {
 
     @Test
     public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService();
+        YachtController yachtController = new YachtController(gameService);
 
         yachtController.startGame();
 
-        assertThat(game.roundCompleted())
+        assertThat(gameService.roundCompleted())
                 .isTrue();
     }
 
     @Test
     public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService();
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         yachtController.rollDice();
 
         Model model = new ConcurrentModel();
@@ -37,8 +37,9 @@ public class YachtControllerRuleTest {
 
     @Test
     public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService();
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());

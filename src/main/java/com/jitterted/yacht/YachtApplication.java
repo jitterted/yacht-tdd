@@ -15,7 +15,7 @@ public class YachtApplication {
 
     @Bean
     public GameService createGameService() {
-        return new GameService(new Game());
+        return new GameService();
     }
 
     @Bean

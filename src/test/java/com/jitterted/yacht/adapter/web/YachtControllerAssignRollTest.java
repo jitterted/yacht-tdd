@@ -2,7 +2,6 @@ package com.jitterted.yacht.adapter.web;
 
 import com.jitterted.yacht.StubDiceRoller;
 import com.jitterted.yacht.application.GameService;
-import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -17,8 +16,9 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
-        Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 3, 3, 5, 5));
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(1, 3, 3, 5, 5));
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.THREES.toString());
@@ -31,35 +31,37 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignDiceRoll22244ToFullHouseResultsInScoreOf6() throws Exception {
-        Game game = new Game(StubDiceRoller.createDiceRollerFor(4, 4, 2, 2, 2));
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(4, 4, 2, 2, 2));
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
 
-        assertThat(game.score())
+        assertThat(gameService.score())
                 .isEqualTo(4 + 4 + 2 + 2 + 2);
     }
 
     @Test
     public void assignDiceRoll11123ToOnesResultsInScoreOf3() throws Exception {
-        Game game = new Game(StubDiceRoller.createDiceRollerFor(1, 1, 1, 2, 3));
-
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService(StubDiceRoller.createDiceRollerFor(1, 1, 1, 2, 3));
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         yachtController.rollDice();
 
         yachtController.assignRollToCategory(ScoreCategory.ONES.toString());
 
-        assertThat(game.score())
+        assertThat(gameService.score())
                 .isEqualTo(1 + 1 + 1);
     }
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        GameService gameService = new GameService();
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
 
-        String viewName = rollAndAssignForAllCategories(game, yachtController);
+        String viewName = rollAndAssignForAllCategories(gameService, yachtController);
 
         assertThat(viewName)
                 .isEqualTo("redirect:/game-over");
@@ -67,9 +69,10 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
-        rollAndAssignForAllCategories(game, yachtController);
+        GameService gameService = new GameService();
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
+        rollAndAssignForAllCategories(gameService, yachtController);
 
         Model model = new ConcurrentModel();
         yachtController.rollResult(model);
@@ -81,8 +84,8 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        YachtController yachtController = new YachtController(new GameService());
+        yachtController.startGame();
 
         Model model = new ConcurrentModel();
         yachtController.rollResult(model);
@@ -93,10 +96,10 @@ public class YachtControllerAssignRollTest {
                 .isTrue();
     }
 
-    private String rollAndAssignForAllCategories(Game game, YachtController yachtController) {
+    private String rollAndAssignForAllCategories(GameService gameService, YachtController yachtController) {
         String viewName = null;
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            game.rollDice();
+            gameService.rollDice();
             viewName = yachtController.assignRollToCategory(scoreCategory.toString());
         }
         return viewName;

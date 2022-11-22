@@ -3,7 +3,7 @@ package com.jitterted.yacht.adapter.web;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.DiceRoller;
-import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.DieRoller;
 import com.jitterted.yacht.domain.StubDieRoller;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -17,8 +17,10 @@ public class YachtControllerReRollTest {
 
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {
-        Game game = new Game(new DiceRoller(new StubDieRoller(List.of(3, 1, 4, 1, 5, 3, 2, 6))));
-        YachtController yachtController = new YachtController(new GameService(game));
+        DieRoller dieRoller = new StubDieRoller(List.of(3, 1, 4, 1, 5, 3, 2, 6));
+        GameService gameService = new GameService(new DiceRoller(dieRoller));
+        YachtController yachtController = new YachtController(gameService);
+        yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();
@@ -33,8 +35,8 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        YachtController yachtController = new YachtController(new GameService());
+        yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();   // roll 1
@@ -50,8 +52,8 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
-        Game game = new Game();
-        YachtController yachtController = new YachtController(new GameService(game));
+        YachtController yachtController = new YachtController(new GameService());
+        yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
         yachtController.rollDice();   // roll 1
