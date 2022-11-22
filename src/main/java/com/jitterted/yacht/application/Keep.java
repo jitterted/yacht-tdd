@@ -5,6 +5,7 @@ import com.jitterted.yacht.domain.DiceRoll;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// QUESTIONABLE: where does this belong? Feels like a Value Object
 public class Keep {
     private List<Integer> diceIndexesToKeep;
 
