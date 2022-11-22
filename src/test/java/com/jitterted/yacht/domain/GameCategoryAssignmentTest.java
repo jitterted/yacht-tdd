@@ -1,21 +1,18 @@
 package com.jitterted.yacht.domain;
 
-import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
-import com.jitterted.yacht.application.DiceRoller;
 import org.junit.jupiter.api.Test;
 
-import static com.jitterted.yacht.domain.ScoreCategory.FULLHOUSE;
 import static org.assertj.core.api.Assertions.*;
 
 public class GameCategoryAssignmentTest {
 
-    private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = FULLHOUSE;
+    private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = ScoreCategory.FULLHOUSE;
+    private static final DiceRoll DICE_ROLL_1_2_3_4_5 = DiceRoll.of(1, 2, 3, 4, 5);
 
     @Test
     public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
 
         assertThat(game.roundCompleted())
                 .isFalse();
@@ -23,9 +20,8 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -35,12 +31,11 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
 
         assertThat(game.roundCompleted())
                 .isFalse();
@@ -48,9 +43,8 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -68,10 +62,9 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void assigningToAllCategoriesEndsTheGame() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
 
-        assignRollToAllCategories(game, diceRoller);
+        assignRollToAllCategories(game);
 
         assertThat(game.isOver())
                 .isTrue();
@@ -79,11 +72,10 @@ public class GameCategoryAssignmentTest {
 
     @Test
     public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
 
         assertThatThrownBy(() -> game.assignRollTo(ARBITRARY_SCORE_CATEGORY))
                 .isInstanceOf(IllegalStateException.class);
@@ -91,19 +83,18 @@ public class GameCategoryAssignmentTest {
 
     @Test
     void assignedRollCanNotBeReAssigned() throws Exception {
-        DiceRoller diceRoller = new DiceRoller(new RandomDieRoller());
         Game game = new Game();
-        game.rollDice(diceRoller.roll());
+        game.rollDice(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ScoreCategory.FOURS);
 
         assertThatThrownBy(() -> {
-            game.assignRollTo(FULLHOUSE);
+            game.assignRollTo(ScoreCategory.FULLHOUSE);
         }).isInstanceOf(IllegalStateException.class);
     }
 
-    private void assignRollToAllCategories(Game game, DiceRoller diceRoller) {
+    private void assignRollToAllCategories(Game game) {
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            game.rollDice(diceRoller.roll());
+            game.rollDice(DICE_ROLL_1_2_3_4_5);
             game.assignRollTo(scoreCategory);
         }
     }
