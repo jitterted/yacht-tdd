@@ -2,11 +2,12 @@ package com.jitterted.yacht.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static com.jitterted.yacht.domain.ScoreCategory.FULLHOUSE;
 import static org.assertj.core.api.Assertions.*;
 
 public class GameCategoryAssignmentTest {
 
-    private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = ScoreCategory.FULLHOUSE;
+    private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = FULLHOUSE;
 
     @Test
     public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
@@ -78,6 +79,17 @@ public class GameCategoryAssignmentTest {
 
         assertThatThrownBy(() -> game.assignRollTo(ARBITRARY_SCORE_CATEGORY))
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    void assignedRollCanNotBeReAssigned() throws Exception {
+        Game game = new Game();
+        game.rollDice();
+        game.assignRollTo(ScoreCategory.FOURS);
+
+        assertThatThrownBy(() -> {
+            game.assignRollTo(FULLHOUSE);
+        }).isInstanceOf(IllegalStateException.class);
     }
 
     private void assignRollToAllCategories(Game game) {

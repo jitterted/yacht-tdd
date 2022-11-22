@@ -49,8 +49,15 @@ public class Game {
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {
+        requireRollNotYetAssigned();
         scoreboard.scoreAs(scoreCategory, lastRoll);
         roundCompleted = true;
+    }
+
+    private void requireRollNotYetAssigned() {
+        if (roundCompleted) {
+            throw new IllegalStateException();
+        }
     }
 
     public List<ScoredCategory> scoredCategories() {
