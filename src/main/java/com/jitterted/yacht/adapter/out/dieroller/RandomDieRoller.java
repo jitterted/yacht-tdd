@@ -2,6 +2,9 @@ package com.jitterted.yacht.adapter.out.dieroller;
 
 import com.jitterted.yacht.application.port.DieRoller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class RandomDieRoller implements DieRoller {
@@ -16,8 +19,8 @@ public class RandomDieRoller implements DieRoller {
         return new RandomDieRoller(new RandomWrapper());
     }
 
-    static RandomDieRoller createNull() {
-        return new RandomDieRoller(new RandomStub());
+    static RandomDieRoller createNull(Integer... values) {
+        return new RandomDieRoller(new RandomStub(values));
     }
 
     @Override
@@ -47,9 +50,27 @@ public class RandomDieRoller implements DieRoller {
     }
 
     private static class RandomStub implements RandomInt {
+        private List<Integer> values;
+
+        public RandomStub(Integer... values) {
+            this.values = new ArrayList<>(Arrays.asList(values));
+        }
+
         @Override
         public int nextInt(int bound) {
-            return 0;
+            if (values.size() == 0) {
+                return 0;
+            } else {
+                int value = values.remove(0);
+                requireWithinRange(value);
+                return value - 1;
+            }
+        }
+
+        private static void requireWithinRange(int value) {
+            if (value < 1 || value > 6) {
+                throw new IllegalArgumentException("Value was: " + value);
+            }
         }
     }
 
