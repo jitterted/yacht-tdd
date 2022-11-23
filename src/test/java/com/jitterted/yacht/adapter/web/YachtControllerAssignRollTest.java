@@ -1,6 +1,6 @@
 package com.jitterted.yacht.adapter.web;
 
-import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -31,7 +31,7 @@ public class YachtControllerAssignRollTest {
     }
 
     private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
-        RandomDieRoller dieRoller = RandomDieRoller.createNull(dies);
+        DieRoller dieRoller = DieRoller.createNull(dies);
         DiceRoller diceRoller = new DiceRoller(dieRoller);
         return new GameService(diceRoller);
     }
@@ -64,7 +64,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -76,7 +76,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -91,7 +91,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(RandomDieRoller.createNull())));
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull())));
         yachtController.startGame();
 
         Model model = new ConcurrentModel();

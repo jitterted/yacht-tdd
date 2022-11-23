@@ -1,6 +1,6 @@
 package com.jitterted.yacht.adapter.web;
 
-import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
+import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ public class YachtControllerInitialRollTest {
 
     @Test
     public void initialDiceRollReturnsRollInResultsPage() throws Exception {
-        RandomDieRoller dieRoller = RandomDieRoller.createNull(3, 1, 4, 1, 5);
+        DieRoller dieRoller = DieRoller.createNull(3, 1, 4, 1, 5);
         GameService gameService = new GameService(new DiceRoller(dieRoller));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();

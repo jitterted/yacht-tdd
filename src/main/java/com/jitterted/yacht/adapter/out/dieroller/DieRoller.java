@@ -1,29 +1,26 @@
 package com.jitterted.yacht.adapter.out.dieroller;
 
-import com.jitterted.yacht.application.port.DieRoller;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class RandomDieRoller implements DieRoller {
+public class DieRoller {
 
     private final RandomInt random;
 
-    private RandomDieRoller(RandomInt randomInt) {
+    private DieRoller(RandomInt randomInt) {
         this.random = randomInt;
     }
 
-    public static RandomDieRoller create() {
-        return new RandomDieRoller(new RandomWrapper());
+    public static DieRoller create() {
+        return new DieRoller(new RandomWrapper());
     }
 
-    public static RandomDieRoller createNull(Integer... values) {
-        return new RandomDieRoller(new RandomStub(values));
+    public static DieRoller createNull(Integer... values) {
+        return new DieRoller(new RandomStub(values));
     }
 
-    @Override
     public int roll() {
         return random.nextInt(6) + 1;
     }

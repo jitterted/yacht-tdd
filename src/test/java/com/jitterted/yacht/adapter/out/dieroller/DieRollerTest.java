@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class RandomDieRollerTest {
+class DieRollerTest {
 
     @Test
     void nullRollerReturnsOneWhenNotConfigured() throws Exception {
-        RandomDieRoller roller = RandomDieRoller.createNull();
+        DieRoller roller = DieRoller.createNull();
 
         assertThat(roller.roll())
                 .isEqualTo(1);
@@ -16,7 +16,7 @@ class RandomDieRollerTest {
 
     @Test
     void nullRollerCanBeConfiguredToReturnSpecificValues() throws Exception {
-        RandomDieRoller roller = RandomDieRoller.createNull(6, 3, 4, 3);
+        DieRoller roller = DieRoller.createNull(6, 3, 4, 3);
 
         assertThat(roller.roll())
                 .isEqualTo(6);

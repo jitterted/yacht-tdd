@@ -1,6 +1,6 @@
 package com.jitterted.yacht.application;
 
-import com.jitterted.yacht.application.port.DieRoller;
+import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.domain.DiceRoll;
 
 import java.util.ArrayList;
