@@ -4,7 +4,6 @@ import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.application.port.StubDieRoller;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -54,7 +53,7 @@ public class VueControllerTest {
 
     @Test
     public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
-        StubDieRoller dieRoller = new StubDieRoller(List.of(2, 3, 4, 5, 6));
+        RandomDieRoller dieRoller = RandomDieRoller.createNull(2, 3, 4, 5, 6);
         GameService gameService = new GameService(new DiceRoller(dieRoller));
         VueController vueController = new VueController(gameService);
 
@@ -69,7 +68,7 @@ public class VueControllerTest {
 
     @Test
     public void scoreCategoriesReturnsScoredCategories() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -83,7 +82,7 @@ public class VueControllerTest {
 
     @Test
     public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
-        StubDieRoller dieRoller = new StubDieRoller(List.of(6, 6, 5, 5, 5));
+        RandomDieRoller dieRoller = RandomDieRoller.createNull(6, 6, 5, 5, 5);
         GameService gameService = new GameService(new DiceRoller(dieRoller));
         VueController vueController = new VueController(gameService);
         vueController.startGame();

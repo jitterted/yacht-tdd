@@ -19,7 +19,7 @@ public class RandomDieRoller implements DieRoller {
         return new RandomDieRoller(new RandomWrapper());
     }
 
-    static RandomDieRoller createNull(Integer... values) {
+    public static RandomDieRoller createNull(Integer... values) {
         return new RandomDieRoller(new RandomStub(values));
     }
 

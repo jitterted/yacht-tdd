@@ -3,7 +3,6 @@ package com.jitterted.yacht.adapter.web;
 import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
-import com.jitterted.yacht.application.port.StubDieRoller;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -32,7 +31,7 @@ public class YachtControllerAssignRollTest {
     }
 
     private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
-        StubDieRoller dieRoller = new StubDieRoller(List.of(dies));
+        RandomDieRoller dieRoller = RandomDieRoller.createNull(dies);
         DiceRoller diceRoller = new DiceRoller(dieRoller);
         return new GameService(diceRoller);
     }

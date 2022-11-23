@@ -4,8 +4,6 @@ import com.jitterted.yacht.adapter.out.dieroller.RandomDieRoller;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.application.port.DieRoller;
-import com.jitterted.yacht.application.port.StubDieRoller;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -18,7 +16,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {
-        DieRoller dieRoller = new StubDieRoller(List.of(3, 1, 4, 1, 5, 3, 2, 6));
+        RandomDieRoller dieRoller = RandomDieRoller.createNull(3, 1, 4, 1, 5, 3, 2, 6);
         GameService gameService = new GameService(new DiceRoller(dieRoller));
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
