@@ -19,7 +19,7 @@ public class VueControllerTest {
 
     @Test
     public void callingStateOnNonStartedGameThrowsException() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
 
         VueController vueController = new VueController(gameService);
 
@@ -30,7 +30,7 @@ public class VueControllerTest {
 
     @Test
     public void postToStartGameStartsGame() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -41,7 +41,7 @@ public class VueControllerTest {
 
     @Test
     public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.create()));
+        GameService gameService = new GameService(new DiceRoller(RandomDieRoller.createNull()));
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
