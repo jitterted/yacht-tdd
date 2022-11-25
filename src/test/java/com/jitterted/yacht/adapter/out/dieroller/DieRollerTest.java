@@ -2,9 +2,23 @@ package com.jitterted.yacht.adapter.out.dieroller;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 class DieRollerTest {
+
+    @Test
+    void rollerRollsMultipleDice() {
+        DieRoller roller = DieRoller.createNull(5, 4, 3);
+
+        // Next? Remove DiceRoller and distribute its work to Domain and Infra
+        // and then eliminate roll()
+        List<Integer> dice = roller.rollMultiple(3);
+
+        assertThat(dice)
+                .containsExactly(5, 4, 3);
+    }
 
     @Test
     void nullRollerReturnsOneWhenNotConfigured() throws Exception {
