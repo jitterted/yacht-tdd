@@ -46,7 +46,9 @@ public class GameService {
 
     public void assignRollTo(ScoreCategory scoreCategory) {
         game.assignRollTo(scoreCategory);
-        scoreCategoryNotifier.rollAssigned(null, -1, null);
+        scoreCategoryNotifier.rollAssigned(game.lastRoll(),
+                                           game.score(),
+                                           scoreCategory);
     }
 
     public boolean isOver() {

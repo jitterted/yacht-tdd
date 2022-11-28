@@ -12,7 +12,8 @@ class GameServiceNotificationTest {
 
     @Test
     void whenRollAssignedToCategoryNotificationIsSent() throws Exception {
-        ScoreCategoryNotifierMock scoreCategoryNotifierMock = new ScoreCategoryNotifierMock();
+        ScoreCategoryNotifierMock scoreCategoryNotifierMock =
+                new ScoreCategoryNotifierMock();
 
         // GIVEN a started game and dice rolled
         DieRoller allSixesDieRoller = DieRoller.createNull(6, 6, 6, 6, 6);
@@ -33,6 +34,12 @@ class GameServiceNotificationTest {
 
         @Override
         public void rollAssigned(DiceRoll diceRoll, int score, ScoreCategory scoreCategory) {
+            assertThat(diceRoll)
+                    .isEqualTo(DiceRoll.of(6, 6, 6, 6, 6));
+            assertThat(score)
+                    .isEqualTo(30);
+            assertThat(scoreCategory)
+                    .isEqualTo(ScoreCategory.SIXES);
             rollAssigned = true;
         }
 
