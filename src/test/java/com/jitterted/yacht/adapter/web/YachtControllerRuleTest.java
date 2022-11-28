@@ -14,7 +14,8 @@ public class YachtControllerRuleTest {
 
     @Test
     public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         YachtController yachtController = new YachtController(gameService);
 
         yachtController.startGame();
@@ -25,7 +26,8 @@ public class YachtControllerRuleTest {
 
     @Test
     public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
@@ -39,7 +41,8 @@ public class YachtControllerRuleTest {
 
     @Test
     public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();

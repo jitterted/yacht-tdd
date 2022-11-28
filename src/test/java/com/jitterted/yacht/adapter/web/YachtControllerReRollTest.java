@@ -17,7 +17,8 @@ public class YachtControllerReRollTest {
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(3, 1, 4, 1, 5, 3, 2, 6);
-        GameService gameService = new GameService(new DiceRoller(dieRoller));
+        GameService gameService = new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
+        });
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
@@ -34,7 +35,8 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull())));
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        }));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
@@ -51,7 +53,8 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull())));
+        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        }));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 

@@ -19,7 +19,8 @@ public class VueControllerTest {
 
     @Test
     public void callingStateOnNonStartedGameThrowsException() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
 
         VueController vueController = new VueController(gameService);
 
@@ -30,7 +31,8 @@ public class VueControllerTest {
 
     @Test
     public void postToStartGameStartsGame() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -41,7 +43,8 @@ public class VueControllerTest {
 
     @Test
     public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -54,7 +57,8 @@ public class VueControllerTest {
     @Test
     public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(2, 3, 4, 5, 6);
-        GameService gameService = new GameService(new DiceRoller(dieRoller));
+        GameService gameService = new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
+        });
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -68,7 +72,8 @@ public class VueControllerTest {
 
     @Test
     public void scoreCategoriesReturnsScoredCategories() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()));
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
+        });
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -83,7 +88,8 @@ public class VueControllerTest {
     @Test
     public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(6, 6, 5, 5, 5);
-        GameService gameService = new GameService(new DiceRoller(dieRoller));
+        GameService gameService = new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
+        });
         VueController vueController = new VueController(gameService);
         vueController.startGame();
         vueController.rollDice();

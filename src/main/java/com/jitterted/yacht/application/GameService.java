@@ -1,5 +1,6 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -8,11 +9,15 @@ import com.jitterted.yacht.domain.ScoredCategory;
 import java.util.List;
 
 public class GameService {
-    private Game game;
+    private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final DiceRoller diceRoller;
 
-    public GameService(DiceRoller diceRoller) {
+    private Game game;
+
+    public GameService(DiceRoller diceRoller,
+                       ScoreCategoryNotifier scoreCategoryNotifier) {
         this.diceRoller = diceRoller;
+        this.scoreCategoryNotifier = scoreCategoryNotifier;
     }
 
     public void start() {
@@ -41,6 +46,7 @@ public class GameService {
 
     public void assignRollTo(ScoreCategory scoreCategory) {
         game.assignRollTo(scoreCategory);
+        scoreCategoryNotifier.rollAssigned(null, -1, null);
     }
 
     public boolean isOver() {

@@ -16,7 +16,8 @@ public class YachtControllerInitialRollTest {
     @Test
     public void initialDiceRollReturnsRollInResultsPage() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(3, 1, 4, 1, 5);
-        GameService gameService = new GameService(new DiceRoller(dieRoller));
+        GameService gameService = new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
+        });
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 

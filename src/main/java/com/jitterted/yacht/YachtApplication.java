@@ -17,7 +17,8 @@ public class YachtApplication {
     @Bean
     public GameService createGameService() {
         DieRoller dieRoller = DieRoller.create();
-        return new GameService(new DiceRoller(dieRoller));
+        return new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
+        });
     }
 
 }

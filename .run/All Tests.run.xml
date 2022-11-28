@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Tests" type="JUnit" factoryName="JUnit">
-    <module name="tdd-yacht"/>
+    <module name="yacht-tdd"/>
     <useClassPathOnly/>
     <extension name="coverage" sample_coverage="false">
       <pattern>
