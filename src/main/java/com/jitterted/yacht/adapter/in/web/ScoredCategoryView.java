@@ -24,10 +24,10 @@ public class ScoredCategoryView {
     }
 
     public static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories,
-                                                  Map<ScoreCategory, String> averages) {
+                                                  Map<ScoreCategory, Double> averages) {
         return scoredCategories.stream()
                                .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
-                               .map(scoredCategory -> from(scoredCategory, averages.get(scoredCategory.scoreCategory())))
+                               .map(scoredCategory -> from(scoredCategory, String.valueOf(averages.get(scoredCategory.scoreCategory()))))
                                .collect(Collectors.toList());
     }
 

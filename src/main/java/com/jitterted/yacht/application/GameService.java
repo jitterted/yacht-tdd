@@ -7,6 +7,7 @@ import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
 import java.util.List;
+import java.util.Map;
 
 public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
@@ -61,5 +62,9 @@ public class GameService {
 
     public int score() {
         return game.score();
+    }
+
+    public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {
+        return null;
     }
 }

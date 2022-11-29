@@ -33,11 +33,11 @@ class ScoredCategoryViewTest {
 
         List<ScoredCategoryView> scoredCategoryViews =
                 ScoredCategoryView.viewOf(scoredCategories,
-                                          Map.of(ScoreCategory.THREES, "8"));
+                                          Map.of(ScoreCategory.THREES, 8.0));
 
         assertThat(scoredCategoryViews)
                 .extracting(ScoredCategoryView::getScoreAverage)
-                .containsExactly("8");
+                .containsExactly("8.0");
     }
 
     @Test
@@ -52,14 +52,14 @@ class ScoredCategoryViewTest {
                                    10);
         List<ScoredCategory> scoredCategories = List.of(
                 scoredCategoryThrees, scoredCategoryFives);
-        Map<ScoreCategory, String> averagesMap =
-                Map.of(ScoreCategory.THREES, "9",
-                       ScoreCategory.FIVES, "10");
+        Map<ScoreCategory, Double> averagesMap =
+                Map.of(ScoreCategory.THREES, 9.0,
+                       ScoreCategory.FIVES, 10.0);
 
         List<ScoredCategoryView> scoredCategoryViews = ScoredCategoryView.viewOf(scoredCategories, averagesMap);
 
         assertThat(scoredCategoryViews)
                 .extracting(ScoredCategoryView::getScoreAverage)
-                .containsExactly("9", "10");
+                .containsExactly("9.0", "10.0");
     }
 }
