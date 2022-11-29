@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.DefaultAverageScoreFetcher;
+import com.jitterted.yacht.application.AverageScoreFetcherStub;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -35,7 +35,7 @@ public class YachtControllerAssignRollTest {
         DieRoller dieRoller = DieRoller.createNull(dies);
         DiceRoller diceRoller = new DiceRoller(dieRoller);
         return new GameService(diceRoller, (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
         GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -80,7 +80,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
         GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -96,7 +96,7 @@ public class YachtControllerAssignRollTest {
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
         YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher()));
+        }, new AverageScoreFetcherStub()));
         yachtController.startGame();
 
         Model model = new ConcurrentModel();

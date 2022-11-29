@@ -20,7 +20,7 @@ class GameServiceAverageFetcherTest {
         DiceRoller diceRoller = new DiceRoller(DieRoller.create());
         GameService gameService = new GameService(diceRoller,
                                                   NO_OP_SCORE_CATEGORY_NOTIFIER,
-                                                  new DefaultAverageScoreFetcher());
+                                                  new AverageScoreFetcherStub());
 
         assertThat(gameService.averagesFor(List.of(ScoreCategory.BIGSTRAIGHT)))
                 .containsEntry(ScoreCategory.BIGSTRAIGHT, 12.0);
@@ -31,7 +31,7 @@ class GameServiceAverageFetcherTest {
         DiceRoller diceRoller = new DiceRoller(DieRoller.create());
         GameService gameService = new GameService(diceRoller,
                                                   NO_OP_SCORE_CATEGORY_NOTIFIER,
-                                                  new DefaultAverageScoreFetcher());
+                                                  new AverageScoreFetcherStub());
 
         List<ScoreCategory> scoreCategories = List.of(ScoreCategory.BIGSTRAIGHT,
                                                       ScoreCategory.FOUROFAKIND);
@@ -40,4 +40,5 @@ class GameServiceAverageFetcherTest {
                 .containsAllEntriesOf(Map.of(ScoreCategory.BIGSTRAIGHT, 12.0,
                                              ScoreCategory.FOUROFAKIND, 20.0));
     }
+
 }

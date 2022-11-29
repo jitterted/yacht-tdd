@@ -1,8 +1,8 @@
 package com.jitterted.yacht;
 
+import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
-import com.jitterted.yacht.application.DefaultAverageScoreFetcher;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +20,8 @@ public class YachtApplication {
     public GameService createGameService() {
         DieRoller dieRoller = DieRoller.create();
         return new GameService(new DiceRoller(dieRoller),
-                               new HttpScoreCategoryNotifier(), new DefaultAverageScoreFetcher()
+                               new HttpScoreCategoryNotifier(),
+                               new HttpAverageScoreFetcher()
         );
     }
 

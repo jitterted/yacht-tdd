@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.DefaultAverageScoreFetcher;
+import com.jitterted.yacht.application.AverageScoreFetcherStub;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -16,7 +16,7 @@ public class YachtControllerRuleTest {
     @Test
     public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
         GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
 
         yachtController.startGame();
@@ -28,7 +28,7 @@ public class YachtControllerRuleTest {
     @Test
     public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
         GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
@@ -43,7 +43,7 @@ public class YachtControllerRuleTest {
     @Test
     public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
         GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new DefaultAverageScoreFetcher());
+        }, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         yachtController.rollDice();
