@@ -6,6 +6,7 @@ import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,11 @@ public class GameService {
     }
 
     public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {
-        return null;
+        Map<ScoreCategory, Double> scoreToAverageMap = new HashMap<>();
+        for (ScoreCategory scoreCategory : scoreCategories) {
+            scoreToAverageMap.put(scoreCategory, new AverageScoreFetcher().averageFor(scoreCategory));
+        }
+        return scoreToAverageMap;
     }
+
 }
