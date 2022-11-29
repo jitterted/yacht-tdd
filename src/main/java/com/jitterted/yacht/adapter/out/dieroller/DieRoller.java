@@ -3,6 +3,7 @@ package com.jitterted.yacht.adapter.out.dieroller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class DieRoller {
@@ -23,6 +24,14 @@ public class DieRoller {
 
     public int roll() {
         return random.nextInt(6) + 1;
+    }
+
+    public List<Integer> rollMultiple(int numDice) {
+        List<Integer> dice = new ArrayList<>();
+        for (int i = 0; i < numDice; i++) {
+            dice.add(roll());
+        }
+        return dice;
     }
 
 
@@ -47,7 +56,8 @@ public class DieRoller {
     }
 
     private static class RandomStub implements RandomInt {
-        private List<Integer> values;
+        private final List<Integer> values;
+        private int current = 0;
 
         public RandomStub(Integer... values) {
             this.values = new ArrayList<>(Arrays.asList(values));
@@ -55,12 +65,19 @@ public class DieRoller {
 
         @Override
         public int nextInt(int bound) {
-            if (values.size() == 0) {
+            if (values.isEmpty()) {
                 return 0;
             } else {
-                int value = values.remove(0);
+                requireHaveMoreConfiguredRolls();
+                int value = values.get(current++);
                 requireWithinRange(value);
                 return value - 1;
+            }
+        }
+
+        private void requireHaveMoreConfiguredRolls() {
+            if (current >= values.size()) {
+                throw new NoSuchElementException("No more rolls configured in Null DieRoller.");
             }
         }
 
