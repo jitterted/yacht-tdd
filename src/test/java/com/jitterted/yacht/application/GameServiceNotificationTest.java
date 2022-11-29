@@ -18,7 +18,7 @@ class GameServiceNotificationTest {
         // GIVEN a started game and dice rolled
         DieRoller allSixesDieRoller = DieRoller.createNull(6, 6, 6, 6, 6);
         GameService gameService = new GameService(new DiceRoller(allSixesDieRoller),
-                                                  scoreCategoryNotifierMock);
+                                                  scoreCategoryNotifierMock, new DefaultAverageScoreFetcher());
         gameService.start();
         gameService.rollDice();
 

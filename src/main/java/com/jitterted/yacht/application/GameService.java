@@ -1,5 +1,6 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.application.port.AverageScoreFetcher;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
@@ -13,13 +14,16 @@ import java.util.Map;
 public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final DiceRoller diceRoller;
+    private final AverageScoreFetcher averageScoreFetcher;
 
     private Game game;
 
     public GameService(DiceRoller diceRoller,
-                       ScoreCategoryNotifier scoreCategoryNotifier) {
+                       ScoreCategoryNotifier scoreCategoryNotifier,
+                       AverageScoreFetcher averageScoreFetcher) {
         this.diceRoller = diceRoller;
         this.scoreCategoryNotifier = scoreCategoryNotifier;
+        this.averageScoreFetcher = averageScoreFetcher;
     }
 
     public void start() {
@@ -68,7 +72,7 @@ public class GameService {
     public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {
         Map<ScoreCategory, Double> scoreToAverageMap = new HashMap<>();
         for (ScoreCategory scoreCategory : scoreCategories) {
-            scoreToAverageMap.put(scoreCategory, new AverageScoreFetcher().averageFor(scoreCategory));
+            scoreToAverageMap.put(scoreCategory, averageScoreFetcher.averageFor(scoreCategory));
         }
         return scoreToAverageMap;
     }
