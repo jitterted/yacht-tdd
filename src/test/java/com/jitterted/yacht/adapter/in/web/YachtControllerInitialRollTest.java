@@ -1,4 +1,4 @@
-package com.jitterted.yacht.adapter.web;
+package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.DiceRoller;

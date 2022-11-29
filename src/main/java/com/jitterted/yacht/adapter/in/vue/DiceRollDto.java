@@ -1,6 +1,6 @@
-package com.jitterted.yacht.adapter.vue;
+package com.jitterted.yacht.adapter.in.vue;
 
-import com.jitterted.yacht.adapter.web.RollView;
+import com.jitterted.yacht.adapter.in.web.RollView;
 import com.jitterted.yacht.domain.DiceRoll;
 
 import java.util.List;

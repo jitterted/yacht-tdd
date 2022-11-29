@@ -1,4 +1,4 @@
-package com.jitterted.yacht.adapter.web;
+package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.application.GameService;
 import org.junit.jupiter.api.Tag;

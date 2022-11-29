@@ -1,4 +1,4 @@
-package com.jitterted.yacht.adapter.vue;
+package com.jitterted.yacht.adapter.in.vue;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

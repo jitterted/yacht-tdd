@@ -1,4 +1,4 @@
-package com.jitterted.yacht.adapter.web;
+package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;

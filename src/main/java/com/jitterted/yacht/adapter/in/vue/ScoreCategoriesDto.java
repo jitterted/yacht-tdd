@@ -1,6 +1,6 @@
-package com.jitterted.yacht.adapter.vue;
+package com.jitterted.yacht.adapter.in.vue;
 
-import com.jitterted.yacht.adapter.web.ScoredCategoryView;
+import com.jitterted.yacht.adapter.in.web.ScoredCategoryView;
 
 import java.util.List;
 

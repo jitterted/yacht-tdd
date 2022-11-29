@@ -1,4 +1,4 @@
-package com.jitterted.yacht.adapter.vue;
+package com.jitterted.yacht.adapter.in.vue;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.DiceRoller;
