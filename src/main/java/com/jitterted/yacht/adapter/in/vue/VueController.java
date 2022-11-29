@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,9 @@ public class VueController {
     @GetMapping("score-categories")
     public ScoreCategoriesDto scoringCategories() {
         return new ScoreCategoriesDto(gameService.score(),
-                                      ScoredCategoryView.viewOf(gameService.scoredCategories()));
+                                      ScoredCategoryView.viewOf(
+                                              gameService.scoredCategories(),
+                                              Collections.emptyMap()));
     }
 
     @PostMapping(value = "assign-roll", consumes = MediaType.APPLICATION_JSON_VALUE)

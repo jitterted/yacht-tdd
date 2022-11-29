@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -73,7 +74,11 @@ public class YachtController {
     }
 
     private void addCategoriesTo(Model model) {
-        model.addAttribute("categories", ScoredCategoryView.viewOf(gameService.scoredCategories()));
+        // fetch averages for scoreCategories, pass that into ScoredCategoryView
+        model.addAttribute("categories",
+                           ScoredCategoryView.viewOf(
+                                   gameService.scoredCategories(),
+                                   Collections.emptyMap()));
     }
 
     private void addCurrentScoreTo(Model model) {

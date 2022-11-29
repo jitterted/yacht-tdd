@@ -1,9 +1,11 @@
 package com.jitterted.yacht.adapter.in.web;
 
+import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ScoredCategoryView {
@@ -13,26 +15,28 @@ public class ScoredCategoryView {
     private final String scoreAverage;
     private final boolean rollAssigned;
 
-    public static ScoredCategoryView from(ScoredCategory scoredCategory) {
+    public static ScoredCategoryView from(ScoredCategory scoredCategory, String scoreAverage) {
         return new ScoredCategoryView(scoredCategory.scoreCategory().toString(),
                                       RollView.forScoreboard(scoredCategory.diceRoll()),
                                       String.valueOf(scoredCategory.score()),
-                                      scoredCategory.isAssigned());
+                                      scoredCategory.isAssigned(),
+                                      scoreAverage);
     }
 
-    public ScoredCategoryView(String description, String diceRoll, String score, boolean rollAssigned) {
+    public static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories,
+                                                  Map<ScoreCategory, String> averages) {
+        return scoredCategories.stream()
+                               .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
+                               .map(scoredCategory -> from(scoredCategory, averages.get(scoredCategory.scoreCategory())))
+                               .collect(Collectors.toList());
+    }
+
+    public ScoredCategoryView(String description, String diceRoll, String score, boolean rollAssigned, String scoreAverage) {
         this.description = description;
         this.diceRoll = diceRoll;
         this.score = score;
-        this.scoreAverage = "";
+        this.scoreAverage = scoreAverage;
         this.rollAssigned = rollAssigned;
-    }
-
-    public static List<ScoredCategoryView> viewOf(List<ScoredCategory> scoredCategories) {
-        return scoredCategories.stream()
-                               .sorted(Comparator.comparing(ScoredCategory::scoreCategory))
-                               .map(ScoredCategoryView::from)
-                               .collect(Collectors.toList());
     }
 
     public boolean isRollAssigned() {
