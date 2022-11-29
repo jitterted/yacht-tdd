@@ -17,6 +17,7 @@ public class Game {
         roundCompleted = true;
     }
 
+    @Deprecated // this is a bad name, it's not ROLLing the dice
     public void rollDice(DiceRoll diceRoll) {
         roundCompleted = false;
         rolls = Rolls.start();

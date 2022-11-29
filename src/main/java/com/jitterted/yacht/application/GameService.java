@@ -1,5 +1,6 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.port.AverageScoreFetcher;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.DiceRoll;
@@ -7,23 +8,25 @@ import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GameService {
+    static final int YACHT_DICE_COUNT = 5;
     private final ScoreCategoryNotifier scoreCategoryNotifier;
-    private final DiceRoller diceRoller;
     private final AverageScoreFetcher averageScoreFetcher;
+    private final DieRoller dieRoller;
 
     private Game game;
 
-    public GameService(DiceRoller diceRoller,
-                       ScoreCategoryNotifier scoreCategoryNotifier,
-                       AverageScoreFetcher averageScoreFetcher) {
-        this.diceRoller = diceRoller;
+    public GameService(ScoreCategoryNotifier scoreCategoryNotifier,
+                       AverageScoreFetcher averageScoreFetcher,
+                       DieRoller dieRoller) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
+        this.dieRoller = dieRoller;
     }
 
     public void start() {
@@ -31,7 +34,8 @@ public class GameService {
     }
 
     public void rollDice() {
-        game.rollDice(diceRoller.roll());
+        DiceRoll diceRoll = DiceRoll.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
+        game.rollDice(diceRoll);
     }
 
     public DiceRoll lastRoll() {
@@ -47,7 +51,10 @@ public class GameService {
     }
 
     public void reRoll(List<Integer> keptDice) {
-        game.reRoll(diceRoller.reRoll(keptDice));
+        List<Integer> dieRolls = new ArrayList<>();
+        dieRolls.addAll(keptDice);
+        dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
+        game.reRoll(DiceRoll.from(dieRolls));
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {

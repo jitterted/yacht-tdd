@@ -2,9 +2,9 @@ package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.AverageScoreFetcherStub;
-import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
+import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -15,11 +15,16 @@ import static org.assertj.core.api.Assertions.*;
 
 public class YachtControllerReRollTest {
 
+    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
+    };
+
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(3, 1, 4, 1, 5, 3, 2, 6);
-        GameService gameService = new GameService(new DiceRoller(dieRoller), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub());
+        GameService gameService = new GameService(
+                NO_OP_SCORE_CATEGORY_NOTIFIER,
+                new AverageScoreFetcherStub(),
+                dieRoller);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
@@ -36,8 +41,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub()));
+        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub(), DieRoller.create()));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
@@ -54,8 +58,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub()));
+        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub(), DieRoller.create()));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
