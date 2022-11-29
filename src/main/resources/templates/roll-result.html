@@ -37,6 +37,7 @@
       <th>Category</th>
       <th>Roll</th>
       <th>Score</th>
+      <th>Average<br/>Score</th>
     </tr>
     <tr th:each="category : ${categories}">
       <td>
@@ -50,6 +51,7 @@
       </td>
       <td th:text="${category.diceRoll}">1 2 3 4 5</td>
       <td th:text="${category.score}">1</td>
+      <td th:text="${category.scoreAverage}">2.5</td>
     </tr>
   </table>
 </form>

@@ -10,6 +10,7 @@ public class ScoredCategoryView {
     private final String description;
     private final String diceRoll;
     private final String score;
+    private final String scoreAverage;
     private final boolean rollAssigned;
 
     public static ScoredCategoryView from(ScoredCategory scoredCategory) {
@@ -23,6 +24,7 @@ public class ScoredCategoryView {
         this.description = description;
         this.diceRoll = diceRoll;
         this.score = score;
+        this.scoreAverage = "";
         this.rollAssigned = rollAssigned;
     }
 
@@ -49,4 +51,7 @@ public class ScoredCategoryView {
         return score;
     }
 
+    public String getScoreAverage() {
+        return scoreAverage;
+    }
 }
