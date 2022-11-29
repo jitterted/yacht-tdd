@@ -3,6 +3,7 @@ package com.jitterted.yacht.adapter.in.web;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.ScoreCategory;
+import com.jitterted.yacht.domain.ScoredCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,8 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class YachtController {
@@ -74,11 +76,16 @@ public class YachtController {
     }
 
     private void addCategoriesTo(Model model) {
-        // fetch averages for scoreCategories, pass that into ScoredCategoryView
+        List<ScoredCategory> scoredCategories = gameService.scoredCategories();
+        List<ScoreCategory> scoreCategories =
+                scoredCategories.stream()
+                                .map(ScoredCategory::scoreCategory)
+                                .collect(Collectors.toList());
+        Map<ScoreCategory, Double> averages = gameService.averagesFor(scoreCategories);
         model.addAttribute("categories",
                            ScoredCategoryView.viewOf(
-                                   gameService.scoredCategories(),
-                                   Collections.emptyMap()));
+                                   scoredCategories,
+                                   averages));
     }
 
     private void addCurrentScoreTo(Model model) {

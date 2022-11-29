@@ -4,6 +4,7 @@ import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.AverageScoreFetcherStub;
 import com.jitterted.yacht.application.DiceRoller;
 import com.jitterted.yacht.application.GameService;
+import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -15,6 +16,9 @@ import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings({"unchecked", "ConstantConditions"})
 public class YachtControllerAssignRollTest {
+
+    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
+    };
 
     @Test
     public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
@@ -29,13 +33,6 @@ public class YachtControllerAssignRollTest {
         yachtController.rollResult(model);
         assertThat(model.getAttribute("score"))
                 .isEqualTo(String.valueOf(3 + 3));
-    }
-
-    private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
-        DieRoller dieRoller = DieRoller.createNull(dies);
-        DiceRoller diceRoller = new DiceRoller(dieRoller);
-        return new GameService(diceRoller, (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub());
     }
 
     @Test
@@ -66,8 +63,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub());
+        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -78,9 +74,11 @@ public class YachtControllerAssignRollTest {
     }
 
     @Test
-    public void assignRollToAllCategoriesResultsInAllCategoriesAssigned() throws Exception {
-        GameService gameService = new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub());
+    public void assignRollToAllCategoriesResultsInAllCategoriesAssignedWithAverages() throws Exception {
+        DiceRoller diceRoller = new DiceRoller(DieRoller.createNull());
+        GameService gameService = new GameService(diceRoller,
+                                                  NO_OP_SCORE_CATEGORY_NOTIFIER,
+                                                  new AverageScoreFetcherStub());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -91,12 +89,18 @@ public class YachtControllerAssignRollTest {
 
         assertThat(categories.stream().allMatch(ScoredCategoryView::isRollAssigned))
                 .isTrue();
+        assertThat(categories)
+                .extracting(ScoredCategoryView::getScoreAverage)
+                .containsOnly("12.0", "20.0");
     }
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(new DiceRoller(DieRoller.createNull()), (diceRoll, score, scoreCategory) -> {
-        }, new AverageScoreFetcherStub()));
+        DiceRoller diceRoller = new DiceRoller(DieRoller.createNull());
+        GameService gameService = new GameService(diceRoller,
+                                                  NO_OP_SCORE_CATEGORY_NOTIFIER,
+                                                  new AverageScoreFetcherStub());
+        YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
         Model model = new ConcurrentModel();
@@ -115,6 +119,12 @@ public class YachtControllerAssignRollTest {
             viewName = yachtController.assignRollToCategory(scoreCategory.toString());
         }
         return viewName;
+    }
+
+    private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
+        DieRoller dieRoller = DieRoller.createNull(dies);
+        DiceRoller diceRoller = new DiceRoller(dieRoller);
+        return new GameService(diceRoller, NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub());
     }
 
 }
