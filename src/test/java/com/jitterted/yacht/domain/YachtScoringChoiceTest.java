@@ -10,7 +10,7 @@ public class YachtScoringChoiceTest {
     public void rollOfAnythingResultsInScoreOfSumOfDice() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsChoice(DiceRoll.of(3, 5, 4, 6, 6));
+        int score = yachtScorer.scoreAsChoice(HandOfDice.of(3, 5, 4, 6, 6));
 
         assertThat(score)
                 .isEqualTo(3 + 5 + 4 + 6 + 6);

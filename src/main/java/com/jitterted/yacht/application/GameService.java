@@ -3,8 +3,8 @@ package com.jitterted.yacht.application;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.port.AverageScoreFetcher;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
-import com.jitterted.yacht.domain.DiceRoll;
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GameService {
-    static final int YACHT_DICE_COUNT = 5;
+    private static final int YACHT_DICE_COUNT = 5;
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
@@ -34,11 +34,11 @@ public class GameService {
     }
 
     public void rollDice() {
-        DiceRoll diceRoll = DiceRoll.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
-        game.rollDice(diceRoll);
+        HandOfDice handOfDice = HandOfDice.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
+        game.diceRolled(handOfDice);
     }
 
-    public DiceRoll lastRoll() {
+    public HandOfDice lastRoll() {
         return game.lastRoll();
     }
 
@@ -54,7 +54,7 @@ public class GameService {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
-        game.reRoll(DiceRoll.from(dieRolls));
+        game.diceReRolled(HandOfDice.from(dieRolls));
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {

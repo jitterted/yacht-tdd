@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ScoredCategoryView {
     private final String description;
-    private final String diceRoll;
+    private final String handOfDice;
     private final String score;
     private final String scoreAverage;
     private final boolean rollAssigned;
@@ -31,9 +31,9 @@ public class ScoredCategoryView {
                                .collect(Collectors.toList());
     }
 
-    public ScoredCategoryView(String description, String diceRoll, String score, boolean rollAssigned, String scoreAverage) {
+    public ScoredCategoryView(String description, String handOfDice, String score, boolean rollAssigned, String scoreAverage) {
         this.description = description;
-        this.diceRoll = diceRoll;
+        this.handOfDice = handOfDice;
         this.score = score;
         this.scoreAverage = scoreAverage;
         this.rollAssigned = rollAssigned;
@@ -47,8 +47,8 @@ public class ScoredCategoryView {
         return description;
     }
 
-    public String getDiceRoll() {
-        return diceRoll;
+    public String getHandOfDice() {
+        return handOfDice;
     }
 
     public String getScore() {

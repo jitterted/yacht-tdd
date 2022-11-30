@@ -1,6 +1,6 @@
 package com.jitterted.yacht.adapter.in.web;
 
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ScoredCategoryViewTest {
     public void hasOneAverageForOneScoredCategory() throws Exception {
         List<ScoredCategory> scoredCategories = List.of(
                 new ScoredCategory(ScoreCategory.THREES,
-                                   DiceRoll.of(1, 2, 3, 3, 3),
+                                   HandOfDice.of(1, 2, 3, 3, 3),
                                    9));
 
         List<ScoredCategoryView> scoredCategoryViews =
@@ -44,11 +44,11 @@ class ScoredCategoryViewTest {
     public void twoScoredCategoriesBothHaveAverageScores() throws Exception {
         ScoredCategory scoredCategoryThrees =
                 new ScoredCategory(ScoreCategory.THREES,
-                                   DiceRoll.of(1, 2, 3, 3, 3),
+                                   HandOfDice.of(1, 2, 3, 3, 3),
                                    9);
         ScoredCategory scoredCategoryFives =
                 new ScoredCategory(ScoreCategory.FIVES,
-                                   DiceRoll.of(1, 5, 5, 3, 3),
+                                   HandOfDice.of(1, 5, 5, 3, 3),
                                    10);
         List<ScoredCategory> scoredCategories = List.of(
                 scoredCategoryThrees, scoredCategoryFives);

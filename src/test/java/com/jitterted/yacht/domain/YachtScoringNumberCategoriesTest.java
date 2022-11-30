@@ -10,7 +10,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf23456ResultsInScoreOfZeroForOnesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsOnes(DiceRoll.of(2, 3, 4, 5, 6));
+        int score = yachtScorer.scoreAsOnes(HandOfDice.of(2, 3, 4, 5, 6));
 
         assertThat(score)
                 .isZero();
@@ -20,7 +20,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf12345ResultsInScoreOf1ForOnesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsOnes(DiceRoll.of(1, 2, 3, 4, 5));
+        int score = yachtScorer.scoreAsOnes(HandOfDice.of(1, 2, 3, 4, 5));
 
         assertThat(score)
                 .isEqualTo(1);
@@ -30,7 +30,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf11111ResultsInScoreOf5ForOnesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsOnes(DiceRoll.of(1, 1, 1, 1, 1));
+        int score = yachtScorer.scoreAsOnes(HandOfDice.of(1, 1, 1, 1, 1));
 
         assertThat(score)
                 .isEqualTo(5);
@@ -40,7 +40,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf12346Scores0ForFivesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsFives(DiceRoll.of(1, 2, 3, 4, 6));
+        int score = yachtScorer.scoreAsFives(HandOfDice.of(1, 2, 3, 4, 6));
 
         assertThat(score)
                 .isZero();
@@ -50,7 +50,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf13336Scores9ForThreesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsThrees(DiceRoll.of(1, 3, 3, 3, 6));
+        int score = yachtScorer.scoreAsThrees(HandOfDice.of(1, 3, 3, 3, 6));
 
         assertThat(score)
                 .isEqualTo(9);
@@ -60,7 +60,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf12556Scores10ForFivesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsFives(DiceRoll.of(1, 2, 5, 5, 6));
+        int score = yachtScorer.scoreAsFives(HandOfDice.of(1, 2, 5, 5, 6));
 
         assertThat(score)
                 .isEqualTo(10);
@@ -70,7 +70,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf22345Scores4ForTwosCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsTwos(DiceRoll.of(2, 2, 3, 4, 5));
+        int score = yachtScorer.scoreAsTwos(HandOfDice.of(2, 2, 3, 4, 5));
 
         assertThat(score)
                 .isEqualTo(2 + 2);
@@ -80,7 +80,7 @@ public class YachtScoringNumberCategoriesTest {
     public void rollOf66644Scores18ForSixesCategory() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsSixes(DiceRoll.of(6, 6, 6, 4, 4));
+        int score = yachtScorer.scoreAsSixes(HandOfDice.of(6, 6, 6, 4, 4));
 
         assertThat(score)
                 .isEqualTo(6 + 6 + 6);
@@ -90,8 +90,8 @@ public class YachtScoringNumberCategoriesTest {
     public void oldScoreForFoursIsSameAsDiceRollBasedScore() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int diceRollScore = yachtScorer.scoreAsFours(DiceRoll.of(5, 5, 4, 4, 4));
-        int score = yachtScorer.scoreAsFours(DiceRoll.of(5, 5, 4, 4, 4));
+        int diceRollScore = yachtScorer.scoreAsFours(HandOfDice.of(5, 5, 4, 4, 4));
+        int score = yachtScorer.scoreAsFours(HandOfDice.of(5, 5, 4, 4, 4));
 
         assertThat(diceRollScore)
                 .isEqualTo(score);

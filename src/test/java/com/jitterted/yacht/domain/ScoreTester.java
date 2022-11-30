@@ -22,26 +22,26 @@ class ScoreTester {
         fourOfAKind.assertAll();
     }
 
-    private final Function<DiceRoll, Integer> scorer;
+    private final Function<HandOfDice, Integer> scorer;
     private final SoftAssertions softAssertions = new SoftAssertions();
-    private DiceRoll diceRoll;
+    private HandOfDice handOfDice;
 
-    public ScoreTester(Function<DiceRoll, Integer> scorer) {
+    public ScoreTester(Function<HandOfDice, Integer> scorer) {
         this.scorer = scorer;
     }
 
-    public static ScoreTester using(Function<DiceRoll, Integer> scorer) {
+    public static ScoreTester using(Function<HandOfDice, Integer> scorer) {
         return new ScoreTester(scorer);
     }
 
     public ScoreTester diceRollOf(int i, int i1, int i2, int i3, int i4) {
-        this.diceRoll = DiceRoll.of(i, i1, i2, i3, i4);
+        this.handOfDice = HandOfDice.of(i, i1, i2, i3, i4);
         return this;
     }
 
     public void scoresAs(int... values) {
         int sum = Arrays.stream(values).sum();
-        softAssertions.assertThat(scorer.apply(diceRoll))
+        softAssertions.assertThat(scorer.apply(handOfDice))
                       .isEqualTo(sum);
     }
 

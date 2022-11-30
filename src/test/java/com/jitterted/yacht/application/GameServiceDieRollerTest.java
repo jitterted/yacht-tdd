@@ -8,7 +8,7 @@ public class GameServiceDieRollerTest {
 //        DiceRoller diceRoller = new DiceRoller(dieRoller);
 //
 //        assertThat(diceRoller.roll())
-//                .isEqualTo(DiceRoll.of(5, 1, 4, 2, 3));
+//                .isEqualTo(HandOfDice.of(5, 1, 4, 2, 3));
 //    }
 //
 //    @Test
@@ -17,10 +17,10 @@ public class GameServiceDieRollerTest {
 //        DiceRoller diceRoller = new DiceRoller(dieRoller);
 //        List<Integer> keptDice = List.of(3, 3);
 //
-//        DiceRoll diceRoll = diceRoller.reRoll(keptDice);
+//        HandOfDice diceRoll = diceRoller.reRoll(keptDice);
 //
 //        assertThat(diceRoll)
-//                .isEqualTo(DiceRoll.of(3, 3, 1, 2, 5));
+//                .isEqualTo(HandOfDice.of(3, 3, 1, 2, 5));
 //    }
 //
 //    @Test
@@ -28,9 +28,9 @@ public class GameServiceDieRollerTest {
 //        DiceRoller diceRoller = new DiceRoller(DieRoller.createNull(4));
 //        List<Integer> keptDice = List.of(1, 1, 2, 2);
 //
-//        DiceRoll diceRoll = diceRoller.reRoll(keptDice);
+//        HandOfDice diceRoll = diceRoller.reRoll(keptDice);
 //
 //        assertThat(diceRoll)
-//                .isEqualTo(DiceRoll.of(1, 1, 2, 2, 4));
+//                .isEqualTo(HandOfDice.of(1, 1, 2, 2, 4));
 //    }
 }

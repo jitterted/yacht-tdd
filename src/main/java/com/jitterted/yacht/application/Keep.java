@@ -1,6 +1,6 @@
 package com.jitterted.yacht.application;
 
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +17,9 @@ public class Keep {
         this.diceIndexesToKeep = diceIndexesToKeep;
     }
 
-    public List<Integer> diceValuesFrom(DiceRoll diceRoll) {
+    public List<Integer> diceValuesFrom(HandOfDice handOfDice) {
         return diceIndexesToKeep.stream()
-                                .map(diceRoll::get)
+                                .map(handOfDice::get)
                                 .collect(Collectors.toList());
     }
 }

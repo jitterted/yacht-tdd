@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.out.scorecategory;
 
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,11 +16,11 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
 
 
     @Override
-    public void rollAssigned(DiceRoll diceRoll,
+    public void rollAssigned(HandOfDice handOfDice,
                              int score,
                              ScoreCategory scoreCategory) {
         RollAssignedToCategory rollAssignedToCategory =
-                RollAssignedToCategory.from(diceRoll, score,
+                RollAssignedToCategory.from(handOfDice, score,
                                             scoreCategory);
 
         restTemplate.postForEntity(YACHT_TRACKER_API_URI,
@@ -39,12 +39,12 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
             this.category = category;
         }
 
-        private static RollAssignedToCategory from(DiceRoll diceRoll,
+        private static RollAssignedToCategory from(HandOfDice handOfDice,
                                                    int score,
                                                    ScoreCategory scoreCategory) {
-            String rollString = diceRoll.stream()
-                                        .map(Object::toString)
-                                        .collect(Collectors.joining(" "));
+            String rollString = handOfDice.stream()
+                                          .map(Object::toString)
+                                          .collect(Collectors.joining(" "));
             String scoreString = String.valueOf(score);
             String categoryString = scoreCategory.toString();
             return new RollAssignedToCategory(rollString,

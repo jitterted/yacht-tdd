@@ -6,28 +6,27 @@ public class Game {
 
     private final Scoreboard scoreboard = new Scoreboard();
 
-    private DiceRoll lastRoll;
+    private HandOfDice lastRoll;
 
     private Rolls rolls = Rolls.start();
 
     private boolean roundCompleted;
 
     public Game() {
-        lastRoll = DiceRoll.empty();
+        lastRoll = HandOfDice.empty();
         roundCompleted = true;
     }
 
-    @Deprecated // this is a bad name, it's not ROLLing the dice
-    public void rollDice(DiceRoll diceRoll) {
+    public void diceRolled(HandOfDice handOfDice) {
         roundCompleted = false;
         rolls = Rolls.start();
-        lastRoll = diceRoll;
+        lastRoll = handOfDice;
     }
 
-    public void reRoll(DiceRoll diceRoll) {
+    public void diceReRolled(HandOfDice handOfDice) {
         requireRerollsRemaining();
         rolls.increment();
-        lastRoll = diceRoll;
+        lastRoll = handOfDice;
     }
 
     private void requireRerollsRemaining() {
@@ -36,7 +35,7 @@ public class Game {
         }
     }
 
-    public DiceRoll lastRoll() {
+    public HandOfDice lastRoll() {
         return lastRoll;
     }
 

@@ -26,8 +26,8 @@ public class ScoreboardCategoryTest {
     public void scoreboardWithAssignedCategoryIsNotEmpty() throws Exception {
         Scoreboard scoreboard = new Scoreboard();
 
-        DiceRoll diceRoll = DiceRoll.of(4, 4, 4, 3, 4);
-        scoreboard.scoreAs(ScoreCategory.FOURS, diceRoll);
+        HandOfDice handOfDice = HandOfDice.of(4, 4, 4, 3, 4);
+        scoreboard.scoreAs(ScoreCategory.FOURS, handOfDice);
 
         assertThat(scoreboard.isEmpty())
                 .isFalse();
@@ -37,26 +37,26 @@ public class ScoreboardCategoryTest {
     public void assignSingleRollToScoreboardReturnsScoreForThatCategory() throws Exception {
         Scoreboard scoreboard = new Scoreboard();
 
-        DiceRoll diceRoll = DiceRoll.of(6, 4, 4, 3, 4);
-        scoreboard.scoreAs(ScoreCategory.FOURS, diceRoll);
+        HandOfDice handOfDice = HandOfDice.of(6, 4, 4, 3, 4);
+        scoreboard.scoreAs(ScoreCategory.FOURS, handOfDice);
 
         assertThat(scoreboard.scoredCategories())
-                .contains(new ScoredCategory(ScoreCategory.FOURS, DiceRoll.of(6, 4, 4, 3, 4), 12));
+                .contains(new ScoredCategory(ScoreCategory.FOURS, HandOfDice.of(6, 4, 4, 3, 4), 12));
     }
 
     @Test
     public void assignTwoRollsToSeparateCategoriesReturnsTwoScoredCategories() throws Exception {
         Scoreboard scoreboard = new Scoreboard();
 
-        DiceRoll diceRollSixes = DiceRoll.of(6, 4, 4, 3, 4);
-        scoreboard.scoreAs(ScoreCategory.SIXES, diceRollSixes);
-        DiceRoll diceRollFives = DiceRoll.of(5, 4, 5, 3, 4);
-        scoreboard.scoreAs(ScoreCategory.FIVES, diceRollFives);
+        HandOfDice handOfDiceSixes = HandOfDice.of(6, 4, 4, 3, 4);
+        scoreboard.scoreAs(ScoreCategory.SIXES, handOfDiceSixes);
+        HandOfDice handOfDiceFives = HandOfDice.of(5, 4, 5, 3, 4);
+        scoreboard.scoreAs(ScoreCategory.FIVES, handOfDiceFives);
 
         assertThat(scoreboard.scoredCategories())
                 .contains(
-                        new ScoredCategory(ScoreCategory.SIXES, diceRollSixes, 6),
-                        new ScoredCategory(ScoreCategory.FIVES, diceRollFives, 10));
+                        new ScoredCategory(ScoreCategory.SIXES, handOfDiceSixes, 6),
+                        new ScoredCategory(ScoreCategory.FIVES, handOfDiceFives, 10));
     }
 
 }

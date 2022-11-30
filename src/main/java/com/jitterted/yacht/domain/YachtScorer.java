@@ -6,34 +6,34 @@ import java.util.stream.Collectors;
 
 public class YachtScorer {
 
-    private static final DiceRoll LITTLE_STRAIGHT = DiceRoll.of(1, 2, 3, 4, 5);
-    private static final DiceRoll BIG_STRAIGHT = DiceRoll.of(2, 3, 4, 5, 6);
+    private static final HandOfDice LITTLE_STRAIGHT = HandOfDice.of(1, 2, 3, 4, 5);
+    private static final HandOfDice BIG_STRAIGHT = HandOfDice.of(2, 3, 4, 5, 6);
 
-    public int scoreAsOnes(DiceRoll roll) {
+    public int scoreAsOnes(HandOfDice roll) {
         return calculateScore(roll, 1);
     }
 
-    public int scoreAsTwos(DiceRoll roll) {
+    public int scoreAsTwos(HandOfDice roll) {
         return calculateScore(roll, 2);
     }
 
-    public int scoreAsThrees(DiceRoll roll) {
+    public int scoreAsThrees(HandOfDice roll) {
         return calculateScore(roll, 3);
     }
 
-    public int scoreAsFours(DiceRoll roll) {
+    public int scoreAsFours(HandOfDice roll) {
         return calculateScore(roll, 4);
     }
 
-    public int scoreAsFives(DiceRoll roll) {
+    public int scoreAsFives(HandOfDice roll) {
         return calculateScore(roll, 5);
     }
 
-    public int scoreAsSixes(DiceRoll roll) {
+    public int scoreAsSixes(HandOfDice roll) {
         return calculateScore(roll, 6);
     }
 
-    public int scoreAsFullHouse(DiceRoll roll) {
+    public int scoreAsFullHouse(HandOfDice roll) {
         if (!isValidFullHouse(roll)) {
             return 0;
         }
@@ -44,7 +44,7 @@ public class YachtScorer {
                    .sum();
     }
 
-    private boolean isValidFullHouse(DiceRoll roll) {
+    private boolean isValidFullHouse(HandOfDice roll) {
         var dieToCountMap = createDieToCountMap(roll);
 
         long numberOfDiceOccurringTwoOrThreeTimes = countForDieOccurringTwoOrThreeTimes(dieToCountMap);
@@ -53,7 +53,7 @@ public class YachtScorer {
                 && numberOfDiceOccurringTwoOrThreeTimes == 2;
     }
 
-    private Map<Integer, Long> createDieToCountMap(DiceRoll roll) {
+    private Map<Integer, Long> createDieToCountMap(HandOfDice roll) {
         return roll.stream()
                    .collect(
                            Collectors.groupingBy(
@@ -78,36 +78,36 @@ public class YachtScorer {
         return e.getValue() == 2 || e.getValue() == 3;
     }
 
-    private int calculateScore(DiceRoll dice, int scoreCategory) {
+    private int calculateScore(HandOfDice dice, int scoreCategory) {
         return dice.countFor(scoreCategory) * scoreCategory;
     }
 
-    public int scoreAsFourOfAKind(DiceRoll diceRoll) {
-        return calculateScoreOfAKind(diceRoll, 4);
+    public int scoreAsFourOfAKind(HandOfDice handOfDice) {
+        return calculateScoreOfAKind(handOfDice, 4);
     }
 
-    public int scoreAsYacht(DiceRoll diceRoll) {
-        return calculateScoreOfAKind(diceRoll, 5);
+    public int scoreAsYacht(HandOfDice handOfDice) {
+        return calculateScoreOfAKind(handOfDice, 5);
     }
 
-    private int calculateScoreOfAKind(DiceRoll diceRoll, int kind) {
-        return createDieToCountMap(diceRoll).entrySet()
-                                            .stream()
-                                            .filter(die -> occursAtLeast(kind, die))
-                                            .mapToInt(die -> multiply(kind, die))
-                                            .sum();
+    private int calculateScoreOfAKind(HandOfDice handOfDice, int kind) {
+        return createDieToCountMap(handOfDice).entrySet()
+                                              .stream()
+                                              .filter(die -> occursAtLeast(kind, die))
+                                              .mapToInt(die -> multiply(kind, die))
+                                              .sum();
     }
 
-    public int scoreAsLittleStraight(DiceRoll diceRoll) {
-        return diceRoll.equals(LITTLE_STRAIGHT) ? 30 : 0;
+    public int scoreAsLittleStraight(HandOfDice handOfDice) {
+        return handOfDice.equals(LITTLE_STRAIGHT) ? 30 : 0;
     }
 
-    public int scoreAsBigStraight(DiceRoll diceRoll) {
-        return diceRoll.equals(BIG_STRAIGHT) ? 30 : 0;
+    public int scoreAsBigStraight(HandOfDice handOfDice) {
+        return handOfDice.equals(BIG_STRAIGHT) ? 30 : 0;
     }
 
-    public int scoreAsChoice(DiceRoll diceRoll) {
-        return diceRoll.stream().mapToInt(Integer::intValue).sum();
+    public int scoreAsChoice(HandOfDice handOfDice) {
+        return handOfDice.stream().mapToInt(Integer::intValue).sum();
     }
 
     private int multiply(int kind, Map.Entry<Integer, Long> die) {

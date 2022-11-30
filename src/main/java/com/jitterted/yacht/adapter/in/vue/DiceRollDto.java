@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.vue;
 
 import com.jitterted.yacht.adapter.in.web.RollView;
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ public class DiceRollDto {
         this.roll = roll;
     }
 
-    public static DiceRollDto from(DiceRoll diceRoll) {
-        return new DiceRollDto(RollView.listOf(diceRoll));
+    public static DiceRollDto from(HandOfDice handOfDice) {
+        return new DiceRollDto(RollView.listOf(handOfDice));
     }
 
     public List<Integer> getRoll() {

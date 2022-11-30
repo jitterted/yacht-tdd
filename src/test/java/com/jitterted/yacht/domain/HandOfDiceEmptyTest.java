@@ -4,21 +4,21 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class DiceRollEmptyTest {
+public class HandOfDiceEmptyTest {
 
     @Test
     public void nonEmptyDiceRollIsNotEmpty() throws Exception {
-        DiceRoll diceRoll = DiceRoll.of(1, 2, 3, 4, 5);
+        HandOfDice handOfDice = HandOfDice.of(1, 2, 3, 4, 5);
 
-        assertThat(diceRoll.isEmpty())
+        assertThat(handOfDice.isEmpty())
                 .isFalse();
     }
 
     @Test
     public void emptyDiceRollIsEmpty() throws Exception {
-        DiceRoll diceRoll = DiceRoll.empty();
+        HandOfDice handOfDice = HandOfDice.empty();
 
-        assertThat(diceRoll.isEmpty())
+        assertThat(handOfDice.isEmpty())
                 .isTrue();
     }
 

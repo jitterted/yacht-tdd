@@ -18,10 +18,10 @@ public class GameTest {
     public void lastRollReturnsValueOfMostRecentRollDice() throws Exception {
         Game game = new Game();
 
-        game.rollDice(DiceRoll.of(2, 3, 4, 5, 6));
+        game.diceRolled(HandOfDice.of(2, 3, 4, 5, 6));
 
         assertThat(game.lastRoll())
-                .isEqualTo(DiceRoll.of(2, 3, 4, 5, 6));
+                .isEqualTo(HandOfDice.of(2, 3, 4, 5, 6));
     }
 
 }

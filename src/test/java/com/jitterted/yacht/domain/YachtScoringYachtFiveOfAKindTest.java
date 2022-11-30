@@ -10,7 +10,7 @@ public class YachtScoringYachtFiveOfAKindTest {
     public void rollOf55556ScoresAs0() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsYacht(DiceRoll.of(5, 5, 5, 5, 6));
+        int score = yachtScorer.scoreAsYacht(HandOfDice.of(5, 5, 5, 5, 6));
 
         assertThat(score)
                 .isZero();
@@ -20,7 +20,7 @@ public class YachtScoringYachtFiveOfAKindTest {
     public void rollOf55555ScoresAs25() throws Exception {
         YachtScorer yachtScorer = new YachtScorer();
 
-        int score = yachtScorer.scoreAsYacht(DiceRoll.of(5, 5, 5, 5, 5));
+        int score = yachtScorer.scoreAsYacht(HandOfDice.of(5, 5, 5, 5, 5));
 
         assertThat(score)
                 .isEqualTo(5 + 5 + 5 + 5 + 5);

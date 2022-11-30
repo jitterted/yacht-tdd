@@ -2,7 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
@@ -35,9 +35,9 @@ class GameServiceNotificationTest {
         private boolean rollAssigned;
 
         @Override
-        public void rollAssigned(DiceRoll diceRoll, int score, ScoreCategory scoreCategory) {
-            assertThat(diceRoll)
-                    .isEqualTo(DiceRoll.of(6, 6, 6, 6, 6));
+        public void rollAssigned(HandOfDice handOfDice, int score, ScoreCategory scoreCategory) {
+            assertThat(handOfDice)
+                    .isEqualTo(HandOfDice.of(6, 6, 6, 6, 6));
             assertThat(score)
                     .isEqualTo(30);
             assertThat(scoreCategory)

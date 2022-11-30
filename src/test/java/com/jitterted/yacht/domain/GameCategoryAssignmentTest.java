@@ -7,12 +7,12 @@ import static org.assertj.core.api.Assertions.*;
 public class GameCategoryAssignmentTest {
 
     private static final ScoreCategory ARBITRARY_SCORE_CATEGORY = ScoreCategory.FULLHOUSE;
-    private static final DiceRoll DICE_ROLL_1_2_3_4_5 = DiceRoll.of(1, 2, 3, 4, 5);
+    private static final HandOfDice DICE_ROLL_1_2_3_4_5 = HandOfDice.of(1, 2, 3, 4, 5);
 
     @Test
     public void newRollThenLastRollIsNotYetAssignedToCategory() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
         assertThat(game.roundCompleted())
                 .isFalse();
@@ -21,7 +21,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollWhenAssignedThenRollIsAssignedToCategory() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -32,10 +32,10 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
         assertThat(game.roundCompleted())
                 .isFalse();
@@ -44,7 +44,7 @@ public class GameCategoryAssignmentTest {
     @Test
     public void newRollAfterAssignmentThenShouldNotBeAbleToReRoll() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
 
@@ -73,9 +73,9 @@ public class GameCategoryAssignmentTest {
     @Test
     public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
         assertThatThrownBy(() -> game.assignRollTo(ARBITRARY_SCORE_CATEGORY))
                 .isInstanceOf(IllegalStateException.class);
@@ -84,7 +84,7 @@ public class GameCategoryAssignmentTest {
     @Test
     void assignedRollCanNotBeReAssigned() throws Exception {
         Game game = new Game();
-        game.rollDice(DICE_ROLL_1_2_3_4_5);
+        game.diceRolled(DICE_ROLL_1_2_3_4_5);
         game.assignRollTo(ScoreCategory.FOURS);
 
         assertThatThrownBy(() -> {
@@ -94,7 +94,7 @@ public class GameCategoryAssignmentTest {
 
     private void assignRollToAllCategories(Game game) {
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            game.rollDice(DICE_ROLL_1_2_3_4_5);
+            game.diceRolled(DICE_ROLL_1_2_3_4_5);
             game.assignRollTo(scoreCategory);
         }
     }

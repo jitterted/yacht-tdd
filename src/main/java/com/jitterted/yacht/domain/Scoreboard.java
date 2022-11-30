@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class Scoreboard {
 
-    private final Map<ScoreCategory, Function<DiceRoll, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
+    private final Map<ScoreCategory, Function<HandOfDice, Integer>> scorerMap = new EnumMap<>(ScoreCategory.class);
 
     private final Map<ScoreCategory, ScoredCategory> scoredCategoryMap = new HashMap<>();
 
@@ -50,12 +50,12 @@ public class Scoreboard {
                 .sum();
     }
 
-    public void scoreAs(ScoreCategory scoreCategory, DiceRoll diceRoll) {
+    public void scoreAs(ScoreCategory scoreCategory, HandOfDice handOfDice) {
         checkCategoryUnassigned(scoreCategory);
         scoredCategoryMap.put(scoreCategory,
                               new ScoredCategory(scoreCategory,
-                                                 diceRoll,
-                                                 scorerMap.get(scoreCategory).apply(diceRoll)));
+                                                 handOfDice,
+                                                 scorerMap.get(scoreCategory).apply(handOfDice)));
     }
 
     public List<ScoredCategory> scoredCategories() {

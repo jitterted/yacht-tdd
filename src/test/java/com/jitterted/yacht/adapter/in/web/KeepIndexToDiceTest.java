@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.domain.DiceRoll;
+import com.jitterted.yacht.domain.HandOfDice;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -15,9 +15,9 @@ public class KeepIndexToDiceTest {
     public void diceIndexesTranslatedToDiceValues() throws Exception {
         Keep keep = new Keep();
         keep.setDiceIndexesToKeep(List.of(0, 4));
-        DiceRoll diceRoll = DiceRoll.of(4, 2, 6, 3, 4);
+        HandOfDice handOfDice = HandOfDice.of(4, 2, 6, 3, 4);
 
-        List<Integer> diceValues = keep.diceValuesFrom(diceRoll);
+        List<Integer> diceValues = keep.diceValuesFrom(handOfDice);
 
         assertThat(diceValues)
                 .containsExactlyInAnyOrder(4, 4);
@@ -27,9 +27,9 @@ public class KeepIndexToDiceTest {
     public void emptyDiceIndexesTranslatesToEmptyList() throws Exception {
         Keep keep = new Keep();
         keep.setDiceIndexesToKeep(Collections.emptyList());
-        DiceRoll diceRoll = DiceRoll.of(4, 2, 6, 3, 4);
+        HandOfDice handOfDice = HandOfDice.of(4, 2, 6, 3, 4);
 
-        List<Integer> diceValues = keep.diceValuesFrom(diceRoll);
+        List<Integer> diceValues = keep.diceValuesFrom(handOfDice);
 
         assertThat(diceValues)
                 .isEmpty();

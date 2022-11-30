@@ -2,25 +2,25 @@ package com.jitterted.yacht.domain;
 
 public class ScoredCategory {
     private final ScoreCategory scoreCategory;
-    private final DiceRoll diceRoll;
+    private final HandOfDice handOfDice;
     private final int score;
 
-    public ScoredCategory(ScoreCategory scoreCategory, DiceRoll diceRoll, int score) {
+    public ScoredCategory(ScoreCategory scoreCategory, HandOfDice handOfDice, int score) {
         this.scoreCategory = scoreCategory;
-        this.diceRoll = diceRoll;
+        this.handOfDice = handOfDice;
         this.score = score;
     }
 
     public static ScoredCategory createUnassignedScoredCategoryFor(ScoreCategory scoreCategory) {
-        return new ScoredCategory(scoreCategory, DiceRoll.empty(), 0);
+        return new ScoredCategory(scoreCategory, HandOfDice.empty(), 0);
     }
 
     public ScoreCategory scoreCategory() {
         return scoreCategory;
     }
 
-    public DiceRoll diceRoll() {
-        return diceRoll;
+    public HandOfDice diceRoll() {
+        return handOfDice;
     }
 
     public int score() {
@@ -48,13 +48,13 @@ public class ScoredCategory {
         if (scoreCategory != that.scoreCategory) {
             return false;
         }
-        return diceRoll.equals(that.diceRoll);
+        return handOfDice.equals(that.handOfDice);
     }
 
     @Override
     public int hashCode() {
         int result = scoreCategory.hashCode();
-        result = 31 * result + diceRoll.hashCode();
+        result = 31 * result + handOfDice.hashCode();
         result = 31 * result + score;
         return result;
     }
@@ -63,7 +63,7 @@ public class ScoredCategory {
     public String toString() {
         return "ScoredCategory: " +
                 "scoreCategory=" + scoreCategory +
-                ", diceRoll=" + diceRoll +
+                ", handOfDice=" + handOfDice +
                 ", score=" + score;
     }
 }
