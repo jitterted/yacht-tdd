@@ -19,7 +19,7 @@ class GameServiceAverageFetcherTest {
     void fetchesAverageForOneScoredCategory() {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.create());
+                new AverageScoreFetcherStub(), DieRoller.createNull());
 
         assertThat(gameService.averagesFor(List.of(ScoreCategory.BIGSTRAIGHT)))
                 .containsEntry(ScoreCategory.BIGSTRAIGHT, 12.0);
@@ -29,7 +29,7 @@ class GameServiceAverageFetcherTest {
     void fetchesAveragesForTwoScoredCategories() {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.create());
+                new AverageScoreFetcherStub(), DieRoller.createNull());
 
         List<ScoreCategory> scoreCategories = List.of(ScoreCategory.BIGSTRAIGHT,
                                                       ScoreCategory.FOUROFAKIND);

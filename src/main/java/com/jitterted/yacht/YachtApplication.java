@@ -19,7 +19,7 @@ public class YachtApplication {
     public GameService createGameService() {
         return new GameService(
                 new HttpScoreCategoryNotifier(),
-                new HttpAverageScoreFetcher(),
+                HttpAverageScoreFetcher.create(),
                 DieRoller.create()
         );
     }
