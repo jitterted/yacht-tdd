@@ -5,6 +5,9 @@ import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 public class HttpAverageScoreFetcher implements AverageScoreFetcher {
     private static final String YACHT_AVERAGE_API_URI =
             "http://localhost:8080/api/averages?scoreCategory={scoreCategory}";
@@ -17,6 +20,10 @@ public class HttpAverageScoreFetcher implements AverageScoreFetcher {
 
     public static HttpAverageScoreFetcher createNull() {
         return new HttpAverageScoreFetcher(new StubbedRestTemplate());
+    }
+
+    public static HttpAverageScoreFetcher createNull(Map<ScoreCategory, Double> map) {
+        return new HttpAverageScoreFetcher(new StubbedRestTemplate(map));
     }
 
     private HttpAverageScoreFetcher(RestTemplateWrapper restTemplate) {
@@ -53,9 +60,32 @@ public class HttpAverageScoreFetcher implements AverageScoreFetcher {
     }
 
     private static class StubbedRestTemplate implements RestTemplateWrapper {
+        private Map<ScoreCategory, Double> map;
+
+        public StubbedRestTemplate() {
+        }
+
+        public StubbedRestTemplate(Map<ScoreCategory, Double> map) {
+            this.map = map;
+        }
+
         @Override
         public <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables) {
-            return new StubbedResponseEntity<>();
+            if (map == null) {
+                return new StubbedResponseEntity<>(42.0);
+            }
+
+            String categoryString = (String) uriVariables[0];
+            ScoreCategory scoreCategory = ScoreCategory.valueOf(categoryString);
+            requireAverageFor(scoreCategory);
+
+            return new StubbedResponseEntity<>(map.get(scoreCategory));
+        }
+
+        private void requireAverageFor(ScoreCategory scoreCategory) {
+            if (!map.containsKey(scoreCategory)) {
+                throw new NoSuchElementException("No average configured for " + scoreCategory + " in Null HttpAverageScoreFetcher.");
+            }
         }
     }
 
@@ -77,9 +107,15 @@ public class HttpAverageScoreFetcher implements AverageScoreFetcher {
 
     private static class StubbedResponseEntity<T> implements ResponseEntityWrapper<T> {
 
+        private double average;
+
+        public StubbedResponseEntity(double average) {
+            this.average = average;
+        }
+
         @Override
         public T getBody() {
-            return (T) new CategoryAverage("Null Category", 42.0);
+            return (T) new CategoryAverage("Null Category", average);
         }
     }
 }
