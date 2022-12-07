@@ -1,6 +1,5 @@
 package com.jitterted.yacht.adapter.out.averagescore;
 
-import com.jitterted.yacht.application.port.AverageScoreFetcher;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -8,29 +7,28 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class HttpAverageScoreFetcher implements AverageScoreFetcher {
+public class AverageScoreFetcher {
     private static final String YACHT_AVERAGE_API_URI =
             "http://localhost:8080/api/averages?scoreCategory={scoreCategory}";
 
     private final RestTemplateWrapper restTemplate;
 
-    public static HttpAverageScoreFetcher create() {
-        return new HttpAverageScoreFetcher(new RealRestTemplate());
+    public static AverageScoreFetcher create() {
+        return new AverageScoreFetcher(new RealRestTemplate());
     }
 
-    public static HttpAverageScoreFetcher createNull() {
-        return new HttpAverageScoreFetcher(new StubbedRestTemplate());
+    public static AverageScoreFetcher createNull() {
+        return new AverageScoreFetcher(new StubbedRestTemplate());
     }
 
-    public static HttpAverageScoreFetcher createNull(Map<ScoreCategory, Double> map) {
-        return new HttpAverageScoreFetcher(new StubbedRestTemplate(map));
+    public static AverageScoreFetcher createNull(Map<ScoreCategory, Double> map) {
+        return new AverageScoreFetcher(new StubbedRestTemplate(map));
     }
 
-    private HttpAverageScoreFetcher(RestTemplateWrapper restTemplate) {
+    private AverageScoreFetcher(RestTemplateWrapper restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    @Override
     public double averageFor(ScoreCategory scoreCategory) {
         ResponseEntityWrapper<CategoryAverage> entity =
                 restTemplate.getForEntity(YACHT_AVERAGE_API_URI,
@@ -84,7 +82,7 @@ public class HttpAverageScoreFetcher implements AverageScoreFetcher {
 
         private void requireAverageFor(ScoreCategory scoreCategory) {
             if (!map.containsKey(scoreCategory)) {
-                throw new NoSuchElementException("No average configured for " + scoreCategory + " in Null HttpAverageScoreFetcher.");
+                throw new NoSuchElementException("No average configured for " + scoreCategory + " in Null AverageScoreFetcher.");
             }
         }
     }

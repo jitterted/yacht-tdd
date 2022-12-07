@@ -1,6 +1,6 @@
 package com.jitterted.yacht.adapter.in.vue;
 
-import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
+import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
@@ -20,7 +20,7 @@ public class VueControllerTest {
     @Test
     public void callingStateOnNonStartedGameThrowsException() throws Exception {
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), DieRoller.create());
+        }, AverageScoreFetcher.createNull(), DieRoller.create());
 
         VueController vueController = new VueController(gameService);
 
@@ -32,7 +32,7 @@ public class VueControllerTest {
     @Test
     public void postToStartGameStartsGame() throws Exception {
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), DieRoller.create());
+        }, AverageScoreFetcher.createNull(), DieRoller.create());
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -44,7 +44,7 @@ public class VueControllerTest {
     @Test
     public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), DieRoller.create());
+        }, AverageScoreFetcher.createNull(), DieRoller.create());
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -58,7 +58,7 @@ public class VueControllerTest {
     public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(2, 3, 4, 5, 6);
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), dieRoller);
+        }, AverageScoreFetcher.createNull(), dieRoller);
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -73,7 +73,7 @@ public class VueControllerTest {
     @Test
     public void scoreCategoriesReturnsScoredCategories() throws Exception {
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), DieRoller.createNull());
+        }, AverageScoreFetcher.createNull(), DieRoller.createNull());
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -89,7 +89,7 @@ public class VueControllerTest {
     public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
         DieRoller dieRoller = DieRoller.createNull(6, 6, 5, 5, 5);
         GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, HttpAverageScoreFetcher.createNull(), dieRoller);
+        }, AverageScoreFetcher.createNull(), dieRoller);
         VueController vueController = new VueController(gameService);
         vueController.startGame();
         vueController.rollDice();

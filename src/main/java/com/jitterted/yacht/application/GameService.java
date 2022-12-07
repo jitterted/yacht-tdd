@@ -1,7 +1,7 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.port.AverageScoreFetcher;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;

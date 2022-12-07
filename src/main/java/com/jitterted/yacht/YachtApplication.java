@@ -1,6 +1,6 @@
 package com.jitterted.yacht;
 
-import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
+import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
 import com.jitterted.yacht.application.GameService;
@@ -19,7 +19,7 @@ public class YachtApplication {
     public GameService createGameService() {
         return new GameService(
                 new HttpScoreCategoryNotifier(),
-                HttpAverageScoreFetcher.create(),
+                AverageScoreFetcher.create(),
                 DieRoller.create()
         );
     }

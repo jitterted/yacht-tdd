@@ -1,6 +1,6 @@
 package com.jitterted.yacht.application;
 
-import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
+import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
@@ -42,7 +42,7 @@ public class GameServiceDieRollerTest {
         DieRoller dieRoller = DieRoller.createNull(dies);
         return new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                HttpAverageScoreFetcher.createNull(),
+                AverageScoreFetcher.createNull(),
                 dieRoller);
     }
 

@@ -8,12 +8,12 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HttpAverageScoreFetcherTest {
+class AverageScoreFetcherTest {
 
     @Test
     void nullFetcherReturnsDefaultValue() {
-        HttpAverageScoreFetcher fetcher =
-                HttpAverageScoreFetcher.createNull();
+        AverageScoreFetcher fetcher =
+                AverageScoreFetcher.createNull();
 
         assertThat(fetcher.averageFor(ScoreCategory.FOURS))
                 .isEqualTo(42.0);
@@ -25,8 +25,8 @@ class HttpAverageScoreFetcherTest {
 
     @Test
     void nullFetcherReturnsConfiguredValue() {
-        HttpAverageScoreFetcher fetcher =
-                HttpAverageScoreFetcher.createNull(
+        AverageScoreFetcher fetcher =
+                AverageScoreFetcher.createNull(
                         Map.of(ScoreCategory.FOURS, 1.0,
                                ScoreCategory.FULLHOUSE, 2.0,
                                ScoreCategory.BIGSTRAIGHT, 3.0)
@@ -38,14 +38,14 @@ class HttpAverageScoreFetcherTest {
 
     @Test
     void whenConfiguredNullFetcherThrowsExceptionIfCategoryHasNoConfiguredValue() {
-        HttpAverageScoreFetcher fetcher =
-                HttpAverageScoreFetcher.createNull(
+        AverageScoreFetcher fetcher =
+                AverageScoreFetcher.createNull(
                         Map.of(ScoreCategory.FOURS, 1.0)
                 );
 
         assertThatThrownBy(() -> {
             fetcher.averageFor(ScoreCategory.FULLHOUSE);
         }).isInstanceOf(NoSuchElementException.class)
-          .hasMessage("No average configured for FULLHOUSE in Null HttpAverageScoreFetcher.");
+          .hasMessage("No average configured for FULLHOUSE in Null AverageScoreFetcher.");
     }
 }
