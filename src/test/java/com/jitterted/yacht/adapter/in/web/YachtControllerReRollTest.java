@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.web;
 
+import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.AverageScoreFetcherStub;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
@@ -23,7 +23,7 @@ public class YachtControllerReRollTest {
         DieRoller dieRoller = DieRoller.createNull(3, 1, 4, 1, 5, 3, 2, 6);
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(),
+                HttpAverageScoreFetcher.createNull(),
                 dieRoller);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
@@ -41,7 +41,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterThreeRollsThenCanReRollIsFalse() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub(), DieRoller.create()));
+        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, HttpAverageScoreFetcher.createNull(), DieRoller.create()));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 
@@ -58,7 +58,7 @@ public class YachtControllerReRollTest {
 
     @Test
     public void afterTwoRollsThenCanReRollIsTrue() throws Exception {
-        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub(), DieRoller.create()));
+        YachtController yachtController = new YachtController(new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, HttpAverageScoreFetcher.createNull(), DieRoller.create()));
         yachtController.startGame();
         Keep keep = keep(List.of(1, 3, 4));
 

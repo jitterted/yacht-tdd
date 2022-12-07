@@ -1,5 +1,6 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -19,7 +20,10 @@ class GameServiceAverageFetcherTest {
     void fetchesAverageForOneScoredCategory() {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.createNull());
+                HttpAverageScoreFetcher.createNull(
+                        Map.of(ScoreCategory.BIGSTRAIGHT, 12.0)
+                ),
+                DieRoller.createNull());
 
         assertThat(gameService.averagesFor(List.of(ScoreCategory.BIGSTRAIGHT)))
                 .containsEntry(ScoreCategory.BIGSTRAIGHT, 12.0);
@@ -29,7 +33,11 @@ class GameServiceAverageFetcherTest {
     void fetchesAveragesForTwoScoredCategories() {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.createNull());
+                HttpAverageScoreFetcher.createNull(
+                        Map.of(ScoreCategory.BIGSTRAIGHT, 12.0,
+                               ScoreCategory.FOUROFAKIND, 20.0)
+                ),
+                DieRoller.createNull());
 
         List<ScoreCategory> scoreCategories = List.of(ScoreCategory.BIGSTRAIGHT,
                                                       ScoreCategory.FOUROFAKIND);

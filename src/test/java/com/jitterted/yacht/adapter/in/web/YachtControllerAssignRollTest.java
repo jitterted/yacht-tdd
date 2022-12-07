@@ -1,7 +1,7 @@
 package com.jitterted.yacht.adapter.in.web;
 
+import com.jitterted.yacht.adapter.out.averagescore.HttpAverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.AverageScoreFetcherStub;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -62,7 +64,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, new AverageScoreFetcherStub(), DieRoller.create());
+        GameService gameService = new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, HttpAverageScoreFetcher.createNull(), DieRoller.create());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -76,7 +78,8 @@ public class YachtControllerAssignRollTest {
     public void assignRollToAllCategoriesResultsInAllCategoriesAssignedWithAverages() throws Exception {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.create());
+                HttpAverageScoreFetcher.createNull(mapOfAllCategoriesToAverageOf(12.0)),
+                DieRoller.create());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -89,14 +92,14 @@ public class YachtControllerAssignRollTest {
                 .isTrue();
         assertThat(categories)
                 .extracting(ScoredCategoryView::getScoreAverage)
-                .containsOnly("12.0", "20.0");
+                .containsOnly("12.0");
     }
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
         GameService gameService = new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(), DieRoller.create());
+                HttpAverageScoreFetcher.createNull(), DieRoller.create());
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -118,11 +121,20 @@ public class YachtControllerAssignRollTest {
         return viewName;
     }
 
+    private Map<ScoreCategory, Double> mapOfAllCategoriesToAverageOf(double average) {
+        Map<ScoreCategory, Double> map = new HashMap<>();
+        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+            map.put(scoreCategory, average);
+        }
+        return map;
+    }
+
+
     private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
         DieRoller dieRoller = DieRoller.createNull(dies);
         return new GameService(
                 NO_OP_SCORE_CATEGORY_NOTIFIER,
-                new AverageScoreFetcherStub(),
+                HttpAverageScoreFetcher.createNull(),
                 dieRoller);
     }
 
