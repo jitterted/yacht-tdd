@@ -13,22 +13,25 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
             URI.create("http://localhost:8080/api/scores");
 
     private final RestTemplate restTemplate = new RestTemplate();
-
-
+    private RollAssignedToCategory rollAssignedToCategory;
+    
     @Override
     public void rollAssigned(HandOfDice handOfDice,
                              int score,
                              ScoreCategory scoreCategory) {
-        RollAssignedToCategory rollAssignedToCategory =
-                RollAssignedToCategory.from(handOfDice, score,
-                                            scoreCategory);
+        rollAssignedToCategory = RollAssignedToCategory.from(handOfDice, score,
+                                    scoreCategory);
 
         restTemplate.postForEntity(YACHT_TRACKER_API_URI,
                                    rollAssignedToCategory,
                                    Void.class);
     }
 
-    private static class RollAssignedToCategory {
+    public RollAssignedToCategory lastRollAssigned() {
+        return rollAssignedToCategory;
+    }
+
+    static class RollAssignedToCategory {
         private final String roll;
         private final String score;
         private final String category;
