@@ -1,6 +1,6 @@
 package com.jitterted.yacht.adapter.out.scorecategory;
 
-import com.jitterted.yacht.adapter.OutputTracker;
+import com.jitterted.yacht.adapter.OutputListener;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -16,7 +16,7 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final OutputTracker<RollAssignment> outputTracker = new OutputTracker<>();
+    private final OutputListener<RollAssignment> outputListener = new OutputListener<>();
 
     @Override
     public void rollAssigned(HandOfDice handOfDice,
@@ -25,7 +25,7 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
         RollAssignedToCategory rollAssignedToCategory = RollAssignedToCategory
                 .from(handOfDice, score, scoreCategory);
 
-        outputTracker.emit(new RollAssignment(handOfDice, score, scoreCategory));
+        outputListener.emit(new RollAssignment(handOfDice, score, scoreCategory));
 
         restTemplate.postForEntity(YACHT_TRACKER_API_URI,
                                    rollAssignedToCategory,
@@ -33,7 +33,7 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
     }
 
     public List<RollAssignment> trackAssignments() {
-        return outputTracker.createTracker();
+        return outputListener.createTracker();
     }
 
     private static class RollAssignedToCategory {
