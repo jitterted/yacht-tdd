@@ -1,21 +1,21 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Non-I/O Tests" type="JUnit" factoryName="JUnit">
-    <module name="tdd-yacht"/>
-    <useClassPathOnly/>
+    <module name="tdd-yacht" />
+    <useClassPathOnly />
     <extension name="coverage" sample_coverage="false">
       <pattern>
-        <option name="PATTERN" value="com.jitterted.yacht.application.*"/>
-        <option name="ENABLED" value="true"/>
+        <option name="PATTERN" value="com.jitterted.yacht.application.*" />
+        <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="com.jitterted.yacht"/>
-    <option name="MAIN_CLASS_NAME" value=""/>
-    <option name="METHOD_NAME" value=""/>
-    <option name="TEST_OBJECT" value="tags"/>
-    <option name="PARAMETERS" value=""/>
-    <tag value="!spring &amp; !architecture"/>
+    <option name="PACKAGE_NAME" value="com.jitterted.yacht" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="tags" />
+    <option name="PARAMETERS" value="" />
+    <tag value="!spring &amp; !architecture &amp;!manual" />
     <method v="2">
-      <option name="Make" enabled="true"/>
+      <option name="Make" enabled="true" />
     </method>
   </configuration>
 </component>
