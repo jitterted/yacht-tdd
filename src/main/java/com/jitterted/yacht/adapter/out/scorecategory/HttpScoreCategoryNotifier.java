@@ -1,11 +1,13 @@
 package com.jitterted.yacht.adapter.out.scorecategory;
 
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
@@ -13,25 +15,28 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
             URI.create("http://localhost:8080/api/scores");
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private RollAssignedToCategory rollAssignedToCategory;
-    
+
+    private final OutputTracker<RollAssignment> outputTracker = new OutputTracker<>();
+
     @Override
     public void rollAssigned(HandOfDice handOfDice,
                              int score,
                              ScoreCategory scoreCategory) {
-        rollAssignedToCategory = RollAssignedToCategory.from(handOfDice, score,
-                                    scoreCategory);
+        RollAssignedToCategory rollAssignedToCategory = RollAssignedToCategory
+                .from(handOfDice, score, scoreCategory);
+
+        outputTracker.emit(new RollAssignment(handOfDice, score, scoreCategory));
 
         restTemplate.postForEntity(YACHT_TRACKER_API_URI,
                                    rollAssignedToCategory,
                                    Void.class);
     }
 
-    public RollAssignedToCategory lastRollAssigned() {
-        return rollAssignedToCategory;
+    public List<RollAssignment> trackAssignments() {
+        return outputTracker.createTracker();
     }
 
-    static class RollAssignedToCategory {
+    private static class RollAssignedToCategory {
         private final String roll;
         private final String score;
         private final String category;
