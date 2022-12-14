@@ -12,9 +12,9 @@ import static org.assertj.core.api.Assertions.*;
 class HttpScoreCategoryNotifierTest {
     @Test
     @Disabled
-    void rollAssignmentSentToExternalService() {
+    void rollAssignmentSentToRealExternalService() {
         HttpScoreCategoryNotifier httpScoreCategoryNotifier =
-                new HttpScoreCategoryNotifier();
+                HttpScoreCategoryNotifier.create();
 
         httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
                                                30,

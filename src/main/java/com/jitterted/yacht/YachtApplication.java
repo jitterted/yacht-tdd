@@ -18,7 +18,7 @@ public class YachtApplication {
     @Bean
     public GameService createGameService() {
         return new GameService(
-                new HttpScoreCategoryNotifier(),
+                HttpScoreCategoryNotifier.create(),
                 AverageScoreFetcher.create(),
                 DieRoller.create()
         );

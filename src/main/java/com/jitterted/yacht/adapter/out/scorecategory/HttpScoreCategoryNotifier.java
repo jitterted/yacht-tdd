@@ -18,16 +18,16 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
 
     private final OutputListener<RollAssignment> outputListener = new OutputListener<>();
 
-    public HttpScoreCategoryNotifier() {
-        restTemplate = new RealRestTemplate();
-    }
-
-    public HttpScoreCategoryNotifier(RestTemplateWrapper restTemplate) {
-        this.restTemplate = restTemplate;
+    public static HttpScoreCategoryNotifier create() {
+        return new HttpScoreCategoryNotifier(new RealRestTemplate());
     }
 
     public static HttpScoreCategoryNotifier createNull() {
-        return new HttpScoreCategoryNotifier(new DummyRestTemplate());        
+        return new HttpScoreCategoryNotifier(new DummyRestTemplate());
+    }
+
+    private HttpScoreCategoryNotifier(RestTemplateWrapper restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @Override

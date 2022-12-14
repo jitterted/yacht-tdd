@@ -2,7 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
+import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
@@ -13,13 +13,10 @@ import static org.assertj.core.api.Assertions.*;
 
 class GameServiceAverageFetcherTest {
 
-    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
-    };
-
     @Test
     void fetchesAverageForOneScoredCategory() {
         GameService gameService = new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
+                HttpScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(
                         Map.of(ScoreCategory.BIGSTRAIGHT, 12.0)
                 ),
@@ -32,7 +29,7 @@ class GameServiceAverageFetcherTest {
     @Test
     void fetchesAveragesForTwoScoredCategories() {
         GameService gameService = new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
+                HttpScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(
                         Map.of(ScoreCategory.BIGSTRAIGHT, 12.0,
                                ScoreCategory.FOUROFAKIND, 20.0)
