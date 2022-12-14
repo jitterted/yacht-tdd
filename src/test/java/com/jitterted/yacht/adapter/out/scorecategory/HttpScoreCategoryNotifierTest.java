@@ -24,7 +24,7 @@ class HttpScoreCategoryNotifierTest {
     @Test
     void rollAssignmentIsTracked() {
         HttpScoreCategoryNotifier httpScoreCategoryNotifier =
-                new HttpScoreCategoryNotifier();
+                HttpScoreCategoryNotifier.createNull();
 
         OutputTracker<RollAssignment> tracker =
                 httpScoreCategoryNotifier.trackAssignments();
