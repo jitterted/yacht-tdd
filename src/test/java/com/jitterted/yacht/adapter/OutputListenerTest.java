@@ -2,8 +2,6 @@ package com.jitterted.yacht.adapter;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
 
 class OutputListenerTest {
@@ -12,40 +10,71 @@ class OutputListenerTest {
     void tracksOutputOverTime() {
         OutputListener<String> outputListener = new OutputListener<>();
 
-        List<String> tracker =
+        OutputTracker<String> tracker =
                 outputListener.createTracker();
 
-        assertThat(tracker)
+        assertThat(tracker.output())
                 .isEmpty();
 
         outputListener.emit("one");
 
-        assertThat(tracker)
+        assertThat(tracker.output())
                 .containsExactly("one");
 
         outputListener.emit("two");
 
-        assertThat(tracker)
+        assertThat(tracker.output())
                 .containsExactly("one", "two");
     }
 
+    @Test
+    void clearsOutput() {
+        OutputListener<String> outputListener = new OutputListener<>();
+
+        OutputTracker<String> tracker =
+                outputListener.createTracker();
+
+        outputListener.emit("one");
+        tracker.clear();
+        outputListener.emit("two");
+
+        assertThat(tracker.output())
+                .containsExactly("two");
+    }
+
+    @Test
+    void canStopTrackingOutput() {
+        OutputListener<String> outputListener = new OutputListener<>();
+
+        OutputTracker<String> tracker =
+                outputListener.createTracker();
+
+        outputListener.emit("one");
+
+        tracker.stop();
+
+        outputListener.emit("two");
+
+        assertThat(tracker.output())
+                .containsExactly("one");
+    }
 
     @Test
     void trackersAreIndependent() {
         OutputListener<String> outputListener = new OutputListener<>();
 
-        List<String> tracker1 = outputListener.createTracker();
+        OutputTracker<String> tracker1 = outputListener.createTracker();
 
         outputListener.emit("one");
 
-        List<String> tracker2 = outputListener.createTracker();
+        OutputTracker<String> tracker2 = outputListener.createTracker();
 
         outputListener.emit("two");
 
-        assertThat(tracker1)
+        assertThat(tracker1.output())
                 .containsExactly("one", "two");
 
-        assertThat(tracker2)
+        assertThat(tracker2.output())
                 .containsExactly("two");
     }
 }

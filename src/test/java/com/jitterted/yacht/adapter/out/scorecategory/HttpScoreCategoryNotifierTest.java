@@ -1,11 +1,10 @@
 package com.jitterted.yacht.adapter.out.scorecategory;
 
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,18 +26,18 @@ class HttpScoreCategoryNotifierTest {
         HttpScoreCategoryNotifier httpScoreCategoryNotifier =
                 new HttpScoreCategoryNotifier();
 
-        List<RollAssignment> tracker =
+        OutputTracker<RollAssignment> tracker =
                 httpScoreCategoryNotifier.trackAssignments();
 
         httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
                                                30,
                                                ScoreCategory.LITTLESTRAIGHT);
 
-        assertThat(tracker)
+        assertThat(tracker.output())
                 .containsOnly(new RollAssignment(
                         HandOfDice.of(1, 3, 5, 2, 4),
                         30,
                         ScoreCategory.LITTLESTRAIGHT));
     }
-    
+
 }

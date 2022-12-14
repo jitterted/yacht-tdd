@@ -1,13 +1,13 @@
 package com.jitterted.yacht.adapter.out.scorecategory;
 
 import com.jitterted.yacht.adapter.OutputListener;
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
@@ -32,7 +32,7 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
                                    Void.class);
     }
 
-    public List<RollAssignment> trackAssignments() {
+    public OutputTracker<RollAssignment> trackAssignments() {
         return outputListener.createTracker();
     }
 

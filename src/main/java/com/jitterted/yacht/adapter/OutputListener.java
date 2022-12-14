@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OutputListener<T> {
-    private final List<List<T>> listeners = new ArrayList<>();
+    private final List<OutputTracker<T>> listeners = new ArrayList<>();
 
     public void emit(T data) {
         listeners.forEach(
-                rollAssignments ->
-                        rollAssignments.add(data));
+                tracker ->
+                        tracker.add(data));
     }
 
-    public List<T> createTracker() {
-        List<T> tracker = new ArrayList<>();
+    public OutputTracker<T> createTracker() {
+        OutputTracker<T> tracker = new OutputTracker<>(this);
         listeners.add(tracker);
         return tracker;
+    }
+
+    void remove(OutputTracker<T> outputTracker) {
+        listeners.remove(outputTracker);
     }
 }
