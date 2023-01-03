@@ -4,12 +4,11 @@ import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.*;
 
 class GameServiceAverageFetcherTest {
 
@@ -22,8 +21,8 @@ class GameServiceAverageFetcherTest {
                 ),
                 DieRoller.createNull());
 
-        assertThat(gameService.averagesFor(List.of(ScoreCategory.BIGSTRAIGHT)))
-                .containsEntry(ScoreCategory.BIGSTRAIGHT, 12.0);
+        Assertions.assertThat(gameService.averagesFor(List.of(ScoreCategory.BIGSTRAIGHT)))
+                  .containsEntry(ScoreCategory.BIGSTRAIGHT, 12.0);
     }
 
     @Test
@@ -39,8 +38,8 @@ class GameServiceAverageFetcherTest {
         List<ScoreCategory> scoreCategories = List.of(ScoreCategory.BIGSTRAIGHT,
                                                       ScoreCategory.FOUROFAKIND);
 
-        assertThat(gameService.averagesFor(scoreCategories))
-                .containsAllEntriesOf(Map.of(ScoreCategory.BIGSTRAIGHT, 12.0,
+        Assertions.assertThat(gameService.averagesFor(scoreCategories))
+                  .containsAllEntriesOf(Map.of(ScoreCategory.BIGSTRAIGHT, 12.0,
                                              ScoreCategory.FOUROFAKIND, 20.0));
     }
 
