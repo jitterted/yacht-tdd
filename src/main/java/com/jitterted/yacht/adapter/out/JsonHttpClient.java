@@ -2,8 +2,12 @@ package com.jitterted.yacht.adapter.out;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class JsonHttpClient {
 
@@ -14,7 +18,11 @@ public class JsonHttpClient {
     }
 
     public static JsonHttpClient createNull() {
-        return new JsonHttpClient(new StubbedRestTemplate());
+        return JsonHttpClient.createNull(Collections.emptyMap());
+    }
+
+    public static JsonHttpClient createNull(Map<String, Object> endpointsResponses) {
+        return new JsonHttpClient(new StubbedRestTemplate(endpointsResponses));
     }
 
     private JsonHttpClient(RestTemplateWrapper restTemplateWrapper) {
@@ -71,28 +79,53 @@ public class JsonHttpClient {
     //    EMBEDDED STUB
 
     private static class StubbedRestTemplate implements RestTemplateWrapper {
+        private Map<String, Object> endpointsResponses;
+
+        public StubbedRestTemplate() {
+        }
+
+        public StubbedRestTemplate(Map<String, Object> endpointsResponses) {
+            this.endpointsResponses = endpointsResponses;
+        }
+
         @Override
         public <T> ResponseEntityWrapper<T> getForEntity(String url,
                                                          Class<T> responseType,
                                                          Object... uriVariables) {
-            return new StubbedResponseEntity<>(responseType);
+            if (endpointsResponses == null) {
+                try {
+                    T response = responseType.getConstructor().newInstance();
+                    return new StubbedResponseEntity<>(response);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String interpolatedUrl = new DefaultUriBuilderFactory()
+                    .expand(url, uriVariables)
+                    .toString();
+
+            T configuredResponse;
+            if (endpointsResponses.containsKey(interpolatedUrl)) {
+                configuredResponse = (T) endpointsResponses.get(interpolatedUrl);
+            } else {
+                throw new NoSuchElementException("URL not configured: " + interpolatedUrl);
+            }
+
+            return new StubbedResponseEntity<>(configuredResponse);
         }
     }
 
     private static class StubbedResponseEntity<T> implements ResponseEntityWrapper<T> {
-        private final Class<T> responseType;
+        private final T configuredResponse;
 
-        public StubbedResponseEntity(Class<T> responseType) {
-            this.responseType = responseType;
+        public StubbedResponseEntity(T configuredResponse) {
+            this.configuredResponse = configuredResponse;
         }
 
         @Override
         public T getBody() {
-            try {
-                return responseType.getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
+            return configuredResponse;
         }
     }
 
