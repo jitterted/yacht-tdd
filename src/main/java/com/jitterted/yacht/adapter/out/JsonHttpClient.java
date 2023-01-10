@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 public class JsonHttpClient {
 
@@ -67,7 +68,7 @@ public class JsonHttpClient {
     }
 
     private static class RealResponseEntity<T> implements ResponseEntityWrapper<T> {
-        private ResponseEntity<T> entity;
+        private final ResponseEntity<T> entity;
 
         RealResponseEntity(ResponseEntity<T> entity) {
             this.entity = entity;
@@ -81,16 +82,23 @@ public class JsonHttpClient {
     //    EMBEDDED STUB
 
     private static class StubbedRestTemplate implements RestTemplateWrapper {
-        private Map<String, Object> endpointsResponses;
+        private final Map<String, Iterator<Object>> endpointsResponses;
 
         public StubbedRestTemplate(Map<String, Object> endpointsResponses) {
             this.endpointsResponses = new HashMap<>();
             for (Map.Entry<String, Object> entry : endpointsResponses.entrySet()) {
-                if (entry.getValue() instanceof List) {
-                    this.endpointsResponses.put(entry.getKey(), ((List<?>) entry.getValue()).iterator());
-                } else {
-                    this.endpointsResponses.put(entry.getKey(), entry.getValue());
-                }
+                this.endpointsResponses.put(entry.getKey(), normalizeResponses(entry));
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        private static Iterator<Object> normalizeResponses(Map.Entry<String, Object> entry) {
+            if (entry.getValue() instanceof List) {
+                // finite list of different responses
+                return ((List<Object>) entry.getValue()).iterator();
+            } else {
+                // generate infinite list of the one response
+                return Stream.generate(entry::getValue).iterator();
             }
         }
 
@@ -102,8 +110,8 @@ public class JsonHttpClient {
                     .expand(url, uriVariables)
                     .toString();
 
-            T configuredResponse = nextResponse(interpolatedUrl);
-            return new StubbedResponseEntity<>(configuredResponse);
+            T response = nextResponse(interpolatedUrl);
+            return new StubbedResponseEntity<>(response);
         }
 
         private <T> T nextResponse(String interpolatedUrl) {
@@ -111,21 +119,15 @@ public class JsonHttpClient {
                 throw new NoSuchElementException("URL not configured: " + interpolatedUrl);
             }
 
-            Object configuredResponse = endpointsResponses.get(interpolatedUrl);
-            if (configuredResponse instanceof Iterator) {
-                return nextResponseFromIterator(interpolatedUrl, (Iterator<T>) configuredResponse);
-            } else {
-                return (T) configuredResponse;
-            }
-        }
-
-        private <T> T nextResponseFromIterator(String interpolatedUrl, Iterator<T> responseIterator) {
-            if (!responseIterator.hasNext()) {
+            @SuppressWarnings("unchecked")
+            Iterator<T> response = (Iterator<T>) endpointsResponses.get(interpolatedUrl);
+            if (!response.hasNext()) {
                 throw new NoSuchElementException("No more responses configured for URL: "
                                                          + interpolatedUrl);
             }
-            return responseIterator.next();
+            return response.next();
         }
+
     }
 
     private static class StubbedResponseEntity<T> implements ResponseEntityWrapper<T> {
