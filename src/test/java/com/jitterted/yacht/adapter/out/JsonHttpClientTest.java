@@ -2,6 +2,7 @@ package com.jitterted.yacht.adapter.out;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -20,7 +21,7 @@ class JsonHttpClientTest {
     }
 
     @Test
-    void nulledGetReturnsConfiguredInstanceForever() {
+    void nulledGetReturnsSingleConfiguredInstanceForever() {
         ExampleDto configuredExampleDto = new ExampleDto("configured value");
 
         JsonHttpClient jsonHttpClient = JsonHttpClient.createNull(
@@ -38,6 +39,43 @@ class JsonHttpClientTest {
         ExampleDto exampleDto3 = jsonHttpClient.get("/configured", ExampleDto.class);
         assertThat(exampleDto3.getContent())
                 .isEqualTo("configured value");
+    }
+
+    @Test
+    void nullGetReturnsDifferentConfiguredInstancesWhenGivenList() {
+        JsonHttpClient jsonHttpClient = JsonHttpClient.createNull(
+                Map.of("/configured-list", List.of(
+                        new ExampleDto("dto 1"),
+                        new ExampleDto("dto 2"),
+                        new ExampleDto("dto 3"))));
+
+
+        ExampleDto exampleDto1 = jsonHttpClient.get("/configured-list",
+                                                    ExampleDto.class);
+        assertThat(exampleDto1.getContent())
+                .isEqualTo("dto 1");
+
+        ExampleDto exampleDto2 = jsonHttpClient.get("/configured-list",
+                                                    ExampleDto.class);
+        assertThat(exampleDto2.getContent())
+                .isEqualTo("dto 2");
+
+        ExampleDto exampleDto3 = jsonHttpClient.get("/configured-list",
+                                                    ExampleDto.class);
+        assertThat(exampleDto3.getContent())
+                .isEqualTo("dto 3");
+    }
+
+    @Test
+    void nullGetThrowsExceptionWhenListOfConfiguredInstancesRunsOut() {
+        JsonHttpClient jsonHttpClient = JsonHttpClient.createNull(
+                Map.of("/list-of-one?a=b", List.of(new ExampleDto("dto 1")))
+        );
+        jsonHttpClient.get("/list-of-one?a={parm}", ExampleDto.class, "b");
+
+        assertThatThrownBy(() -> jsonHttpClient.get("/list-of-one?a={parm}", ExampleDto.class, "b"))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("No more responses configured for URL: /list-of-one?a=b");
     }
 
     @Test
@@ -69,26 +107,6 @@ class JsonHttpClientTest {
                 .isEqualTo("configured 2");
     }
 
-    @Test
-    public void nulledGetReturnsDifferentValuesForDifferentEndpoints() throws Exception {
-        // url (incl. query params) -> Something, List<Something>
-        // Something -> Exception, Object to Return
-//         JsonHttpClient.createNull(Map.of("/first-url",
-
-    }
-
-//    @Test
-//    void whenConfiguredNullFetcherThrowsExceptionIfCategoryHasNoConfiguredValue() {
-//        AverageScoreFetcher fetcher =
-//                AverageScoreFetcher.createNull(
-//                        Map.of(ScoreCategory.FOURS, 1.0)
-//                );
-//
-//        assertThatThrownBy(() -> {
-//            fetcher.averageFor(ScoreCategory.FULLHOUSE);
-//        }).isInstanceOf(NoSuchElementException.class)
-//          .hasMessage("No average configured for FULLHOUSE in Null AverageScoreFetcher.");
-//    }
 
     public static class ExampleDto {
         private String content;

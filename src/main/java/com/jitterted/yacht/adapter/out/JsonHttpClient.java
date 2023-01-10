@@ -6,6 +6,9 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -81,11 +84,15 @@ public class JsonHttpClient {
     private static class StubbedRestTemplate implements RestTemplateWrapper {
         private Map<String, Object> endpointsResponses;
 
-        public StubbedRestTemplate() {
-        }
-
         public StubbedRestTemplate(Map<String, Object> endpointsResponses) {
-            this.endpointsResponses = endpointsResponses;
+            this.endpointsResponses = new HashMap<>();
+            for (Map.Entry<String, Object> entry : endpointsResponses.entrySet()) {
+                if (entry.getValue() instanceof List) {
+                    this.endpointsResponses.put(entry.getKey(), ((List<?>) entry.getValue()).iterator());
+                } else {
+                    this.endpointsResponses.put(entry.getKey(), entry.getValue());
+                }
+            }
         }
 
         @Override
@@ -96,7 +103,8 @@ public class JsonHttpClient {
                 try {
                     T response = responseType.getConstructor().newInstance();
                     return new StubbedResponseEntity<>(response);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -107,7 +115,18 @@ public class JsonHttpClient {
 
             T configuredResponse;
             if (endpointsResponses.containsKey(interpolatedUrl)) {
-                configuredResponse = (T) endpointsResponses.get(interpolatedUrl);
+                Object responseAsObject = endpointsResponses.get(interpolatedUrl);
+                if (responseAsObject instanceof Iterator) {
+                    Iterator<T> responseIterator = (Iterator<T>) responseAsObject;
+                    if (responseIterator.hasNext()) {
+                        configuredResponse = responseIterator.next();
+                    } else {
+                        throw new NoSuchElementException("No more responses configured for URL: "
+                                                                 + interpolatedUrl);
+                    }
+                } else {
+                    configuredResponse = (T) responseAsObject;
+                }
             } else {
                 throw new NoSuchElementException("URL not configured: " + interpolatedUrl);
             }
