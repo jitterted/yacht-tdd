@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -99,39 +98,33 @@ public class JsonHttpClient {
         public <T> ResponseEntityWrapper<T> getForEntity(String url,
                                                          Class<T> responseType,
                                                          Object... uriVariables) {
-            if (endpointsResponses == null) {
-                try {
-                    T response = responseType.getConstructor().newInstance();
-                    return new StubbedResponseEntity<>(response);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                         NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
             String interpolatedUrl = new DefaultUriBuilderFactory()
                     .expand(url, uriVariables)
                     .toString();
 
-            T configuredResponse;
-            if (endpointsResponses.containsKey(interpolatedUrl)) {
-                Object responseAsObject = endpointsResponses.get(interpolatedUrl);
-                if (responseAsObject instanceof Iterator) {
-                    Iterator<T> responseIterator = (Iterator<T>) responseAsObject;
-                    if (responseIterator.hasNext()) {
-                        configuredResponse = responseIterator.next();
-                    } else {
-                        throw new NoSuchElementException("No more responses configured for URL: "
-                                                                 + interpolatedUrl);
-                    }
-                } else {
-                    configuredResponse = (T) responseAsObject;
-                }
-            } else {
+            T configuredResponse = nextResponse(interpolatedUrl);
+            return new StubbedResponseEntity<>(configuredResponse);
+        }
+
+        private <T> T nextResponse(String interpolatedUrl) {
+            if (!endpointsResponses.containsKey(interpolatedUrl)) {
                 throw new NoSuchElementException("URL not configured: " + interpolatedUrl);
             }
 
-            return new StubbedResponseEntity<>(configuredResponse);
+            Object configuredResponse = endpointsResponses.get(interpolatedUrl);
+            if (configuredResponse instanceof Iterator) {
+                return nextResponseFromIterator(interpolatedUrl, (Iterator<T>) configuredResponse);
+            } else {
+                return (T) configuredResponse;
+            }
+        }
+
+        private <T> T nextResponseFromIterator(String interpolatedUrl, Iterator<T> responseIterator) {
+            if (!responseIterator.hasNext()) {
+                throw new NoSuchElementException("No more responses configured for URL: "
+                                                         + interpolatedUrl);
+            }
+            return responseIterator.next();
         }
     }
 
