@@ -1,5 +1,7 @@
 package com.jitterted.yacht.adapter.out;
 
+import com.jitterted.yacht.adapter.OutputListener;
+import com.jitterted.yacht.adapter.OutputTracker;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
@@ -15,6 +17,7 @@ import java.util.stream.Stream;
 public class JsonHttpClient {
 
     private final RestTemplateWrapper restTemplateWrapper;
+    private final OutputListener<JsonHttpRequest> listener = new OutputListener<>();
 
     public static JsonHttpClient create() {
         return new JsonHttpClient(new RealRestTemplate());
@@ -35,10 +38,22 @@ public class JsonHttpClient {
     public <R> R get(String urlTemplate,
                      Class<R> convertedResponseType,
                      String... urlVariables) {
+        listener.emit(JsonHttpRequest.createGet(
+                interpolateUrl(urlTemplate, urlVariables)));
         return restTemplateWrapper.getForEntity(urlTemplate,
                                                 convertedResponseType,
                                                 (Object[]) urlVariables)
                                   .getBody();
+    }
+
+    public OutputTracker<JsonHttpRequest> trackRequests() {
+        return listener.createTracker();
+    }
+
+    private static String interpolateUrl(String urlTemplate, Object[] uriVariables) {
+        return new DefaultUriBuilderFactory()
+                .expand(urlTemplate, uriVariables)
+                .toString();
     }
 
 //    public void post(String urlTemplate, Object requestType) {
@@ -106,9 +121,7 @@ public class JsonHttpClient {
         public <T> ResponseEntityWrapper<T> getForEntity(String url,
                                                          Class<T> responseType,
                                                          Object... uriVariables) {
-            String interpolatedUrl = new DefaultUriBuilderFactory()
-                    .expand(url, uriVariables)
-                    .toString();
+            String interpolatedUrl = interpolateUrl(url, uriVariables);
 
             T response = nextResponse(interpolatedUrl);
             return new StubbedResponseEntity<>(response);
@@ -129,6 +142,7 @@ public class JsonHttpClient {
         }
 
     }
+
 
     private static class StubbedResponseEntity<T> implements ResponseEntityWrapper<T> {
         private final T configuredResponse;

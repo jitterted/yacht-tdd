@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.out;
 
+import com.jitterted.yacht.adapter.OutputTracker;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -127,5 +128,39 @@ class JsonHttpClientTest {
             this.content = content;
         }
     }
+
+    @Test
+    void requestsAreTracked() {
+        // requests: (GET|POST, url, [body])
+
+        JsonHttpClient jsonHttpClient = JsonHttpClient.createNull(
+                Map.of("/endpoint?a", new ExampleDto())
+        );
+
+        OutputTracker<JsonHttpRequest> tracker = jsonHttpClient.trackRequests();
+
+        jsonHttpClient.get("/endpoint?{parm}", ExampleDto.class, "a");
+
+        assertThat(tracker.output())
+                .containsExactly(JsonHttpRequest.createGet("/endpoint?a"));
+
+
+//        HttpScoreCategoryNotifier httpScoreCategoryNotifier =
+//                HttpScoreCategoryNotifier.createNull();
+//
+//        OutputTracker<RollAssignment> tracker =
+//                httpScoreCategoryNotifier.trackAssignments();
+//
+//        httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
+//                                               30,
+//                                               ScoreCategory.LITTLESTRAIGHT);
+//
+//        assertThat(tracker.output())
+//                .containsOnly(new RollAssignment(
+//                        HandOfDice.of(1, 3, 5, 2, 4),
+//                        30,
+//                        ScoreCategory.LITTLESTRAIGHT));
+    }
+
 
 }
