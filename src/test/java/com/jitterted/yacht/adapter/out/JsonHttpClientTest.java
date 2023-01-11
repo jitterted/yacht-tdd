@@ -131,35 +131,21 @@ class JsonHttpClientTest {
 
     @Test
     void requestsAreTracked() {
-        // requests: (GET|POST, url, [body])
-
         JsonHttpClient jsonHttpClient = JsonHttpClient.createNull(
-                Map.of("/endpoint?a", new ExampleDto())
+                Map.of("/get-endpoint?a", new ExampleDto())
         );
 
         OutputTracker<JsonHttpRequest> tracker = jsonHttpClient.trackRequests();
 
-        jsonHttpClient.get("/endpoint?{parm}", ExampleDto.class, "a");
+        jsonHttpClient.get("/get-endpoint?{parm}", ExampleDto.class, "a");
+
+        ExampleDto postedBody = new ExampleDto("post");
+        jsonHttpClient.post("/post-endpoint", postedBody);
 
         assertThat(tracker.output())
-                .containsExactly(JsonHttpRequest.createGet("/endpoint?a"));
-
-
-//        HttpScoreCategoryNotifier httpScoreCategoryNotifier =
-//                HttpScoreCategoryNotifier.createNull();
-//
-//        OutputTracker<RollAssignment> tracker =
-//                httpScoreCategoryNotifier.trackAssignments();
-//
-//        httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
-//                                               30,
-//                                               ScoreCategory.LITTLESTRAIGHT);
-//
-//        assertThat(tracker.output())
-//                .containsOnly(new RollAssignment(
-//                        HandOfDice.of(1, 3, 5, 2, 4),
-//                        30,
-//                        ScoreCategory.LITTLESTRAIGHT));
+                .containsExactly(
+                        JsonHttpRequest.createGet("/get-endpoint?a"),
+                        JsonHttpRequest.createPost("/post-endpoint", postedBody));
     }
 
 

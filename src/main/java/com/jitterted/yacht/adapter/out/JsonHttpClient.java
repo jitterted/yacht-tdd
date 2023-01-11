@@ -46,6 +46,13 @@ public class JsonHttpClient {
                                   .getBody();
     }
 
+    public void post(String url, Object body) {
+        listener.emit(JsonHttpRequest.createPost(url, body));
+        restTemplateWrapper.postForEntity(url,
+                                          body,
+                                          Void.class);
+    }
+
     public OutputTracker<JsonHttpRequest> trackRequests() {
         return listener.createTracker();
     }
@@ -56,14 +63,11 @@ public class JsonHttpClient {
                 .toString();
     }
 
-//    public void post(String urlTemplate, Object requestType) {
-//        restTemplate.postForEntity(urlTemplate,
-//                                   requestType,
-//                                   Void.class);
-//    }
 
     interface RestTemplateWrapper {
         <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables);
+
+        <T> void postForEntity(String url, Object request, Class<T> responseType);
     }
 
     interface ResponseEntityWrapper<T> {
@@ -73,12 +77,18 @@ public class JsonHttpClient {
     private static class RealRestTemplate implements RestTemplateWrapper {
         private final RestTemplate restTemplate = new RestTemplate();
 
+        @Override
         public <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables) {
             ResponseEntity<T> entity = restTemplate.getForEntity(
                     url,
                     responseType,
                     uriVariables);
             return new RealResponseEntity<T>(entity);
+        }
+
+        @Override
+        public <T> void postForEntity(String url, Object request, Class<T> responseType) {
+            restTemplate.postForEntity(url, request, responseType);
         }
     }
 
@@ -125,6 +135,11 @@ public class JsonHttpClient {
 
             T response = nextResponse(interpolatedUrl);
             return new StubbedResponseEntity<>(response);
+        }
+
+        @Override
+        public <T> void postForEntity(String url, Object request, Class<T> responseType) {
+            // no-op
         }
 
         private <T> T nextResponse(String interpolatedUrl) {
