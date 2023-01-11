@@ -13,6 +13,8 @@ class HttpScoreCategoryNotifierTest {
     @Test
     @Disabled
     void rollAssignmentSentToRealExternalService() {
+        // use the post tracker
+        
         HttpScoreCategoryNotifier httpScoreCategoryNotifier =
                 HttpScoreCategoryNotifier.create();
 

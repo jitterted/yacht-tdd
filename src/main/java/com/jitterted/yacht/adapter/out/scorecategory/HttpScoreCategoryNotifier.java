@@ -2,11 +2,10 @@ package com.jitterted.yacht.adapter.out.scorecategory;
 
 import com.jitterted.yacht.adapter.OutputListener;
 import com.jitterted.yacht.adapter.OutputTracker;
+import com.jitterted.yacht.adapter.out.JsonHttpClient;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
@@ -14,20 +13,20 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
     private static final URI YACHT_TRACKER_API_URI =
             URI.create("http://localhost:8080/api/scores");
 
-    private final RestTemplateWrapper restTemplate;
+    private final JsonHttpClient jsonHttpClient;
 
     private final OutputListener<RollAssignment> outputListener = new OutputListener<>();
 
     public static HttpScoreCategoryNotifier create() {
-        return new HttpScoreCategoryNotifier(new RealRestTemplate());
+        return new HttpScoreCategoryNotifier(JsonHttpClient.create());
     }
 
     public static HttpScoreCategoryNotifier createNull() {
-        return new HttpScoreCategoryNotifier(new DummyRestTemplate());
+        return new HttpScoreCategoryNotifier(JsonHttpClient.createNull());
     }
 
-    private HttpScoreCategoryNotifier(RestTemplateWrapper restTemplate) {
-        this.restTemplate = restTemplate;
+    private HttpScoreCategoryNotifier(JsonHttpClient jsonHttpClient) {
+        this.jsonHttpClient = jsonHttpClient;
     }
 
     @Override
@@ -39,40 +38,12 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
 
         outputListener.emit(new RollAssignment(handOfDice, score, scoreCategory));
 
-        restTemplate.postForEntity(YACHT_TRACKER_API_URI,
-                                   rollAssignedToCategory,
-                                   Void.class);
+        jsonHttpClient.post(YACHT_TRACKER_API_URI.toString(),
+                            rollAssignedToCategory);
     }
 
     public OutputTracker<RollAssignment> trackAssignments() {
         return outputListener.createTracker();
     }
 
-
-    //// --- NULLABLES BELOW ---
-
-
-    interface RestTemplateWrapper {
-        <T> void postForEntity(URI url,
-                               Object request,
-                               Class<T> responseType)
-                throws RestClientException;
-    }
-
-    private static class RealRestTemplate implements RestTemplateWrapper {
-        private final RestTemplate restTemplate = new RestTemplate();
-
-        @Override
-        public <T> void postForEntity(URI url, Object request, Class<T> responseType) throws RestClientException {
-            restTemplate.postForEntity(url, request, responseType);
-        }
-    }
-
-    private static class DummyRestTemplate implements RestTemplateWrapper {
-
-        @Override
-        public <T> void postForEntity(URI url, Object request, Class<T> responseType) throws RestClientException {
-            // do nothing
-        }
-    }
 }
