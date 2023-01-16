@@ -4,6 +4,14 @@ This is a dice game similar to Yahtzee™.
 Scoring rules are based on the description at https://www.mathsisfun.com/games/yacht-dice-game.html and more details
 at https://en.wikipedia.org/wiki/Yacht_(dice_game).
 
+# Discussing Project
+
+You can ask questions and discuss this project on my public (free) Discord. Information on how to join is here: https://ted.dev/discord.
+
+## Before and After "Nullables"
+
+If you're interested in the code before I worked with James Shore to convert the code to use "Nullable Infrastructure Wrappers", checkout the tag `before-nullables`. 
+
 ## Terminology
 
 GAME has PLAYERs, each of whom have a SCOREBOARD that contains ROLLs and SCORE and CATEGORYs that are used/not yet used.
