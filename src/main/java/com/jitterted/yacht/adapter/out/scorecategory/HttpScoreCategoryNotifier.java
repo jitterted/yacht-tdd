@@ -25,7 +25,7 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
         return new HttpScoreCategoryNotifier(JsonHttpClient.createNull());
     }
 
-    private HttpScoreCategoryNotifier(JsonHttpClient jsonHttpClient) {
+    HttpScoreCategoryNotifier(JsonHttpClient jsonHttpClient) {
         this.jsonHttpClient = jsonHttpClient;
     }
 

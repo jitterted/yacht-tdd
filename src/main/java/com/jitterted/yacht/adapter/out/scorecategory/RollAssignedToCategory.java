@@ -41,4 +41,41 @@ class RollAssignedToCategory {
     public String getCategory() {
         return category;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RollAssignedToCategory that = (RollAssignedToCategory) o;
+
+        if (!roll.equals(that.roll)) {
+            return false;
+        }
+        if (!score.equals(that.score)) {
+            return false;
+        }
+        return category.equals(that.category);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = roll.hashCode();
+        result = 31 * result + score.hashCode();
+        result = 31 * result + category.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RollAssignedToCategory{" +
+                "roll='" + roll + '\'' +
+                ", score='" + score + '\'' +
+                ", category='" + category + '\'' +
+                '}';
+    }
 }
