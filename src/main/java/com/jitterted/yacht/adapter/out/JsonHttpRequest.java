@@ -9,12 +9,12 @@ public class JsonHttpRequest {
     private final String url;
     private final Object body;
 
-    public static JsonHttpRequest createGet(String urlTemplate) {
-        return new JsonHttpRequest(HttpMethod.GET, urlTemplate, null);
+    public static JsonHttpRequest createGet(String url) {
+        return new JsonHttpRequest(HttpMethod.GET, url, null);
     }
 
-    public static JsonHttpRequest createPost(String urlTemplate, Object body) {
-        return new JsonHttpRequest(HttpMethod.POST, urlTemplate, body);
+    public static JsonHttpRequest createPost(String url, Object body) {
+        return new JsonHttpRequest(HttpMethod.POST, url, body);
     }
 
     private JsonHttpRequest(HttpMethod httpMethod, String url, Object body) {

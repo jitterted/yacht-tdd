@@ -1,119 +1,51 @@
 package com.jitterted.yacht.adapter.out.averagescore;
 
+import com.jitterted.yacht.adapter.out.JsonHttpClient;
 import com.jitterted.yacht.domain.ScoreCategory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 public class AverageScoreFetcher {
     private static final String YACHT_AVERAGE_API_URI =
             "http://localhost:8080/api/averages?scoreCategory={scoreCategory}";
 
-    private final RestTemplateWrapper restTemplate;
+    private final JsonHttpClient jsonHttpClient;
+
+    AverageScoreFetcher(JsonHttpClient jsonHttpClient) {
+        this.jsonHttpClient = jsonHttpClient;
+    }
 
     public static AverageScoreFetcher create() {
-        return new AverageScoreFetcher(new RealRestTemplate());
+        return new AverageScoreFetcher(JsonHttpClient.create());
     }
 
     public static AverageScoreFetcher createNull() {
-        return new AverageScoreFetcher(new StubbedRestTemplate());
+        return createNull(Collections.emptyMap());
     }
 
     public static AverageScoreFetcher createNull(Map<ScoreCategory, Double> map) {
-        return new AverageScoreFetcher(new StubbedRestTemplate(map));
-    }
-
-    private AverageScoreFetcher(RestTemplateWrapper restTemplate) {
-        this.restTemplate = restTemplate;
+        Map<String, Object> endpointsResponses = nulledHttpResponses(map);
+        return new AverageScoreFetcher(JsonHttpClient.createNull(endpointsResponses));
     }
 
     public double averageFor(ScoreCategory scoreCategory) {
-        ResponseEntityWrapper<CategoryAverage> entity =
-                restTemplate.getForEntity(YACHT_AVERAGE_API_URI,
-                                          CategoryAverage.class,
-                                          scoreCategory.toString());
-        return entity.getBody().getAverage();
+        CategoryAverage categoryAverage =
+                jsonHttpClient.get(YACHT_AVERAGE_API_URI,
+                                   CategoryAverage.class,
+                                   scoreCategory.toString());
+        return categoryAverage.getAverage();
     }
 
-
-    //// --- NULLABLES BELOW ---
-
-
-    interface RestTemplateWrapper {
-        <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables);
+    private static Map<String, Object> nulledHttpResponses(Map<ScoreCategory, Double> fetcherResponses) {
+        Map<String, Object> httpResponses = new HashMap<>();
+        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+            String url = "http://localhost:8080/api/averages?scoreCategory=" + scoreCategory;
+            double value = fetcherResponses.getOrDefault(scoreCategory, 42.0);
+            httpResponses.put(url, new CategoryAverage(scoreCategory.toString(), value));
+        }
+        return httpResponses;
     }
 
-    private static class RealRestTemplate implements RestTemplateWrapper {
-        private final RestTemplate restTemplate = new RestTemplate();
-
-        public <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables) {
-            ResponseEntity<T> entity = restTemplate.getForEntity(
-                    url,
-                    responseType,
-                    uriVariables);
-            return new RealResponseEntity<T>(entity);
-        }
-    }
-
-    private static class StubbedRestTemplate implements RestTemplateWrapper {
-        private Map<ScoreCategory, Double> map;
-
-        public StubbedRestTemplate() {
-        }
-
-        public StubbedRestTemplate(Map<ScoreCategory, Double> map) {
-            this.map = map;
-        }
-
-        @Override
-        public <T> ResponseEntityWrapper<T> getForEntity(String url, Class<T> responseType, Object... uriVariables) {
-            if (map == null) {
-                return new StubbedResponseEntity<>(42.0);
-            }
-
-            String categoryString = (String) uriVariables[0];
-            ScoreCategory scoreCategory = ScoreCategory.valueOf(categoryString);
-            requireAverageFor(scoreCategory);
-
-            return new StubbedResponseEntity<>(map.get(scoreCategory));
-        }
-
-        private void requireAverageFor(ScoreCategory scoreCategory) {
-            if (!map.containsKey(scoreCategory)) {
-                throw new NoSuchElementException("No average configured for " + scoreCategory + " in Null AverageScoreFetcher.");
-            }
-        }
-    }
-
-    interface ResponseEntityWrapper<T> {
-        T getBody();
-    }
-
-    private static class RealResponseEntity<T> implements ResponseEntityWrapper<T> {
-        private ResponseEntity<T> entity;
-
-        RealResponseEntity(ResponseEntity<T> entity) {
-            this.entity = entity;
-        }
-
-        public T getBody() {
-            return this.entity.getBody();
-        }
-    }
-
-    private static class StubbedResponseEntity<T> implements ResponseEntityWrapper<T> {
-
-        private double average;
-
-        public StubbedResponseEntity(double average) {
-            this.average = average;
-        }
-
-        @Override
-        public T getBody() {
-            return (T) new CategoryAverage("Null Category", average);
-        }
-    }
 }
