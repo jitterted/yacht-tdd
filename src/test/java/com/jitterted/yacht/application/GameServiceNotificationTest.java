@@ -9,9 +9,33 @@ import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.*;
 
 class GameServiceNotificationTest {
+
+    // TODO: Move to more appropriate test class
+    @Test
+    void canConfigureGameServiceWithDieRolls() {
+        GameService.createNull(
+                new GameService.NulledResponses()
+                        .withDieRolls(List.of(1, 2, 3, 4, 5))
+        fail("");
+    }
+
+
+    void canConfigureGameServiceWithAverageScores() {
+        GameService.createNull(
+                new GameService.NulledResponses()
+                        .withAverageScores(Map.of(
+                                ScoreCategory.FOURS, 13,
+                                ScoreCategory.FIVES, 25,
+                                ScoreCategory.FULLHOUSE, 6
+                        )));
+        fail("");
+    }
 
     @Test
     void whenRollAssignedToCategoryNotificationIsSent() throws Exception {

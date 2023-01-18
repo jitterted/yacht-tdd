@@ -29,6 +29,27 @@ public class GameService {
         this.dieRoller = dieRoller;
     }
 
+    public static GameService createNull(NulledResponses nulledResponses) {
+        
+    }
+
+    static class NulledResponses {
+        private List<Integer> dieRolls = null;
+        private Map<ScoreCategory, Integer> averageScoreResponses = null;
+
+        NulledResponses withDieRolls(List<Integer> rolls) {
+            dieRolls = rolls;
+            return this;
+        }
+
+        NulledResponses withAverageScores(Map<ScoreCategory, Integer> scoreResponses) {
+            this.averageScoreResponses = scoreResponses;
+            return this;
+        }
+
+    }
+
+
     public void start() {
         game = new Game();
     }
