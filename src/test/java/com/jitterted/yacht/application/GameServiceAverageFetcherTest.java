@@ -2,7 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
+import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ class GameServiceAverageFetcherTest {
 
     private static GameService createGameServiceWithAverageScoresOf(Map<ScoreCategory, Double> map) {
         return new GameService(
-                HttpScoreCategoryNotifier.createNull(),
+                ScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(
                         map
                 ),

@@ -2,7 +2,6 @@ package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
@@ -12,9 +11,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 public class YachtControllerReRollTest {
-
-    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
-    };
 
     @Test
     public void reRollGeneratesNewRollIncludingKeptDice() throws Exception {

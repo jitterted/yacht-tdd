@@ -3,13 +3,12 @@ package com.jitterted.yacht.adapter.out.scorecategory;
 import com.jitterted.yacht.adapter.OutputListener;
 import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.adapter.out.JsonHttpClient;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 
 import java.net.URI;
 
-public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
+public class ScoreCategoryNotifier {
     private static final URI YACHT_TRACKER_API_URI =
             URI.create("http://localhost:8080/api/scores");
 
@@ -17,19 +16,18 @@ public class HttpScoreCategoryNotifier implements ScoreCategoryNotifier {
 
     private final OutputListener<RollAssignment> outputListener = new OutputListener<>();
 
-    public static HttpScoreCategoryNotifier create() {
-        return new HttpScoreCategoryNotifier(JsonHttpClient.create());
+    public static ScoreCategoryNotifier create() {
+        return new ScoreCategoryNotifier(JsonHttpClient.create());
     }
 
-    public static HttpScoreCategoryNotifier createNull() {
-        return new HttpScoreCategoryNotifier(JsonHttpClient.createNull());
+    public static ScoreCategoryNotifier createNull() {
+        return new ScoreCategoryNotifier(JsonHttpClient.createNull());
     }
 
-    HttpScoreCategoryNotifier(JsonHttpClient jsonHttpClient) {
+    ScoreCategoryNotifier(JsonHttpClient jsonHttpClient) {
         this.jsonHttpClient = jsonHttpClient;
     }
 
-    @Override
     public void rollAssigned(HandOfDice handOfDice,
                              int score,
                              ScoreCategory scoreCategory) {

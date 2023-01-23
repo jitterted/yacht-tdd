@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
-class HttpScoreCategoryNotifierTest {
+class ScoreCategoryNotifierTest {
     @Test
     void rollAssignmentDoesPostToNotifierService() {
         JsonHttpClient jsonHttpClient = JsonHttpClient.createNull();
@@ -17,12 +17,12 @@ class HttpScoreCategoryNotifierTest {
         OutputTracker<JsonHttpRequest> tracker =
                 jsonHttpClient.trackRequests();
 
-        HttpScoreCategoryNotifier httpScoreCategoryNotifier =
-                new HttpScoreCategoryNotifier(jsonHttpClient);
+        ScoreCategoryNotifier scoreCategoryNotifier =
+                new ScoreCategoryNotifier(jsonHttpClient);
 
-        httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
-                                               30,
-                                               ScoreCategory.LITTLESTRAIGHT);
+        scoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
+                                           30,
+                                           ScoreCategory.LITTLESTRAIGHT);
 
         assertThat(tracker.output())
                 .containsOnly(JsonHttpRequest.createPost(
@@ -34,15 +34,15 @@ class HttpScoreCategoryNotifierTest {
 
     @Test
     void rollAssignmentIsTracked() {
-        HttpScoreCategoryNotifier httpScoreCategoryNotifier =
-                HttpScoreCategoryNotifier.createNull();
+        ScoreCategoryNotifier scoreCategoryNotifier =
+                ScoreCategoryNotifier.createNull();
 
         OutputTracker<RollAssignment> tracker =
-                httpScoreCategoryNotifier.trackAssignments();
+                scoreCategoryNotifier.trackAssignments();
 
-        httpScoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
-                                               30,
-                                               ScoreCategory.LITTLESTRAIGHT);
+        scoreCategoryNotifier.rollAssigned(HandOfDice.of(1, 3, 5, 2, 4),
+                                           30,
+                                           ScoreCategory.LITTLESTRAIGHT);
 
         assertThat(tracker.output())
                 .containsOnly(new RollAssignment(

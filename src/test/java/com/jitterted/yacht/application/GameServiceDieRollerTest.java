@@ -2,8 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
+import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import org.junit.jupiter.api.Test;
 
@@ -12,9 +11,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 public class GameServiceDieRollerTest {
-
-    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
-    };
 
     @Test
     void rollDiceRollsAllDice() {
@@ -41,7 +37,7 @@ public class GameServiceDieRollerTest {
 
     private static GameService createGameServiceWithDieRollsOf(Integer... dieRolls) {
         return new GameService(
-                HttpScoreCategoryNotifier.createNull(),
+                ScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(),
                 DieRoller.createNull(dieRolls));
     }

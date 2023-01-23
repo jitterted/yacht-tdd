@@ -1,7 +1,6 @@
 package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.application.GameService;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
@@ -15,10 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings({"unchecked", "ConstantConditions"})
 public class YachtControllerAssignRollTest {
-
-    private static final ScoreCategoryNotifier NO_OP_SCORE_CATEGORY_NOTIFIER = (diceRoll, score, scoreCategory) -> {
-    };
-
+    
     @Test
     public void assignDiceRoll13355ToThreesResultsInScoreOf6() throws Exception {
         GameService gameService = createGameServiceWithDieRollsOf(1, 3, 3, 5, 5);

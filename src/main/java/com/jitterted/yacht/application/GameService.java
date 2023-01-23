@@ -2,8 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
-import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
-import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
+import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -25,15 +24,15 @@ public class GameService {
     private Game game;
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
-                       AverageScoreFetcher averageScoreFetcher,
-                       DieRoller dieRoller) {
+                AverageScoreFetcher averageScoreFetcher,
+                DieRoller dieRoller) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
     }
 
     public static GameService create() {
-        return new GameService(HttpScoreCategoryNotifier.create(),
+        return new GameService(ScoreCategoryNotifier.create(),
                                AverageScoreFetcher.create(),
                                DieRoller.create());
     }
@@ -43,7 +42,7 @@ public class GameService {
     }
 
     public static GameService createNull(NulledResponses nulledResponses) {
-        return new GameService(HttpScoreCategoryNotifier.createNull(),
+        return new GameService(ScoreCategoryNotifier.createNull(),
                                AverageScoreFetcher.createNull(
                                        nulledResponses.averageScoreResponses),
                                DieRoller.createNull(
