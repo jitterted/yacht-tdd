@@ -2,6 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
@@ -9,6 +10,7 @@ import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,19 +32,24 @@ public class GameService {
     }
 
     public static GameService createNull(NulledResponses nulledResponses) {
-        
+        return new GameService(HttpScoreCategoryNotifier.createNull(),
+                               AverageScoreFetcher.createNull(
+                                       nulledResponses.averageScoreResponses),
+                               DieRoller.createNull(
+                                       nulledResponses.dieRolls
+                               ));
     }
 
     static class NulledResponses {
-        private List<Integer> dieRolls = null;
-        private Map<ScoreCategory, Integer> averageScoreResponses = null;
+        private List<Integer> dieRolls = Collections.emptyList();
+        private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
 
         NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;
             return this;
         }
 
-        NulledResponses withAverageScores(Map<ScoreCategory, Integer> scoreResponses) {
+        NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
             this.averageScoreResponses = scoreResponses;
             return this;
         }

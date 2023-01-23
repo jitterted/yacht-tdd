@@ -19,22 +19,37 @@ class GameServiceNotificationTest {
     // TODO: Move to more appropriate test class
     @Test
     void canConfigureGameServiceWithDieRolls() {
-        GameService.createNull(
+        GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
-                        .withDieRolls(List.of(1, 2, 3, 4, 5))
-        fail("");
+                        .withDieRolls(List.of(1, 2, 3, 4, 5)));
+        gameService.start();
+        gameService.rollDice();
+
+        HandOfDice handOfDice = gameService.lastRoll();
+
+        assertThat(handOfDice)
+                .isEqualTo(HandOfDice.of(1, 2, 3, 4, 5));
     }
 
 
+    @Test
     void canConfigureGameServiceWithAverageScores() {
-        GameService.createNull(
+        Map<ScoreCategory, Double> expectedAverages = Map.of(
+                ScoreCategory.FOURS, 13.0,
+                ScoreCategory.FIVES, 25.0,
+                ScoreCategory.FULLHOUSE, 6.0
+        );
+        GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
-                        .withAverageScores(Map.of(
-                                ScoreCategory.FOURS, 13,
-                                ScoreCategory.FIVES, 25,
-                                ScoreCategory.FULLHOUSE, 6
-                        )));
-        fail("");
+                        .withAverageScores(expectedAverages));
+
+        Map<ScoreCategory, Double> scoreCategoryDoubleMap =
+                gameService.averagesFor(List.of(ScoreCategory.FOURS,
+                                                ScoreCategory.FIVES,
+                                                ScoreCategory.FULLHOUSE));
+
+        assertThat(scoreCategoryDoubleMap)
+                .isEqualTo(expectedAverages);
     }
 
     @Test

@@ -18,8 +18,12 @@ public class DieRoller {
         return new DieRoller(new RandomWrapper());
     }
 
-    public static DieRoller createNull(Integer... values) {
-        return new DieRoller(new RandomStub(values));
+    public static DieRoller createNull(Integer... dieRolls) {
+        return createNull(Arrays.asList(dieRolls));
+    }
+
+    public static DieRoller createNull(List<Integer> dieRolls) {
+        return new DieRoller(new RandomStub(dieRolls));
     }
 
     public int roll() {
@@ -59,8 +63,8 @@ public class DieRoller {
         private final List<Integer> values;
         private int current = 0;
 
-        public RandomStub(Integer... values) {
-            this.values = new ArrayList<>(Arrays.asList(values));
+        public RandomStub(List<Integer> values) {
+            this.values = values;
         }
 
         @Override
