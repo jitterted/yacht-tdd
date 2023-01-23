@@ -56,7 +56,8 @@ class GameServiceNotificationTest {
     void whenRollAssignedToCategoryNotificationIsSent() throws Exception {
         // GIVEN a started game and dice rolled
         DieRoller allSixesDieRoller = DieRoller.createNull(6, 6, 6, 6, 6);
-        HttpScoreCategoryNotifier scoreCategoryNotifier = HttpScoreCategoryNotifier.createNull();
+        HttpScoreCategoryNotifier scoreCategoryNotifier =
+                HttpScoreCategoryNotifier.createNull();
         OutputTracker<RollAssignment> tracker = scoreCategoryNotifier.trackAssignments();
 
         GameService gameService = new GameService(

@@ -1,7 +1,5 @@
 package com.jitterted.yacht.adapter.in.web;
 
-import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
-import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
@@ -14,8 +12,7 @@ public class YachtControllerRuleTest {
 
     @Test
     public void newGameDoesNotRollDiceSoNoRollToAssign() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
         YachtController yachtController = new YachtController(gameService);
 
         yachtController.startGame();
@@ -26,9 +23,7 @@ public class YachtControllerRuleTest {
 
     @Test
     public void givenRollHasNotBeenAssignedThenRollAssignedToCategoryIsFalse() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
-        YachtController yachtController = new YachtController(gameService);
+        YachtController yachtController = new YachtController(GameService.createNull());
         yachtController.startGame();
         yachtController.rollDice();
 
@@ -41,9 +36,7 @@ public class YachtControllerRuleTest {
 
     @Test
     public void givenRollWhenAssignedThenRollAssignedToCategoryIsTrue() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
-        YachtController yachtController = new YachtController(gameService);
+        YachtController yachtController = new YachtController(GameService.createNull());
         yachtController.startGame();
         yachtController.rollDice();
 

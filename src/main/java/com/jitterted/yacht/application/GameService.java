@@ -10,6 +10,7 @@ import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +24,22 @@ public class GameService {
 
     private Game game;
 
-    public GameService(ScoreCategoryNotifier scoreCategoryNotifier,
+    GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                        AverageScoreFetcher averageScoreFetcher,
                        DieRoller dieRoller) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
+    }
+
+    public static GameService create() {
+        return new GameService(HttpScoreCategoryNotifier.create(),
+                               AverageScoreFetcher.create(),
+                               DieRoller.create());
+    }
+
+    public static GameService createNull() {
+        return createNull(new NulledResponses());
     }
 
     public static GameService createNull(NulledResponses nulledResponses) {
@@ -40,20 +51,23 @@ public class GameService {
                                ));
     }
 
-    static class NulledResponses {
+    public static class NulledResponses {
         private List<Integer> dieRolls = Collections.emptyList();
         private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
 
-        NulledResponses withDieRolls(List<Integer> rolls) {
+        public NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;
             return this;
         }
 
-        NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
+        public NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
             this.averageScoreResponses = scoreResponses;
             return this;
         }
 
+        public NulledResponses withDieRolls(Integer... dieRolls) {
+            return withDieRolls(Arrays.asList(dieRolls));
+        }
     }
 
 

@@ -1,26 +1,21 @@
 package com.jitterted.yacht.adapter.in.vue;
 
-import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
-import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 public class VueControllerTest {
 
     @Test
     public void callingStateOnNonStartedGameThrowsException() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
 
         VueController vueController = new VueController(gameService);
 
@@ -31,8 +26,7 @@ public class VueControllerTest {
 
     @Test
     public void postToStartGameStartsGame() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -43,8 +37,7 @@ public class VueControllerTest {
 
     @Test
     public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -56,9 +49,10 @@ public class VueControllerTest {
 
     @Test
     public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
-        DieRoller dieRoller = DieRoller.createNull(2, 3, 4, 5, 6);
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), dieRoller);
+        GameService gameService = GameService.createNull(
+                new GameService.NulledResponses()
+                        .withDieRolls(2, 3, 4, 5, 6));
+
         VueController vueController = new VueController(gameService);
 
         vueController.startGame();
@@ -72,8 +66,7 @@ public class VueControllerTest {
 
     @Test
     public void scoreCategoriesReturnsScoredCategories() throws Exception {
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), DieRoller.createNull());
+        GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
@@ -87,9 +80,9 @@ public class VueControllerTest {
 
     @Test
     public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
-        DieRoller dieRoller = DieRoller.createNull(6, 6, 5, 5, 5);
-        GameService gameService = new GameService((diceRoll, score, scoreCategory) -> {
-        }, AverageScoreFetcher.createNull(), dieRoller);
+        GameService gameService = GameService.createNull(
+                new GameService.NulledResponses()
+                        .withDieRolls(6, 6, 5, 5, 5));
         VueController vueController = new VueController(gameService);
         vueController.startGame();
         vueController.rollDice();
@@ -102,20 +95,21 @@ public class VueControllerTest {
     }
 
     @Test
-    @Disabled // fix this by creating a hand-rolled Mock/Spy
-    public void keepDiceReRollsTheNonKeptDiceUsingSpy() throws Exception {
-        GameService spyGameService = spy(GameService.class);
-        VueController vueController = new VueController(spyGameService);
+    public void keepDiceReRollsTheNonKeptDice() throws Exception {
+        GameService gameService = GameService.createNull(
+                new GameService.NulledResponses()
+                        .withDieRolls(1, 2, 3, 4, 5, 6, 6));
+        VueController vueController = new VueController(gameService);
         vueController.startGame();
         vueController.rollDice();
 
         Keep keep = new Keep();
         keep.setDiceIndexesToKeep(List.of(1, 2, 4));
-        List<Integer> keptDiceValues = keep.diceValuesFrom(spyGameService.lastRoll());
 
         vueController.reroll(keep);
 
-        verify(spyGameService).reRoll(keptDiceValues);
+        assertThat(gameService.lastRoll())
+                .isEqualTo(HandOfDice.of(2, 3, 5, 6, 6));
     }
 
 }

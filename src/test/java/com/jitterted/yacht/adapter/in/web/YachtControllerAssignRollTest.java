@@ -1,7 +1,5 @@
 package com.jitterted.yacht.adapter.in.web;
 
-import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
-import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -64,7 +62,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignToLastCategoryRedirectsToGameOverPage() throws Exception {
-        GameService gameService = new GameService(NO_OP_SCORE_CATEGORY_NOTIFIER, AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -76,10 +74,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void assignRollToAllCategoriesResultsInAllCategoriesAssignedWithAverages() throws Exception {
-        GameService gameService = new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
-                AverageScoreFetcher.createNull(mapOfAllCategoriesToAverageOf(12.0)),
-                DieRoller.create());
+        GameService gameService = createGameServiceWithAllAverageScoresOf(12.0);
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
         rollAndAssignForAllCategories(gameService, yachtController);
@@ -97,9 +92,7 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void newGameAllCategoriesAreUnassigned() throws Exception {
-        GameService gameService = new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
-                AverageScoreFetcher.createNull(), DieRoller.create());
+        GameService gameService = GameService.createNull();
         YachtController yachtController = new YachtController(gameService);
         yachtController.startGame();
 
@@ -121,21 +114,19 @@ public class YachtControllerAssignRollTest {
         return viewName;
     }
 
-    private Map<ScoreCategory, Double> mapOfAllCategoriesToAverageOf(double average) {
+    private GameService createGameServiceWithAllAverageScoresOf(double averageScore) {
         Map<ScoreCategory, Double> map = new HashMap<>();
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            map.put(scoreCategory, average);
+            map.put(scoreCategory, averageScore);
         }
-        return map;
+        return GameService.createNull(
+                new GameService.NulledResponses().withAverageScores(map));
     }
 
 
-    private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
-        DieRoller dieRoller = DieRoller.createNull(dies);
-        return new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
-                AverageScoreFetcher.createNull(),
-                dieRoller);
+    private static GameService createGameServiceWithDieRollsOf(Integer... dieRolls) {
+        return GameService.createNull(new GameService.NulledResponses()
+                                              .withDieRolls(dieRolls));
     }
 
 }

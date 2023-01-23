@@ -2,6 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.scorecategory.HttpScoreCategoryNotifier;
 import com.jitterted.yacht.application.port.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.HandOfDice;
 import org.junit.jupiter.api.Test;
@@ -38,12 +39,11 @@ public class GameServiceDieRollerTest {
                 .isEqualTo(HandOfDice.of(6, 6, 6, 2, 3));
     }
 
-    private static GameService createGameServiceWithDieRollsOf(Integer... dies) {
-        DieRoller dieRoller = DieRoller.createNull(dies);
+    private static GameService createGameServiceWithDieRollsOf(Integer... dieRolls) {
         return new GameService(
-                NO_OP_SCORE_CATEGORY_NOTIFIER,
+                HttpScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(),
-                dieRoller);
+                DieRoller.createNull(dieRolls));
     }
 
 }
