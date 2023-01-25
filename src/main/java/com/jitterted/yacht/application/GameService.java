@@ -50,24 +50,6 @@ public class GameService {
                                ));
     }
 
-    public static class NulledResponses {
-        private List<Integer> dieRolls = Collections.emptyList();
-        private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
-
-        public NulledResponses withDieRolls(List<Integer> rolls) {
-            dieRolls = rolls;
-            return this;
-        }
-
-        public NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
-            this.averageScoreResponses = scoreResponses;
-            return this;
-        }
-
-        public NulledResponses withDieRolls(Integer... dieRolls) {
-            return withDieRolls(Arrays.asList(dieRolls));
-        }
-    }
 
 
     public void start() {
@@ -125,4 +107,22 @@ public class GameService {
         return scoreToAverageMap;
     }
 
+    public static class NulledResponses {
+        private List<Integer> dieRolls = Collections.emptyList();
+        private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
+
+        public NulledResponses withDieRolls(List<Integer> rolls) {
+            dieRolls = rolls;
+            return this;
+        }
+
+        public NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
+            this.averageScoreResponses = scoreResponses;
+            return this;
+        }
+
+        public NulledResponses withDieRolls(Integer... dieRolls) {
+            return withDieRolls(Arrays.asList(dieRolls));
+        }
+    }
 }
