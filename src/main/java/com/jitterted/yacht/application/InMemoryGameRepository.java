@@ -6,8 +6,9 @@ public class InMemoryGameRepository implements GameRepository {
     private Game.Memento gameMemento;
 
     @Override
-    public void save(Game game) {
+    public Game save(Game game) {
         this.gameMemento = game.memento();
+        return Game.from(gameMemento);
     }
 
     @Override

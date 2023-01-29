@@ -6,8 +6,8 @@ roundCompleted      boolean
 rolls               int
 currentHand         array
 
-Score Table
------------
+ScoreCategory Table
+-------------------
 id                  PK
 gameId              FK
 scoreCategoryId     FK

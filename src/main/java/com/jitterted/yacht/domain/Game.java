@@ -47,6 +47,7 @@ public class Game {
         }
     }
 
+    // TODO: rename to current hand
     public HandOfDice lastRoll() {
         return lastRoll;
     }
