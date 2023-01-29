@@ -14,26 +14,30 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class GameService {
     private static final int YACHT_DICE_COUNT = 5;
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-    private final GameRepository gameRepository = new GameRepository();
+    private final GameRepository gameRepository;
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
-                DieRoller dieRoller) {
+                DieRoller dieRoller,
+                GameRepository gameRepository) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
+        this.gameRepository = gameRepository;
     }
 
     public static GameService create() {
         return new GameService(ScoreCategoryNotifier.create(),
                                AverageScoreFetcher.create(),
-                               DieRoller.create());
+                               DieRoller.create(),
+                               new InMemoryGameRepository());
     }
 
     public static GameService createNull() {
@@ -46,7 +50,8 @@ public class GameService {
                                        nulledResponses.averageScoreResponses),
                                DieRoller.createNull(
                                        nulledResponses.dieRolls
-                               ));
+                               ),
+                               new InMemoryGameRepository());
     }
 
 
@@ -57,27 +62,28 @@ public class GameService {
 
     public void rollDice() {
         HandOfDice handOfDice = HandOfDice.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
-        Game game = gameRepository.find();
-        game.diceRolled(handOfDice);
-        gameRepository.save(game);
+        executeAndSave(game -> game.diceRolled(handOfDice));
     }
 
     public void reRoll(List<Integer> keptDice) {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
+        executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
+    }
+
+    private void executeAndSave(Consumer<Game> consumer) {
         Game game = gameRepository.find();
-        game.diceReRolled(HandOfDice.from(dieRolls));
+        consumer.accept(game);
         gameRepository.save(game);
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {
+        executeAndSave(game -> game.assignRollTo(scoreCategory));
         Game game = gameRepository.find();
-        game.assignRollTo(scoreCategory);
         scoreCategoryNotifier.rollAssigned(game.lastRoll(),
                                            game.score(),
                                            scoreCategory);
-        gameRepository.save(game);
     }
 
     public HandOfDice lastRoll() {

@@ -42,7 +42,7 @@ class GameServiceAverageFetcherTest {
                 AverageScoreFetcher.createNull(
                         map
                 ),
-                DieRoller.createNull());
+                DieRoller.createNull(), new InMemoryGameRepository());
     }
 
 }

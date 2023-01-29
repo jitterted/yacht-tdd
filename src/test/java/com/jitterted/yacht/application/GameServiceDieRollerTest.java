@@ -39,7 +39,7 @@ public class GameServiceDieRollerTest {
         return new GameService(
                 ScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(),
-                DieRoller.createNull(dieRolls));
+                DieRoller.createNull(dieRolls), new InMemoryGameRepository());
     }
 
 }
