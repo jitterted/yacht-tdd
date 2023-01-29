@@ -137,3 +137,10 @@ getting off of the Map.
 [ ] Change full house to score 25 (as per https://www.mathsisfun.com/games/yacht-dice-game.html)
   
 [ ] Introduce "Die" as a value object (to replace Integer)
+
+
+### Streaming Title & Go Live Notification
+
+Refactoring to "Nullables" with James Shore. !james !nullables !project
+
+James Shore and I are Pair Programming again: Join Us!

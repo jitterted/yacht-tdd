@@ -25,7 +25,7 @@ public class HandOfDice {
         return new HandOfDice(dieRolls);
     }
 
-    public static HandOfDice empty() {
+    public static HandOfDice unassigned() {
         return NON_EXISTENT_DICE_ROLL;
     }
 

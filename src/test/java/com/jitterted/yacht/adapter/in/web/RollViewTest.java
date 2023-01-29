@@ -19,7 +19,7 @@ public class RollViewTest {
 
     @Test
     public void rollViewForNonExistentRollIsEmptyString() throws Exception {
-        HandOfDice handOfDice = HandOfDice.empty();
+        HandOfDice handOfDice = HandOfDice.unassigned();
 
         String rollView = RollView.forScoreboard(handOfDice);
 

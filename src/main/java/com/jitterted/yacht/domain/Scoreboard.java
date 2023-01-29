@@ -19,6 +19,13 @@ public class Scoreboard {
         populateScoredCategoriesMap();
     }
 
+    public Scoreboard(Memento memento) {
+        this();
+        memento.scoredCategoryHandMap.forEach(
+                (scoreCategory, handOfDiceRolls) ->
+                        scoreAs(scoreCategory, HandOfDice.from(handOfDiceRolls)));
+    }
+
     private void populateScoredCategoriesMap() {
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
             scoredCategoryMap.put(scoreCategory,
@@ -76,6 +83,21 @@ public class Scoreboard {
                                 .noneMatch(ScoredCategory::isAssigned);
     }
 
+    Memento memento() {
+        Map<ScoreCategory, List<Integer>> scoredCategoryHandMap =
+                scoredCategoryMap
+                        .entrySet()
+                        .stream()
+                        .filter(entry -> entry.getValue().isAssigned())
+                        .collect(Collectors
+                                         .toMap(Map.Entry::getKey,
+                                                entry -> entry.getValue()
+                                                              .diceRoll()
+                                                              .stream()
+                                                              .toList()));
+        return new Memento(scoredCategoryHandMap);
+    }
+
     private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
         return scoredCategoryMap.get(scoreCategory);
     }
@@ -87,4 +109,31 @@ public class Scoreboard {
         }
     }
 
+    public record Memento(Map<ScoreCategory, List<Integer>> scoredCategoryHandMap) {
+
+    }
+
+    @Override
+    public String toString() {
+        return "Scoreboard Map: " + scoredCategoryMap;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Scoreboard that = (Scoreboard) o;
+
+        return scoredCategoryMap.equals(that.scoredCategoryMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return scoredCategoryMap.hashCode();
+    }
 }

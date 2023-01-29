@@ -4,14 +4,15 @@ Game Table
 id                  PK
 roundCompleted      boolean
 rolls               int
-handOfDice          array
+currentHand         array
 
 Score Table
 -----------
 id                  PK
 gameId              FK
 scoreCategoryId     FK
-score               int
+handOfDice          array
+// Note: score will be recalculated when the object is reconstituted
 
 ScoreCategory Table
 -------------------
@@ -21,14 +22,11 @@ CategoryName        string
 
 Memento Design
 --------------
-Game
+Game.Memento
     roundCompleted  boolean
     rolls           int
-    handOfDice      array
-    scoreboard      Scoreboard
-
-Scoreboard
-    scores          Map<String, int>
+    currentHand     List<Integer> (not HandOfDice)
+    scoreboard      EnumMap<ScoreCategory (enum), List<Integer>>
 
 
 NEXT STEPS:

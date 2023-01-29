@@ -16,7 +16,7 @@ public class HandOfDiceEmptyTest {
 
     @Test
     public void emptyDiceRollIsEmpty() throws Exception {
-        HandOfDice handOfDice = HandOfDice.empty();
+        HandOfDice handOfDice = HandOfDice.unassigned();
 
         assertThat(handOfDice.isEmpty())
                 .isTrue();

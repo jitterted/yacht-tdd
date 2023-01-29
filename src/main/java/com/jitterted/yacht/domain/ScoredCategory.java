@@ -12,13 +12,14 @@ public class ScoredCategory {
     }
 
     public static ScoredCategory createUnassignedScoredCategoryFor(ScoreCategory scoreCategory) {
-        return new ScoredCategory(scoreCategory, HandOfDice.empty(), 0);
+        return new ScoredCategory(scoreCategory, HandOfDice.unassigned(), 0);
     }
 
     public ScoreCategory scoreCategory() {
         return scoreCategory;
     }
 
+    // TODO: rename this method to handOfDice
     public HandOfDice diceRoll() {
         return handOfDice;
     }
