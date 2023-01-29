@@ -19,7 +19,11 @@ public class Scoreboard {
         populateScoredCategoriesMap();
     }
 
-    public Scoreboard(Memento memento) {
+    public static Scoreboard from(Memento memento) {
+        return new Scoreboard(memento);
+    }
+
+    private Scoreboard(Memento memento) {
         this();
         memento.scoredCategoryHandMap.forEach(
                 (scoreCategory, handOfDiceRolls) ->

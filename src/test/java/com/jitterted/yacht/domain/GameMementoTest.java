@@ -23,7 +23,7 @@ class GameMementoTest {
                 .isEqualTo(1);
         assertThat(memento.lastRoll())
                 .containsExactly(1, 2, 3, 4, 5);
-        assertThat(memento.scoreboard())
+        assertThat(memento.scoreboard().scoredCategoryHandMap())
                 .containsExactly(Map.entry(ScoreCategory.FIVES,
                                            List.of(1, 2, 3, 4, 5)));
     }

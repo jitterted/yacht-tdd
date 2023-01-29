@@ -1,7 +1,6 @@
 package com.jitterted.yacht.domain;
 
 import java.util.List;
-import java.util.Map;
 
 public class Game {
 
@@ -23,8 +22,7 @@ public class Game {
         roundCompleted = memento.roundCompleted();
         rolls = new Rolls(memento.rolls());
         lastRoll = HandOfDice.from(memento.lastRoll());
-        Scoreboard.Memento scoreboardMemento = new Scoreboard.Memento(memento.scoreboard);
-        scoreboard = new Scoreboard(scoreboardMemento);
+        scoreboard = Scoreboard.from(memento.scoreboard());
     }
 
     public static Game from(Memento memento) {
@@ -92,13 +90,13 @@ public class Game {
         return new Memento(roundCompleted,
                            rolls.rolls(),
                            lastRoll.stream().toList(),
-                           scoreboard.memento().scoredCategoryHandMap());
+                           scoreboard.memento());
     }
 
     public record Memento(boolean roundCompleted,
                           int rolls,
                           List<Integer> lastRoll,
-                          Map<ScoreCategory, List<Integer>> scoreboard) {
+                          Scoreboard.Memento scoreboard) {
     }
 
     @Override
