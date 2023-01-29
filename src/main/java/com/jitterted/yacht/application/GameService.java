@@ -20,8 +20,7 @@ public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-
-    private Game game;
+    private final GameRepository gameRepository = new GameRepository();
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
@@ -53,50 +52,56 @@ public class GameService {
 
 
     public void start() {
-        game = new Game();
+        gameRepository.save(new Game());
     }
 
     public void rollDice() {
         HandOfDice handOfDice = HandOfDice.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
+        Game game = gameRepository.find();
         game.diceRolled(handOfDice);
-    }
-
-    public HandOfDice lastRoll() {
-        return game.lastRoll();
-    }
-
-    public boolean canReRoll() {
-        return game.canReRoll();
-    }
-
-    public boolean roundCompleted() {
-        return game.roundCompleted();
+        gameRepository.save(game);
     }
 
     public void reRoll(List<Integer> keptDice) {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
+        Game game = gameRepository.find();
         game.diceReRolled(HandOfDice.from(dieRolls));
+        gameRepository.save(game);
     }
 
     public void assignRollTo(ScoreCategory scoreCategory) {
+        Game game = gameRepository.find();
         game.assignRollTo(scoreCategory);
         scoreCategoryNotifier.rollAssigned(game.lastRoll(),
                                            game.score(),
                                            scoreCategory);
+        gameRepository.save(game);
+    }
+
+    public HandOfDice lastRoll() {
+        return gameRepository.find().lastRoll();
+    }
+
+    public boolean canReRoll() {
+        return gameRepository.find().canReRoll();
+    }
+
+    public boolean roundCompleted() {
+        return gameRepository.find().roundCompleted();
     }
 
     public boolean isOver() {
-        return game.isOver();
+        return gameRepository.find().isOver();
     }
 
     public List<ScoredCategory> scoredCategories() {
-        return game.scoredCategories();
+        return gameRepository.find().scoredCategories();
     }
 
     public int score() {
-        return game.score();
+        return gameRepository.find().score();
     }
 
     public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {
