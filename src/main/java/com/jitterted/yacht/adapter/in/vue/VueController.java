@@ -37,7 +37,7 @@ public class VueController {
 
     @GetMapping("last-roll")
     public DiceRollDto lastRoll() {
-        return DiceRollDto.from(gameService.lastRoll());
+        return DiceRollDto.from(gameService.currentHand());
     }
 
     @PostMapping("roll-dice")
@@ -62,7 +62,7 @@ public class VueController {
 
     @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void reroll(@RequestBody Keep keep) {
-        List<Integer> keptDice = keep.diceValuesFrom(gameService.lastRoll());
+        List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
         gameService.reRoll(keptDice);
     }
 

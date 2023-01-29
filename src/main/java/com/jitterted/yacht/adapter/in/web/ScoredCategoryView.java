@@ -17,7 +17,7 @@ public class ScoredCategoryView {
 
     public static ScoredCategoryView from(ScoredCategory scoredCategory, String scoreAverage) {
         return new ScoredCategoryView(scoredCategory.scoreCategory().toString(),
-                                      RollView.forScoreboard(scoredCategory.diceRoll()),
+                                      RollView.forScoreboard(scoredCategory.handOfDice()),
                                       String.valueOf(scoredCategory.score()),
                                       scoredCategory.isAssigned(),
                                       scoreAverage);

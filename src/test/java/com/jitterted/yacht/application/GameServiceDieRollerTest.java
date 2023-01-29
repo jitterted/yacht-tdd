@@ -19,7 +19,7 @@ public class GameServiceDieRollerTest {
 
         gameService.rollDice();
 
-        assertThat(gameService.lastRoll())
+        assertThat(gameService.currentHand())
                 .isEqualTo(HandOfDice.of(5, 1, 4, 2, 3));
     }
 
@@ -31,7 +31,7 @@ public class GameServiceDieRollerTest {
 
         gameService.reRoll(List.of(6, 6, 6));
 
-        assertThat(gameService.lastRoll())
+        assertThat(gameService.currentHand())
                 .isEqualTo(HandOfDice.of(6, 6, 6, 2, 3));
     }
 

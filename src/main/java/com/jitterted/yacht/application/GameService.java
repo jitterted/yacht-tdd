@@ -81,13 +81,13 @@ public class GameService {
     public void assignRollTo(ScoreCategory scoreCategory) {
         executeAndSave(game -> game.assignRollTo(scoreCategory));
         Game game = gameRepository.find();
-        scoreCategoryNotifier.rollAssigned(game.lastRoll(),
+        scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);
     }
 
-    public HandOfDice lastRoll() {
-        return gameRepository.find().lastRoll();
+    public HandOfDice currentHand() {
+        return gameRepository.find().currentHand();
     }
 
     public boolean canReRoll() {

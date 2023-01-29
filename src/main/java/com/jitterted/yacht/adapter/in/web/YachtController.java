@@ -40,7 +40,7 @@ public class YachtController {
     @GetMapping("/rollresult")
     public String rollResult(Model model) {
         addCurrentScoreTo(model);
-        model.addAttribute("roll", RollView.listOf(gameService.lastRoll()));
+        model.addAttribute("roll", RollView.listOf(gameService.currentHand()));
         addCategoriesTo(model);
         model.addAttribute("canReRoll", gameService.canReRoll());
         model.addAttribute("roundCompleted", gameService.roundCompleted());
@@ -51,7 +51,7 @@ public class YachtController {
 
     @PostMapping("/re-roll")
     public String reRoll(Keep keep) {
-        List<Integer> keptDice = keep.diceValuesFrom(gameService.lastRoll());
+        List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
         gameService.reRoll(keptDice);
         return "redirect:/rollresult";
     }

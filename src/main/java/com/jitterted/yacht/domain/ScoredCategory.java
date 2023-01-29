@@ -19,8 +19,7 @@ public class ScoredCategory {
         return scoreCategory;
     }
 
-    // TODO: rename this method to handOfDice
-    public HandOfDice diceRoll() {
+    public HandOfDice handOfDice() {
         return handOfDice;
     }
 
@@ -29,7 +28,7 @@ public class ScoredCategory {
     }
 
     public boolean isAssigned() {
-        return !diceRoll().isEmpty();
+        return !handOfDice().isEmpty();
     }
 
     @Override

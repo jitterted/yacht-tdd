@@ -20,7 +20,7 @@ public class GameTest {
 
         game.diceRolled(HandOfDice.of(2, 3, 4, 5, 6));
 
-        assertThat(game.lastRoll())
+        assertThat(game.currentHand())
                 .isEqualTo(HandOfDice.of(2, 3, 4, 5, 6));
     }
 

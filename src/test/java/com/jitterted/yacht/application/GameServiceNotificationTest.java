@@ -25,7 +25,7 @@ class GameServiceNotificationTest {
         gameService.start();
         gameService.rollDice();
 
-        HandOfDice handOfDice = gameService.lastRoll();
+        HandOfDice handOfDice = gameService.currentHand();
 
         assertThat(handOfDice)
                 .isEqualTo(HandOfDice.of(1, 2, 3, 4, 5));

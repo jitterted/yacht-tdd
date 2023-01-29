@@ -108,7 +108,7 @@ public class VueControllerTest {
 
         vueController.reroll(keep);
 
-        assertThat(gameService.lastRoll())
+        assertThat(gameService.currentHand())
                 .isEqualTo(HandOfDice.of(2, 3, 5, 6, 6));
     }
 

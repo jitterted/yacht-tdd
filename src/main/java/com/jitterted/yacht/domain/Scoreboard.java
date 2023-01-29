@@ -96,7 +96,7 @@ public class Scoreboard {
                         .collect(Collectors
                                          .toMap(Map.Entry::getKey,
                                                 entry -> entry.getValue()
-                                                              .diceRoll()
+                                                              .handOfDice()
                                                               .stream()
                                                               .toList()));
         return new Memento(scoredCategoryHandMap);
