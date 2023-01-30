@@ -39,7 +39,8 @@ public class GameDbo {
         gameDbo.setRolls(memento.rolls());
         gameDbo.setCurrentHand(memento.lastRoll());
         List<ScoredCategoryDbo> dboList =
-                memento.scoreboard().scoredCategoryHandMap()
+                memento.scoreboard()
+                       .scoredCategoryHandMap()
                        .entrySet()
                        .stream()
                        .map(entry -> {
@@ -54,10 +55,11 @@ public class GameDbo {
     }
 
     Game toDomain() {
-        Map<ScoreCategory, List<Integer>> map = getScoredCategoryDbos()
-                .stream()
-                .collect(Collectors.toMap(ScoredCategoryDbo::getScoreCategory,
-                                          ScoredCategoryDbo::getHandOfDice));
+        Map<ScoreCategory, List<Integer>> map =
+                scoredCategoryDbos
+                        .stream()
+                        .collect(Collectors.toMap(ScoredCategoryDbo::getScoreCategory,
+                                                  ScoredCategoryDbo::getHandOfDice));
         Scoreboard.Memento scoreboardMemento =
                 new Scoreboard.Memento(map);
 

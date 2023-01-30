@@ -8,7 +8,7 @@
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="tags" />
     <option name="PARAMETERS" value="" />
-    <tag value="!spring &amp; !architecture &amp;!manual" />
+    <tag value="!spring &amp; !architecture &amp; !manual" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
