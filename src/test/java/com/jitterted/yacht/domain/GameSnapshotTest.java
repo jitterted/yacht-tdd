@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
-class GameMementoTest {
+class GameSnapshotTest {
 
     @Test
     void mementoSavesAllGameState() {
@@ -15,15 +15,15 @@ class GameMementoTest {
         game.diceRolled(HandOfDice.of(1, 2, 3, 4, 5));
         game.assignRollTo(ScoreCategory.FIVES);
 
-        Game.Memento memento = game.memento();
+        Game.Snapshot snapshot = game.memento();
 
-        assertThat(memento.roundCompleted())
+        assertThat(snapshot.roundCompleted())
                 .isTrue();
-        assertThat(memento.rolls())
+        assertThat(snapshot.rolls())
                 .isEqualTo(1);
-        assertThat(memento.lastRoll())
+        assertThat(snapshot.currentHand())
                 .containsExactly(1, 2, 3, 4, 5);
-        assertThat(memento.scoreboard().scoredCategoryHandMap())
+        assertThat(snapshot.scoreboard().scoredCategoryHandMap())
                 .containsExactly(Map.entry(ScoreCategory.FIVES,
                                            List.of(1, 2, 3, 4, 5)));
     }
@@ -36,9 +36,9 @@ class GameMementoTest {
         originalGame.diceRolled(HandOfDice.of(6, 6, 6, 6, 1));
         originalGame.diceReRolled(HandOfDice.of(6, 6, 6, 6, 6));
 
-        Game.Memento originalGameMemento = originalGame.memento();
+        Game.Snapshot originalGameSnapshot = originalGame.memento();
 
-        Game restoredGame = Game.from(originalGameMemento);
+        Game restoredGame = Game.from(originalGameSnapshot);
 
         // NOTE: this assertion gives us nicer assertion failure messages,
         // but assumes all fields of Game are used for equality (which is true

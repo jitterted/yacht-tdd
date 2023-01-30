@@ -18,15 +18,15 @@ public class Game {
         scoreboard = new Scoreboard();
     }
 
-    private Game(Memento memento) {
-        roundCompleted = memento.roundCompleted();
-        rolls = new Rolls(memento.rolls());
-        lastRoll = HandOfDice.from(memento.lastRoll());
-        scoreboard = Scoreboard.from(memento.scoreboard());
+    private Game(Snapshot snapshot) {
+        roundCompleted = snapshot.roundCompleted();
+        rolls = new Rolls(snapshot.rolls());
+        lastRoll = HandOfDice.from(snapshot.currentHand());
+        scoreboard = Scoreboard.from(snapshot.scoreboard());
     }
 
-    public static Game from(Memento memento) {
-        return new Game(memento);
+    public static Game from(Snapshot snapshot) {
+        return new Game(snapshot);
     }
 
     public void diceRolled(HandOfDice handOfDice) {
@@ -86,17 +86,17 @@ public class Game {
         return scoreboard.isComplete();
     }
 
-    public Memento memento() {
-        return new Memento(roundCompleted,
-                           rolls.rolls(),
-                           lastRoll.stream().toList(),
-                           scoreboard.memento());
+    public Snapshot memento() {
+        return new Snapshot(roundCompleted,
+                            rolls.rolls(),
+                            lastRoll.stream().toList(),
+                            scoreboard.memento());
     }
 
-    public record Memento(boolean roundCompleted,
-                          int rolls,
-                          List<Integer> lastRoll,
-                          Scoreboard.Memento scoreboard) {
+    public record Snapshot(boolean roundCompleted,
+                           int rolls,
+                           List<Integer> currentHand,
+                           Scoreboard.Memento scoreboard) {
     }
 
     @Override

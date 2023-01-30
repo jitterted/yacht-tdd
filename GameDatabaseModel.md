@@ -32,5 +32,5 @@ Game.Memento
 NEXT STEPS:
 ==========
 #. Create DB tables [Ted will do separately]
-#. Introduce memento [Ted will do separately]
+#. Introduce snapshot [Ted will do separately]
 #. Create GameRepository adapter

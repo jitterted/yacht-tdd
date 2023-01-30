@@ -3,17 +3,17 @@ package com.jitterted.yacht.application;
 import com.jitterted.yacht.domain.Game;
 
 public class InMemoryGameRepository implements GameRepository {
-    private Game.Memento gameMemento;
+    private Game.Snapshot gameSnapshot;
 
     @Override
     public Game save(Game game) {
-        this.gameMemento = game.memento();
-        return Game.from(gameMemento);
+        this.gameSnapshot = game.memento();
+        return Game.from(gameSnapshot);
     }
 
     @Override
     public Game find() {
-        return Game.from(gameMemento);
+        return Game.from(gameSnapshot);
     }
 
 }

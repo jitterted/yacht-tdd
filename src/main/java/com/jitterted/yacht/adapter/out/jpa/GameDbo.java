@@ -30,26 +30,27 @@ public class GameDbo {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ScoredCategoryDbo> scoredCategoryDbos;
 
+    // TODO: make this take a memento
     static GameDbo from(Game game) {
         GameDbo gameDbo = new GameDbo();
         gameDbo.setId(THE_ONLY_ID);
 
-        Game.Memento memento = game.memento();
-        gameDbo.setRoundCompleted(memento.roundCompleted());
-        gameDbo.setRolls(memento.rolls());
-        gameDbo.setCurrentHand(memento.lastRoll());
+        Game.Snapshot snapshot = game.memento();
+        gameDbo.setRoundCompleted(snapshot.roundCompleted());
+        gameDbo.setRolls(snapshot.rolls());
+        gameDbo.setCurrentHand(snapshot.currentHand());
         List<ScoredCategoryDbo> dboList =
-                memento.scoreboard()
-                       .scoredCategoryHandMap()
-                       .entrySet()
-                       .stream()
-                       .map(entry -> {
+                snapshot.scoreboard()
+                        .scoredCategoryHandMap()
+                        .entrySet()
+                        .stream()
+                        .map(entry -> {
                            ScoredCategoryDbo dbo = new ScoredCategoryDbo();
                            dbo.setScoreCategory(entry.getKey());
                            dbo.setHandOfDice(entry.getValue());
                            return dbo;
                        })
-                       .toList();
+                        .toList();
         gameDbo.setScoredCategoryDbos(dboList);
         return gameDbo;
     }
@@ -63,11 +64,11 @@ public class GameDbo {
         Scoreboard.Memento scoreboardMemento =
                 new Scoreboard.Memento(map);
 
-        Game.Memento savedGameMemento = new Game.Memento(isRoundCompleted(),
-                                                         getRolls(),
-                                                         getCurrentHand(),
-                                                         scoreboardMemento);
-        return Game.from(savedGameMemento);
+        Game.Snapshot savedGameSnapshot = new Game.Snapshot(isRoundCompleted(),
+                                                            getRolls(),
+                                                            getCurrentHand(),
+                                                            scoreboardMemento);
+        return Game.from(savedGameSnapshot);
     }
 
 
