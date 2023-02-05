@@ -18,6 +18,7 @@ public class GameDatabase {
         GameTable gameTable = new GameTable();
 
         gameTable.setRolls(snapshot.rolls());
+        gameTable.setRoundCompleted(snapshot.roundCompleted());
 
         gameDatabaseJpa.save(gameTable);
     }

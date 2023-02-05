@@ -1,12 +1,14 @@
 package com.jitterted.yacht.adapter.out.jpa;
 
 import com.jitterted.yacht.domain.ScoreCategory;
+import com.jitterted.yacht.domain.Scoreboard;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class ScoredCategoryDbo {
@@ -18,6 +20,21 @@ public class ScoredCategoryDbo {
 
     @ElementCollection
     private List<Integer> handOfDice;
+
+    static List<ScoredCategoryDbo> fromEntry(Scoreboard.Memento scoreboard) {
+        return scoreboard.scoredCategoryHandMap()
+                         .entrySet()
+                         .stream()
+                         .map(ScoredCategoryDbo::fromEntry)
+                         .toList();
+    }
+
+    private static ScoredCategoryDbo fromEntry(Map.Entry<ScoreCategory, List<Integer>> entry) {
+        ScoredCategoryDbo dbo = new ScoredCategoryDbo();
+        dbo.setScoreCategory(entry.getKey());
+        dbo.setHandOfDice(entry.getValue());
+        return dbo;
+    }
 
     public void setId(Long id) {
         this.id = id;

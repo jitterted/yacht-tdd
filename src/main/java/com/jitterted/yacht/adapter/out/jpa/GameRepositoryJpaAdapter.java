@@ -14,7 +14,7 @@ public class GameRepositoryJpaAdapter implements GameRepository {
 
     @Override
     public Game save(Game game) {
-        GameDbo gameDbo = GameDbo.from(game);
+        GameDbo gameDbo = GameDbo.from(game.memento());
 
         GameDbo savedGameDbo = gameJpaRepository.save(gameDbo);
 

@@ -30,28 +30,17 @@ public class GameDbo {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ScoredCategoryDbo> scoredCategoryDbos;
 
-    // TODO: make this take a memento
-    static GameDbo from(Game game) {
+    static GameDbo from(Game.Snapshot snapshot) {
         GameDbo gameDbo = new GameDbo();
         gameDbo.setId(THE_ONLY_ID);
-
-        Game.Snapshot snapshot = game.memento();
         gameDbo.setRoundCompleted(snapshot.roundCompleted());
         gameDbo.setRolls(snapshot.rolls());
         gameDbo.setCurrentHand(snapshot.currentHand());
+
         List<ScoredCategoryDbo> dboList =
-                snapshot.scoreboard()
-                        .scoredCategoryHandMap()
-                        .entrySet()
-                        .stream()
-                        .map(entry -> {
-                           ScoredCategoryDbo dbo = new ScoredCategoryDbo();
-                           dbo.setScoreCategory(entry.getKey());
-                           dbo.setHandOfDice(entry.getValue());
-                           return dbo;
-                       })
-                        .toList();
+                ScoredCategoryDbo.fromEntry(snapshot.scoreboard());
         gameDbo.setScoredCategoryDbos(dboList);
+
         return gameDbo;
     }
 

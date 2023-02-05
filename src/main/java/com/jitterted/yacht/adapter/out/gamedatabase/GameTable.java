@@ -12,7 +12,12 @@ public class GameTable {
     @GeneratedValue
     private Long id;
 
+    private boolean roundCompleted;
     private int rolls;
+
+    // TODO: https://vladmihalcea.com/postgresql-array-java-list/
+//    private List<Integer> currentHand;
+
 
     public void setId(Long id) {
         this.id = id;
@@ -28,5 +33,13 @@ public class GameTable {
 
     public void setRolls(int rolls) {
         this.rolls = rolls;
+    }
+
+    public boolean isRoundCompleted() {
+        return roundCompleted;
+    }
+
+    public void setRoundCompleted(boolean roundCompleted) {
+        this.roundCompleted = roundCompleted;
     }
 }
