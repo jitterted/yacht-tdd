@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.out.gamedatabase;
 
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.HandOfDice;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class GameDatabaseTest {
         GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
         Game.Snapshot snapshot = new Game.Snapshot(2,
                                                    true,
-                                                   List.of(3, 4, 4, 5, 6),
+                                                   HandOfDice.of(3, 4, 4, 5, 6),
                                                    null);
 
         gameDatabase.saveGame(snapshot);

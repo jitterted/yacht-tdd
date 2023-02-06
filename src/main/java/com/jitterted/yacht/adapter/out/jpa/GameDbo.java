@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.out.jpa;
 
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.Scoreboard;
 
@@ -35,7 +36,7 @@ public class GameDbo {
         gameDbo.setId(THE_ONLY_ID);
         gameDbo.setRoundCompleted(snapshot.roundCompleted());
         gameDbo.setRolls(snapshot.rolls());
-        gameDbo.setCurrentHand(snapshot.currentHand());
+        gameDbo.setCurrentHand(snapshot.currentHand().stream().toList());
 
         List<ScoredCategoryDbo> dboList =
                 ScoredCategoryDbo.fromEntry(snapshot.scoreboard());
@@ -53,8 +54,9 @@ public class GameDbo {
         Scoreboard.Snapshot scoreboardSnapshot =
                 new Scoreboard.Snapshot(map);
 
-        Game.Snapshot savedGameSnapshot = new Game.Snapshot(getRolls(), isRoundCompleted(),
-                                                            getCurrentHand(),
+        Game.Snapshot savedGameSnapshot = new Game.Snapshot(getRolls(),
+                                                            isRoundCompleted(),
+                                                            HandOfDice.from(getCurrentHand()),
                                                             scoreboardSnapshot);
         return Game.from(savedGameSnapshot);
     }

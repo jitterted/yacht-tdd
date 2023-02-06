@@ -21,7 +21,7 @@ public class Game {
     private Game(Snapshot snapshot) {
         roundCompleted = snapshot.roundCompleted();
         rolls = new Rolls(snapshot.rolls());
-        lastRoll = HandOfDice.from(snapshot.currentHand());
+        lastRoll = snapshot.currentHand();
         scoreboard = Scoreboard.from(snapshot.scoreboard());
     }
 
@@ -88,12 +88,12 @@ public class Game {
 
     public Snapshot memento() {
         return new Snapshot(rolls.rolls(), roundCompleted,
-                            lastRoll.stream().toList(),
+                            lastRoll,
                             scoreboard.memento());
     }
 
     public record Snapshot(int rolls, boolean roundCompleted,
-                           List<Integer> currentHand,
+                           HandOfDice currentHand,
                            Scoreboard.Snapshot scoreboard) {
     }
 

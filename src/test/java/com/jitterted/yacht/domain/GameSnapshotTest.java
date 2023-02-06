@@ -22,7 +22,7 @@ class GameSnapshotTest {
         assertThat(snapshot.rolls())
                 .isEqualTo(1);
         assertThat(snapshot.currentHand())
-                .containsExactly(1, 2, 3, 4, 5);
+                .isEqualTo(HandOfDice.of(1, 2, 3, 4, 5));
         assertThat(snapshot.scoreboard().scoredCategoryHandMap())
                 .containsExactly(Map.entry(ScoreCategory.FIVES,
                                            List.of(1, 2, 3, 4, 5)));
