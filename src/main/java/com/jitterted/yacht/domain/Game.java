@@ -92,7 +92,8 @@ public class Game {
                             scoreboard.memento());
     }
 
-    public record Snapshot(int rolls, boolean roundCompleted,
+    public record Snapshot(int rolls,
+                           boolean roundCompleted,
                            HandOfDice currentHand,
                            Scoreboard.Snapshot scoreboard) {
     }

@@ -2,9 +2,11 @@ package com.jitterted.yacht.adapter.out.gamedatabase;
 
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
+import com.jitterted.yacht.domain.Scoreboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
@@ -22,15 +24,25 @@ public class GameDatabase {
 
         gameTable.setRolls(snapshot.rolls());
         gameTable.setRoundCompleted(snapshot.roundCompleted());
-        gameTable.setCurrentHand(serializableStringOf(snapshot.currentHand()));
+        gameTable.setCurrentHand(asPersistable(snapshot.currentHand()));
+        gameTable.setScoreboard(asPersistable(snapshot.scoreboard()));
 
         gameDatabaseJpa.save(gameTable);
     }
 
-    private static String serializableStringOf(HandOfDice handOfDice) {
+    private static Map<String, String> asPersistable(Scoreboard.Snapshot scoreboard) {
+        return scoreboard.scoredCategoryHandMap()
+                         .entrySet()
+                         .stream()
+                         .collect(Collectors.toMap(
+                                 entry -> entry.getKey().toString(),
+                                 entry -> asPersistable(entry.getValue())));
+    }
+
+    private static String asPersistable(HandOfDice handOfDice) {
         return handOfDice
-                       .stream()
-                       .map(String::valueOf)
-                       .collect(Collectors.joining(","));
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
     }
 }
