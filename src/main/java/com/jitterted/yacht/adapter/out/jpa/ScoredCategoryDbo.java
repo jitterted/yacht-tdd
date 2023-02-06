@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.out.jpa;
 
+import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.Scoreboard;
 
@@ -29,10 +30,10 @@ public class ScoredCategoryDbo {
                          .toList();
     }
 
-    private static ScoredCategoryDbo fromEntry(Map.Entry<ScoreCategory, List<Integer>> entry) {
+    private static ScoredCategoryDbo fromEntry(Map.Entry<ScoreCategory, HandOfDice> entry) {
         ScoredCategoryDbo dbo = new ScoredCategoryDbo();
         dbo.setScoreCategory(entry.getKey());
-        dbo.setHandOfDice(entry.getValue());
+        dbo.setHandOfDice(entry.getValue().stream().toList());
         return dbo;
     }
 

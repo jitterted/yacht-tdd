@@ -2,7 +2,6 @@ package com.jitterted.yacht.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -25,7 +24,7 @@ class GameSnapshotTest {
                 .isEqualTo(HandOfDice.of(1, 2, 3, 4, 5));
         assertThat(snapshot.scoreboard().scoredCategoryHandMap())
                 .containsExactly(Map.entry(ScoreCategory.FIVES,
-                                           List.of(1, 2, 3, 4, 5)));
+                                           HandOfDice.of(1, 2, 3, 4, 5)));
     }
 
     @Test

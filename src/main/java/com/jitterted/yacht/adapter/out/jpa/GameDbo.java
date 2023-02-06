@@ -46,18 +46,19 @@ public class GameDbo {
     }
 
     Game toDomain() {
-        Map<ScoreCategory, List<Integer>> map =
+        Map<ScoreCategory, HandOfDice> map =
                 scoredCategoryDbos
                         .stream()
                         .collect(Collectors.toMap(ScoredCategoryDbo::getScoreCategory,
-                                                  ScoredCategoryDbo::getHandOfDice));
+                                                  scoredCategoryDbo -> HandOfDice.from(scoredCategoryDbo.getHandOfDice())));
         Scoreboard.Snapshot scoreboardSnapshot =
                 new Scoreboard.Snapshot(map);
 
-        Game.Snapshot savedGameSnapshot = new Game.Snapshot(getRolls(),
-                                                            isRoundCompleted(),
-                                                            HandOfDice.from(getCurrentHand()),
-                                                            scoreboardSnapshot);
+        Game.Snapshot savedGameSnapshot = new Game.Snapshot(
+                getRolls(),
+                isRoundCompleted(),
+                HandOfDice.from(getCurrentHand()),
+                scoreboardSnapshot);
         return Game.from(savedGameSnapshot);
     }
 

@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.out.gamedatabase;
 
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.HandOfDice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,11 +22,15 @@ public class GameDatabase {
 
         gameTable.setRolls(snapshot.rolls());
         gameTable.setRoundCompleted(snapshot.roundCompleted());
-        gameTable.setCurrentHand(snapshot.currentHand()
-                                         .stream()
-                                         .map(String::valueOf)
-                                         .collect(Collectors.joining(",")));
+        gameTable.setCurrentHand(serializableStringOf(snapshot.currentHand()));
 
         gameDatabaseJpa.save(gameTable);
+    }
+
+    private static String serializableStringOf(HandOfDice handOfDice) {
+        return handOfDice
+                       .stream()
+                       .map(String::valueOf)
+                       .collect(Collectors.joining(","));
     }
 }

@@ -25,9 +25,7 @@ public class Scoreboard {
 
     private Scoreboard(Snapshot snapshot) {
         this();
-        snapshot.scoredCategoryHandMap.forEach(
-                (scoreCategory, handOfDiceRolls) ->
-                        scoreAs(scoreCategory, HandOfDice.from(handOfDiceRolls)));
+        snapshot.scoredCategoryHandMap.forEach(this::scoreAs);
     }
 
     private void populateScoredCategoriesMap() {
@@ -88,7 +86,7 @@ public class Scoreboard {
     }
 
     Snapshot memento() {
-        Map<ScoreCategory, List<Integer>> scoredCategoryHandMap =
+        Map<ScoreCategory, HandOfDice> scoredCategoryHandMap =
                 scoredCategoryMap
                         .entrySet()
                         .stream()
@@ -96,9 +94,7 @@ public class Scoreboard {
                         .collect(Collectors
                                          .toMap(Map.Entry::getKey,
                                                 entry -> entry.getValue()
-                                                              .handOfDice()
-                                                              .stream()
-                                                              .toList()));
+                                                              .handOfDice()));
         return new Snapshot(scoredCategoryHandMap);
     }
 
@@ -113,7 +109,7 @@ public class Scoreboard {
         }
     }
 
-    public record Snapshot(Map<ScoreCategory, List<Integer>> scoredCategoryHandMap) {
+    public record Snapshot(Map<ScoreCategory, HandOfDice> scoredCategoryHandMap) {
 
     }
 
