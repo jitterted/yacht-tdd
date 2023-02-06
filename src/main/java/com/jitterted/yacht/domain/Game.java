@@ -87,16 +87,14 @@ public class Game {
     }
 
     public Snapshot memento() {
-        return new Snapshot(roundCompleted,
-                            rolls.rolls(),
+        return new Snapshot(rolls.rolls(), roundCompleted,
                             lastRoll.stream().toList(),
                             scoreboard.memento());
     }
 
-    public record Snapshot(boolean roundCompleted,
-                           int rolls,
+    public record Snapshot(int rolls, boolean roundCompleted,
                            List<Integer> currentHand,
-                           Scoreboard.Memento scoreboard) {
+                           Scoreboard.Snapshot scoreboard) {
     }
 
     @Override

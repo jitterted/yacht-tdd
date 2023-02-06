@@ -21,7 +21,7 @@ public class ScoredCategoryDbo {
     @ElementCollection
     private List<Integer> handOfDice;
 
-    static List<ScoredCategoryDbo> fromEntry(Scoreboard.Memento scoreboard) {
+    static List<ScoredCategoryDbo> fromEntry(Scoreboard.Snapshot scoreboard) {
         return scoreboard.scoredCategoryHandMap()
                          .entrySet()
                          .stream()

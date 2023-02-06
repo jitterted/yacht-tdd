@@ -19,13 +19,13 @@ public class Scoreboard {
         populateScoredCategoriesMap();
     }
 
-    public static Scoreboard from(Memento memento) {
-        return new Scoreboard(memento);
+    public static Scoreboard from(Snapshot snapshot) {
+        return new Scoreboard(snapshot);
     }
 
-    private Scoreboard(Memento memento) {
+    private Scoreboard(Snapshot snapshot) {
         this();
-        memento.scoredCategoryHandMap.forEach(
+        snapshot.scoredCategoryHandMap.forEach(
                 (scoreCategory, handOfDiceRolls) ->
                         scoreAs(scoreCategory, HandOfDice.from(handOfDiceRolls)));
     }
@@ -87,7 +87,7 @@ public class Scoreboard {
                                 .noneMatch(ScoredCategory::isAssigned);
     }
 
-    Memento memento() {
+    Snapshot memento() {
         Map<ScoreCategory, List<Integer>> scoredCategoryHandMap =
                 scoredCategoryMap
                         .entrySet()
@@ -99,7 +99,7 @@ public class Scoreboard {
                                                               .handOfDice()
                                                               .stream()
                                                               .toList()));
-        return new Memento(scoredCategoryHandMap);
+        return new Snapshot(scoredCategoryHandMap);
     }
 
     private ScoredCategory scoredCategoryFor(ScoreCategory scoreCategory) {
@@ -113,7 +113,7 @@ public class Scoreboard {
         }
     }
 
-    public record Memento(Map<ScoreCategory, List<Integer>> scoredCategoryHandMap) {
+    public record Snapshot(Map<ScoreCategory, List<Integer>> scoredCategoryHandMap) {
 
     }
 

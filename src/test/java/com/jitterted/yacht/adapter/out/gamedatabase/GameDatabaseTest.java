@@ -10,15 +10,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.sql.DataSource;
-import java.util.Arrays;
+import java.math.BigInteger;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SuppressWarnings("unchecked")
 @Tag("spring")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class GameDatabaseTest {
 
     @Autowired
@@ -30,47 +30,34 @@ public class GameDatabaseTest {
     @Autowired
     GameDatabaseJpa gameDatabaseJpa;
 
-//    @AfterEach
-//    void deleteAllRows() throws Exception {
-//        Connection connection = dataSource.getConnection();
-//        connection.prepareStatement("TRUNCATE TABLE games").execute();
-//    }
-
     @Test
-    void writesToDatabase() {
+    void writesCoreGameStateToDatabase() {
         GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
-        Game.Snapshot snapshot = new Game.Snapshot(true, 2, List.of(3, 4, 4, 5, 6), null);
+        Game.Snapshot snapshot = new Game.Snapshot(2,
+                                                   true,
+                                                   List.of(3, 4, 4, 5, 6),
+                                                   null);
 
         gameDatabase.saveGame(snapshot);
 
-        Query query = entityManager.createNativeQuery("SELECT * FROM games");
-        List<Object[]> games = query.getResultList();
-        for (Object[] game : games) {
-            System.out.println(Arrays.toString(game));
-        }
-        assertThat(games.get(0)) // first row
-                .contains(true, 2);
-        assertThat(games) // number of rows
-                .hasSize(1);
+        // from https://thorben-janssen.com/jpa-native-queries/
+        Query query = entityManager.createNativeQuery(
+                "SELECT id, rolls, round_completed, current_hand FROM games");
+        List<Object[]> gameRows = query.getResultList();
 
-//        Table table = new Table(dataSource, "games");
-//        Assertions.assertThat(table)
-//                  .hasNumberOfRows(1);
-
-//        Assertions.assertThat(table)
-//                  .hasNumberOfColumns(25);
-
-//        Assertions.assertThat(table).column("id")
-//                  .value().isGreaterThan(0L);
-//
-//        Assertions.assertThat(table).column("round_completed")
-//                  .value().isTrue();
-//        Assertions.assertThat(table).column("rolls")
-//                  .value().isEqualTo(2);
-//        Assertions.assertThat(table).column("current_hand")
-//                  .value().isEqualTo("xxx");
-
+        assertThat(gameRows)
+                .containsExactly(new Object[]{
+                        BigInteger.valueOf(1),
+                        2,
+                        true,
+                        "3,4,4,5,6"
+                });
     }
 
-
+    @Test
+    void writesScoreboardStateToDatabase() {
+        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
+//        Scoreboard.Snapshot snapshot = new Scoreboard.Snapshot(
+//                Map.of(ScoreCategory.FOURS, HandOfDice.of(1,2,4,4,4).
+    }
 }

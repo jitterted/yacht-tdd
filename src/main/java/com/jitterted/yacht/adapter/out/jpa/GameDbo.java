@@ -50,13 +50,12 @@ public class GameDbo {
                         .stream()
                         .collect(Collectors.toMap(ScoredCategoryDbo::getScoreCategory,
                                                   ScoredCategoryDbo::getHandOfDice));
-        Scoreboard.Memento scoreboardMemento =
-                new Scoreboard.Memento(map);
+        Scoreboard.Snapshot scoreboardSnapshot =
+                new Scoreboard.Snapshot(map);
 
-        Game.Snapshot savedGameSnapshot = new Game.Snapshot(isRoundCompleted(),
-                                                            getRolls(),
+        Game.Snapshot savedGameSnapshot = new Game.Snapshot(getRolls(), isRoundCompleted(),
                                                             getCurrentHand(),
-                                                            scoreboardMemento);
+                                                            scoreboardSnapshot);
         return Game.from(savedGameSnapshot);
     }
 
