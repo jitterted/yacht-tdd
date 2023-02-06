@@ -40,7 +40,6 @@ public class GameDatabaseTest {
                          .game(2, true, HandOfDice.of(3, 4, 4, 5, 6))
         );
 
-        // from https://thorben-janssen.com/jpa-native-queries/
         List<Object[]> gameRows = executeQuery(
                 "SELECT rolls, round_completed, current_hand FROM games");
 
@@ -77,6 +76,50 @@ public class GameDatabaseTest {
                         "6,6,5,5,4"
                 });
     }
+
+    @Test
+    void loadsCoreGameState() {
+        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
+        String sqlString = "INSERT INTO games " +
+                "(id, rolls, round_completed, current_hand) VALUES " +
+                "(9999, 3, true, '1,2,3,4,4')";
+        entityManager.createNativeQuery(sqlString).executeUpdate();
+
+        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame(9999L);
+
+        assertThat(loadedGameSnapshot)
+                .isEqualTo(new Game.Snapshot(3,
+                                             true,
+                                             HandOfDice.of(1, 2, 3, 4, 4),
+                                             new Scoreboard.Snapshot(Collections.emptyMap())
+                                             ));
+    }
+
+    @Test
+    void loadsScoreboardState() {
+        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
+        String insertIntoGameSql = "INSERT INTO games " +
+                "(id, rolls, round_completed, current_hand) VALUES " +
+                "(9999, 3, true, '1,2,3,4,4')";
+        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
+        String insertIntoScoreboardSql = "INSERT INTO games_scoreboards " +
+                "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                "(9999, 'FIVES', '5,5,5,5,5'), " +
+                "(9999, 'FOURS', '4,4,4,4,4')";
+        entityManager.createNativeQuery(insertIntoScoreboardSql).executeUpdate();
+
+        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame(9999L);
+
+        assertThat(loadedGameSnapshot.scoreboard())
+                .isEqualTo(new Scoreboard.Snapshot(
+                        Map.of(ScoreCategory.FIVES, HandOfDice.of(5, 5, 5, 5, 5),
+                               ScoreCategory.FOURS, HandOfDice.of(4, 4, 4, 4, 4))));
+    }
+
+    // TODO Tests
+    // no game exists for ID
+    // no scoreboard exists for game ID
+    // duplicate scoreboard entries exist for game ID and score category
 
     private List executeQuery(String sqlString) {
         return entityManager.createNativeQuery(sqlString).getResultList();

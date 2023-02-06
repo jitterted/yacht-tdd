@@ -2,10 +2,13 @@ package com.jitterted.yacht.adapter.out.gamedatabase;
 
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
+import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.Scoreboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -24,25 +27,53 @@ public class GameDatabase {
 
         gameTable.setRolls(snapshot.rolls());
         gameTable.setRoundCompleted(snapshot.roundCompleted());
-        gameTable.setCurrentHand(asPersistable(snapshot.currentHand()));
-        gameTable.setScoreboard(asPersistable(snapshot.scoreboard()));
+        gameTable.setCurrentHand(asPersistableHand(snapshot.currentHand()));
+        gameTable.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
 
         gameDatabaseJpa.save(gameTable);
     }
 
-    private static Map<String, String> asPersistable(Scoreboard.Snapshot scoreboard) {
+    private static Map<String, String> asPersistableScoreboard(Scoreboard.Snapshot scoreboard) {
         return scoreboard.scoredCategoryHandMap()
                          .entrySet()
                          .stream()
                          .collect(Collectors.toMap(
                                  entry -> entry.getKey().toString(),
-                                 entry -> asPersistable(entry.getValue())));
+                                 entry -> asPersistableHand(entry.getValue())));
     }
 
-    private static String asPersistable(HandOfDice handOfDice) {
+    public Game.Snapshot loadGame(long gameId) {
+        GameTable gameTable = gameDatabaseJpa.findById(gameId).orElseThrow();
+        return new Game.Snapshot(
+                gameTable.getRolls(),
+                gameTable.isRoundCompleted(),
+                fromPersistedHand(gameTable.getCurrentHand()),
+                fromPersistedScoreboard(gameTable.getScoreboard()));
+    }
+
+    private Scoreboard.Snapshot fromPersistedScoreboard(Map<String, String> scoreboardStrings) {
+        Map<ScoreCategory, HandOfDice> map =
+                scoreboardStrings
+                        .entrySet()
+                        .stream()
+                        .collect(Collectors.toMap(
+                                entry -> ScoreCategory.valueOf(entry.getKey()),
+                                entry -> fromPersistedHand(entry.getValue()))
+                        );
+        return new Scoreboard.Snapshot(map);
+    }
+
+    private static String asPersistableHand(HandOfDice handOfDice) {
         return handOfDice
                 .stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
+    }
+
+    private HandOfDice fromPersistedHand(String handOfDice) {
+        List<Integer> integers = Arrays.stream(handOfDice.split(","))
+                                       .map(Integer::valueOf)
+                                       .toList();
+        return HandOfDice.from(integers);
     }
 }
