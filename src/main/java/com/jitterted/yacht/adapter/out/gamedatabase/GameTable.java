@@ -3,7 +3,6 @@ package com.jitterted.yacht.adapter.out.gamedatabase;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.Map;
 @Table(name = "games")
 public class GameTable {
     @Id
-    @GeneratedValue
     private Long id;
 
     private int rolls;

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Repository
 public class GameDatabase {
 
+    static final Long THE_ONLY_GAME_ID = 777L;
     private final GameDatabaseJpa gameDatabaseJpa;
 
     @Autowired
@@ -24,6 +25,7 @@ public class GameDatabase {
 
     public void saveGame(Game.Snapshot snapshot) {
         GameTable gameTable = new GameTable();
+        gameTable.setId(THE_ONLY_GAME_ID);
 
         gameTable.setRolls(snapshot.rolls());
         gameTable.setRoundCompleted(snapshot.roundCompleted());
@@ -42,8 +44,9 @@ public class GameDatabase {
                                  entry -> asPersistableHand(entry.getValue())));
     }
 
-    public Game.Snapshot loadGame(long gameId) {
-        GameTable gameTable = gameDatabaseJpa.findById(gameId).orElseThrow();
+    public Game.Snapshot loadGame() {
+        GameTable gameTable = gameDatabaseJpa.findById(THE_ONLY_GAME_ID)
+                                             .orElseThrow();
         return new Game.Snapshot(
                 gameTable.getRolls(),
                 gameTable.isRoundCompleted(),

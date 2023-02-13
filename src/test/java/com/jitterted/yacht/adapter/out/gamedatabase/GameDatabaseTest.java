@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase.THE_ONLY_GAME_ID;
 import static org.assertj.core.api.Assertions.*;
 
 @SuppressWarnings("unchecked")
@@ -33,6 +34,17 @@ public class GameDatabaseTest {
 
     @Autowired
     GameDatabaseJpa gameDatabaseJpa;
+
+    @Test
+    void alwaysWritesToSameIdBecauseWeOnlySupportOneGameForNow() {
+        saveGame(new SaveGameOptions());
+
+        List<Object[]> gameRows = executeQuery(
+                "SELECT * FROM games WHERE id=" + THE_ONLY_GAME_ID);
+
+        assertThat(gameRows)
+                .hasSize(1);
+    }
 
     @Test
     void writesCoreGameStateToDatabase() {
@@ -82,10 +94,10 @@ public class GameDatabaseTest {
         GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
         String sqlString = "INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(9999, 3, true, '1,2,3,4,4')";
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
         entityManager.createNativeQuery(sqlString).executeUpdate();
 
-        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame(9999L);
+        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame();
 
         assertThat(loadedGameSnapshot)
                 .isEqualTo(new Game.Snapshot(3,
@@ -100,15 +112,15 @@ public class GameDatabaseTest {
         GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
         String insertIntoGameSql = "INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(9999, 3, true, '1,2,3,4,4')";
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
         entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
         String insertIntoScoreboardSql = "INSERT INTO games_scoreboards " +
                 "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                "(9999, 'FIVES', '5,5,5,5,5'), " +
-                "(9999, 'FOURS', '4,4,4,4,4')";
+                "(" + THE_ONLY_GAME_ID + ", 'FIVES', '5,5,5,5,5'), " +
+                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')";
         entityManager.createNativeQuery(insertIntoScoreboardSql).executeUpdate();
 
-        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame(9999L);
+        Game.Snapshot loadedGameSnapshot = gameDatabase.loadGame();
 
         assertThat(loadedGameSnapshot.scoreboard())
                 .isEqualTo(new Scoreboard.Snapshot(
@@ -117,8 +129,10 @@ public class GameDatabaseTest {
     }
 
     // TODO Tests
+    // "not found"
     // no game exists for ID
     // no scoreboard exists for game ID
+    // "corruption"
     // duplicate scoreboard entries exist for game ID and score category
 
     private List executeQuery(String sqlString) {
