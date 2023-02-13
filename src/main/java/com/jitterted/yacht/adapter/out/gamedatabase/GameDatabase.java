@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -44,9 +45,17 @@ public class GameDatabase {
                                  entry -> asPersistableHand(entry.getValue())));
     }
 
-    public Game.Snapshot loadGame() {
-        GameTable gameTable = gameDatabaseJpa.findById(THE_ONLY_GAME_ID)
-                                             .orElseThrow();
+    public Optional<Game.Snapshot> loadGame() throws GameCorrupted {
+        try {
+            return gameDatabaseJpa
+                    .findById(THE_ONLY_GAME_ID)
+                    .map(this::fromPersistedGame);
+        } catch (GameCorruptedInternalException e) {
+            throw new GameCorrupted(e.getMessage());
+        }
+    }
+
+    private Game.Snapshot fromPersistedGame(GameTable gameTable) {
         return new Game.Snapshot(
                 gameTable.getRolls(),
                 gameTable.isRoundCompleted(),
@@ -55,15 +64,24 @@ public class GameDatabase {
     }
 
     private Scoreboard.Snapshot fromPersistedScoreboard(Map<String, String> scoreboardStrings) {
-        Map<ScoreCategory, HandOfDice> map =
-                scoreboardStrings
-                        .entrySet()
-                        .stream()
-                        .collect(Collectors.toMap(
-                                entry -> ScoreCategory.valueOf(entry.getKey()),
-                                entry -> fromPersistedHand(entry.getValue()))
-                        );
+        Map<ScoreCategory, HandOfDice> map = scoreboardStrings
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> fromPersistedScoreCategory(entry),
+                        entry -> fromPersistedHand(entry.getValue()))
+                );
         return new Scoreboard.Snapshot(map);
+    }
+
+    private ScoreCategory fromPersistedScoreCategory(Map.Entry<String, String> entry) {
+        try {
+            return ScoreCategory.valueOf(entry.getKey());
+        } catch (IllegalArgumentException e) {
+            throw new GameCorruptedInternalException(
+                    "Unrecognized ScoreCategory when loading game: " +
+                            entry.getKey());
+        }
     }
 
     private static String asPersistableHand(HandOfDice handOfDice) {
@@ -74,9 +92,38 @@ public class GameDatabase {
     }
 
     private HandOfDice fromPersistedHand(String handOfDice) {
-        List<Integer> integers = Arrays.stream(handOfDice.split(","))
-                                       .map(Integer::valueOf)
-                                       .toList();
+        List<Integer> integers = null;
+        try {
+            integers = Arrays.stream(handOfDice.split(","))
+                             .map(die -> dieValue(die, handOfDice))
+                             .toList();
+        } catch (NumberFormatException nfe) {
+            throw new GameCorruptedInternalException(
+                    "Invalid hand of dice when loading game: "
+                            + handOfDice
+            );
+        }
+        if (integers.size() != 5) {
+            throw new GameCorruptedInternalException(
+                    "Invalid hand of dice when loading game: "
+                            + handOfDice);
+        }
         return HandOfDice.from(integers);
+    }
+
+    private Integer dieValue(String die, String handOfDice) {
+        int dieValue = Integer.parseInt(die);
+        if (dieValue < 1 || dieValue > 6) {
+            throw new GameCorruptedInternalException(
+                    "Invalid hand of dice when loading game: "
+            + handOfDice);
+        }
+        return dieValue;
+    }
+
+    private static class GameCorruptedInternalException extends RuntimeException {
+        public GameCorruptedInternalException(String message) {
+            super(message);
+        }
     }
 }
