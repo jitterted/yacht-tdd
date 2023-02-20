@@ -185,15 +185,6 @@ public class GameDatabaseTest {
     }
 
     @Test
-    void throwsExceptionWhenCurrentHandHasWrongNumberOfDice() {
-        executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6')");
-
-        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,6,6");
-    }
-
-    @Test
     void throwsExceptionWhenCurrentHandHasNonIntegerDice() {
         executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
@@ -203,21 +194,12 @@ public class GameDatabaseTest {
     }
 
     @Test
-    void throwsExceptionWhenCurrentHandHasDiceThatAreTooLarge() {
+    void throwsExceptionWhenHandOfDiceIsInvalid() {
         executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,5,6,7,6')");
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '6')");
 
-        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,5,6,7,6");
-    }
-
-    @Test
-    void throwsExceptionWhenCurrentHandHasDiceThatAreTooSmall() {
-        executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,1,0,1')");
-
-        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 1,2,1,0,1");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6");
     }
 
 

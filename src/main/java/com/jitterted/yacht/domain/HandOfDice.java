@@ -3,6 +3,7 @@ package com.jitterted.yacht.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class HandOfDice {
@@ -22,8 +23,33 @@ public class HandOfDice {
     }
 
     public static HandOfDice from(List<Integer> dieRolls) {
-        return new HandOfDice(dieRolls);
+        return from(dieRolls, () -> {
+            throw new IllegalArgumentException("Invalid HandOfDice, dieRolls were: " + dieRolls);
+        });
     }
+
+    public static HandOfDice from(List<Integer> dieRolls, Supplier<HandOfDice> invalidResult) {
+        if (isCorrectNumberOfDice(dieRolls)
+                && hasValidDieRolls(dieRolls)) {
+            return new HandOfDice(dieRolls);
+        } else {
+            return invalidResult.get();
+        }
+    }
+
+    private static boolean isCorrectNumberOfDice(List<Integer> dieRolls) {
+        return dieRolls.isEmpty() || dieRolls.size() == 5;
+    }
+
+    private static boolean hasValidDieRolls(List<Integer> dieRolls) {
+        for (Integer integer : dieRolls) {
+            if (integer < 1 || integer > 6) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static HandOfDice unassigned() {
         return NON_EXISTENT_DICE_ROLL;

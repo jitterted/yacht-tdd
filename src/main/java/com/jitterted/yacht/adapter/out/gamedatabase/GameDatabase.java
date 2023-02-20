@@ -92,10 +92,10 @@ public class GameDatabase {
     }
 
     private HandOfDice fromPersistedHand(String handOfDice) {
-        List<Integer> integers = null;
+        List<Integer> integers;
         try {
             integers = Arrays.stream(handOfDice.split(","))
-                             .map(die -> dieValue(die, handOfDice))
+                             .map(Integer::parseInt)
                              .toList();
         } catch (NumberFormatException nfe) {
             throw new GameCorruptedInternalException(
@@ -103,22 +103,12 @@ public class GameDatabase {
                             + handOfDice
             );
         }
-        if (integers.size() != 5) {
+
+        return HandOfDice.from(integers, () -> {
             throw new GameCorruptedInternalException(
                     "Invalid hand of dice when loading game: "
                             + handOfDice);
-        }
-        return HandOfDice.from(integers);
-    }
-
-    private Integer dieValue(String die, String handOfDice) {
-        int dieValue = Integer.parseInt(die);
-        if (dieValue < 1 || dieValue > 6) {
-            throw new GameCorruptedInternalException(
-                    "Invalid hand of dice when loading game: "
-            + handOfDice);
-        }
-        return dieValue;
+        });
     }
 
     private static class GameCorruptedInternalException extends RuntimeException {
