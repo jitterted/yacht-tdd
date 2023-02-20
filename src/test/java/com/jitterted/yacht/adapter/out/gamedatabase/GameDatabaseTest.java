@@ -137,6 +137,23 @@ public class GameDatabaseTest {
     }
 
     @Test
+    void saveGameUpdatesExistingGame() throws Exception {
+        String sqlString = "INSERT INTO games " +
+                "(id, rolls, round_completed, current_hand) VALUES " +
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,1,1,1,1')";
+        entityManager.createNativeQuery(sqlString).executeUpdate();
+
+        saveGame(new SaveGameOptions()
+                         .game(3, true, HandOfDice.of(5, 5, 5, 5, 5)));
+
+        var gameRows = executeQuery("SELECT current_hand FROM games WHERE id=" + THE_ONLY_GAME_ID);
+        assertThat(gameRows)
+                .containsExactly("5,5,5,5,5");
+    }
+
+    //// Error handling cases:
+
+    @Test
     void databaseConstraintPreventsDuplicateScoreboardRowsWithSameScoreCategory() {
         String insertIntoGameSql = "INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
@@ -166,7 +183,7 @@ public class GameDatabaseTest {
         assertThatThrownBy(() -> {
             loadGame();
         }).isInstanceOf(GameCorrupted.class)
-        .hasMessage("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
+          .hasMessage("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
     }
 
     @Test
@@ -179,7 +196,7 @@ public class GameDatabaseTest {
         assertThatThrownBy(() -> {
             loadGame();
         }).isInstanceOf(GameCorrupted.class)
-        .hasMessage("Invalid hand of dice when loading game: 6,6,6");
+          .hasMessage("Invalid hand of dice when loading game: 6,6,6");
     }
 
     @Test
@@ -192,7 +209,7 @@ public class GameDatabaseTest {
         assertThatThrownBy(() -> {
             loadGame();
         }).isInstanceOf(GameCorrupted.class)
-        .hasMessage("Invalid hand of dice when loading game: 6,6,6,1.5,6");
+          .hasMessage("Invalid hand of dice when loading game: 6,6,6,1.5,6");
     }
 
     @Test
@@ -205,7 +222,7 @@ public class GameDatabaseTest {
         assertThatThrownBy(() -> {
             loadGame();
         }).isInstanceOf(GameCorrupted.class)
-        .hasMessage("Invalid hand of dice when loading game: 6,5,6,7,6");
+          .hasMessage("Invalid hand of dice when loading game: 6,5,6,7,6");
     }
 
     @Test
@@ -218,7 +235,7 @@ public class GameDatabaseTest {
         assertThatThrownBy(() -> {
             loadGame();
         }).isInstanceOf(GameCorrupted.class)
-        .hasMessage("Invalid hand of dice when loading game: 1,2,1,0,1");
+          .hasMessage("Invalid hand of dice when loading game: 1,2,1,0,1");
     }
 
     private Optional<Game.Snapshot> loadGame() throws Exception {
