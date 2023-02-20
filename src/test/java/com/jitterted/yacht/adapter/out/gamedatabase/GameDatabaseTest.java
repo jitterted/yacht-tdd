@@ -37,21 +37,26 @@ public class GameDatabaseTest {
     @Autowired
     GameDatabaseJpa gameDatabaseJpa;
 
+
+    // ------ SAVE ------
+
     @Test
-    void alwaysWritesToSameIdBecauseWeOnlySupportOneGameForNow() {
-        saveGame(new SaveGameOptions());
+    void saveGameAlwaysWritesToSameIdBecauseWeOnlySupportOneGameForNow() {
+        saveGame();
 
-        List<Object[]> gameRows = executeQuery(
-                "SELECT * FROM games WHERE id=" + THE_ONLY_GAME_ID);
+        List<BigInteger> ids = executeQuery(
+                "SELECT id FROM games");
 
-        assertThat(gameRows)
-                .hasSize(1);
+        assertThat(ids)
+                .containsExactly(BigInteger.valueOf(THE_ONLY_GAME_ID));
     }
 
     @Test
-    void writesCoreGameStateToDatabase() {
+    void saveGameWritesCoreGameStateToDatabase() {
         saveGame(new SaveGameOptions()
-                         .game(2, true, HandOfDice.of(3, 4, 4, 5, 6))
+            .rolls(2)
+            .roundCompleted(true)
+            .currentHand(HandOfDice.of(3, 4, 4, 5, 6))
         );
 
         List<Object[]> gameRows = executeQuery(
@@ -66,7 +71,7 @@ public class GameDatabaseTest {
     }
 
     @Test
-    void writesScoreboardStateToDatabase() {
+    void saveGameWritesScoreboardStateToDatabase() {
         saveGame(new SaveGameOptions()
                          .scoreboard(
                                  Map.of(ScoreCategory.FOURS, HandOfDice.of(1, 2, 4, 4, 4),
@@ -92,11 +97,27 @@ public class GameDatabaseTest {
     }
 
     @Test
-    void loadsCoreGameState() throws Exception {
-        String sqlString = "INSERT INTO games " +
+    void saveGameUpdatesExistingGame() throws Exception {
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
-        entityManager.createNativeQuery(sqlString).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,1,1,1,1')");
+
+        saveGame(new SaveGameOptions()
+                         .currentHand(HandOfDice.of(5, 5, 5, 5, 5)));
+
+        var handRow = executeQuery("SELECT current_hand FROM games WHERE id=" + THE_ONLY_GAME_ID);
+        assertThat(handRow)
+                .containsExactly("5,5,5,5,5");
+    }
+
+
+    // ----- LOAD -----
+
+    @Test
+    void loadsCoreGameState() throws Exception {
+        executeUpdate("INSERT INTO games " +
+                "(id, rolls, round_completed, current_hand) VALUES " +
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
 
         Game.Snapshot loadedGameSnapshot = loadGame().get();
 
@@ -110,15 +131,13 @@ public class GameDatabaseTest {
 
     @Test
     void loadsScoreboardState() throws Exception {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
-        String insertIntoScoreboardSql = "INSERT INTO games_scoreboards " +
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+        executeUpdate("INSERT INTO games_scoreboards " +
                 "(game_table_id, scoreboard_key, scoreboard) VALUES " +
                 "(" + THE_ONLY_GAME_ID + ", 'FIVES', '5,5,5,5,5'), " +
-                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')";
-        entityManager.createNativeQuery(insertIntoScoreboardSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
 
         Game.Snapshot loadedGameSnapshot = loadGame().get();
 
@@ -136,107 +155,73 @@ public class GameDatabaseTest {
                 .isEmpty();
     }
 
-    @Test
-    void saveGameUpdatesExistingGame() throws Exception {
-        String sqlString = "INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,1,1,1,1')";
-        entityManager.createNativeQuery(sqlString).executeUpdate();
 
-        saveGame(new SaveGameOptions()
-                         .game(3, true, HandOfDice.of(5, 5, 5, 5, 5)));
-
-        var gameRows = executeQuery("SELECT current_hand FROM games WHERE id=" + THE_ONLY_GAME_ID);
-        assertThat(gameRows)
-                .containsExactly("5,5,5,5,5");
-    }
-
-    //// Error handling cases:
+    // ----- EDGE CASES -----
 
     @Test
     void databaseConstraintPreventsDuplicateScoreboardRowsWithSameScoreCategory() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
-        String insertIntoScoreboardSql = "INSERT INTO games_scoreboards " +
-                "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '5,4,4,5,5'), " +
-                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')";
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
 
         assertThatThrownBy(() -> {
-            entityManager.createNativeQuery(insertIntoScoreboardSql).executeUpdate();
+            executeUpdate("INSERT INTO games_scoreboards " +
+                    "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                    "(" + THE_ONLY_GAME_ID + ", 'FOURS', '5,4,4,5,5'), " +
+                    "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
         }).isInstanceOf(PersistenceException.class);
     }
 
     @Test
     void throwsExceptionWhenScoreCategoryDoesNotExist() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
-        String insertIntoScoreboardSql = "INSERT INTO games_scoreboards " +
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+        executeUpdate("INSERT INTO games_scoreboards " +
                 "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 'NO_SUCH_CATEGORY', '5,4,4,5,5')";
-        entityManager.createNativeQuery(insertIntoScoreboardSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 'NO_SUCH_CATEGORY', '5,4,4,5,5')");
 
-        assertThatThrownBy(() -> {
-            loadGame();
-        }).isInstanceOf(GameCorrupted.class)
-          .hasMessage("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
+        assertLoadGameThrowsGameCorrupted("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
     }
 
     @Test
     void throwsExceptionWhenCurrentHandHasWrongNumberOfDice() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6')");
 
-        assertThatThrownBy(() -> {
-            loadGame();
-        }).isInstanceOf(GameCorrupted.class)
-          .hasMessage("Invalid hand of dice when loading game: 6,6,6");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,6,6");
     }
 
     @Test
     void throwsExceptionWhenCurrentHandHasNonIntegerDice() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6,1.5,6')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6,1.5,6')");
 
-        assertThatThrownBy(() -> {
-            loadGame();
-        }).isInstanceOf(GameCorrupted.class)
-          .hasMessage("Invalid hand of dice when loading game: 6,6,6,1.5,6");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,6,6,1.5,6");
     }
 
     @Test
     void throwsExceptionWhenCurrentHandHasDiceThatAreTooLarge() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,5,6,7,6')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,5,6,7,6')");
 
-        assertThatThrownBy(() -> {
-            loadGame();
-        }).isInstanceOf(GameCorrupted.class)
-          .hasMessage("Invalid hand of dice when loading game: 6,5,6,7,6");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,5,6,7,6");
     }
 
     @Test
     void throwsExceptionWhenCurrentHandHasDiceThatAreTooSmall() {
-        String insertIntoGameSql = "INSERT INTO games " +
+        executeUpdate("INSERT INTO games " +
                 "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,1,0,1')";
-        entityManager.createNativeQuery(insertIntoGameSql).executeUpdate();
+                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,1,0,1')");
 
-        assertThatThrownBy(() -> {
-            loadGame();
-        }).isInstanceOf(GameCorrupted.class)
-          .hasMessage("Invalid hand of dice when loading game: 1,2,1,0,1");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 1,2,1,0,1");
     }
+
+
+    // ----- HELPERS -----
 
     private Optional<Game.Snapshot> loadGame() throws Exception {
         GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
@@ -244,8 +229,22 @@ public class GameDatabaseTest {
         return loadedGameSnapshot;
     }
 
+    private void assertLoadGameThrowsGameCorrupted(String message) {
+        assertThatThrownBy(this::loadGame)
+                .isInstanceOf(GameCorrupted.class)
+                .hasMessage(message);
+    }
+    
     private List executeQuery(String sqlString) {
         return entityManager.createNativeQuery(sqlString).getResultList();
+    }
+
+    private void executeUpdate(String sql) {
+        entityManager.createNativeQuery(sql).executeUpdate();
+    }
+
+    private void saveGame() {
+        saveGame(new SaveGameOptions());
     }
 
     private void saveGame(SaveGameOptions saveGameOptions) {
@@ -264,11 +263,18 @@ public class GameDatabaseTest {
         HandOfDice currentHand = HandOfDice.of(1, 1, 1, 1, 1);
         Map<ScoreCategory, HandOfDice> scoreboard = Collections.emptyMap();
 
-        SaveGameOptions game(int rolls, boolean roundCompleted, HandOfDice currentHand) {
+        SaveGameOptions rolls(int rolls) {
             this.rolls = rolls;
-            this.roundCompleted = roundCompleted;
-            this.currentHand = currentHand;
+            return this;
+        }
 
+        SaveGameOptions roundCompleted(boolean roundCompleted) {
+            this.roundCompleted = roundCompleted;
+            return this;
+        }
+
+        SaveGameOptions currentHand(HandOfDice currentHand) {
+            this.currentHand = currentHand;
             return this;
         }
 
