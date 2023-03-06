@@ -1,11 +1,19 @@
 package com.jitterted.yacht.adapter.out.gamedatabase;
 
+import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.HandOfDice;
+import com.jitterted.yacht.domain.ScoreCategory;
+import com.jitterted.yacht.domain.Scoreboard;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "games")
@@ -24,6 +32,84 @@ public class GameTable {
     @ElementCollection
     @CollectionTable(name = "games_scoreboards")
     private Map<String, String> scoreboard;
+
+    // -- from and asSnapshot are tested (indirectly) via GameDatabaseTest
+    
+    static GameTable from(Game.Snapshot snapshot) {
+        GameTable gameTable = new GameTable();
+        gameTable.setId(GameDatabase.THE_ONLY_GAME_ID);
+
+        gameTable.setRolls(snapshot.rolls());
+        gameTable.setRoundCompleted(snapshot.roundCompleted());
+        gameTable.setCurrentHand(asPersistableHand(snapshot.currentHand()));
+        gameTable.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
+        return gameTable;
+    }
+
+    Game.Snapshot asSnapshot() {
+        return new Game.Snapshot(
+                getRolls(),
+                isRoundCompleted(),
+                fromPersistedHand(getCurrentHand()),
+                fromPersistedScoreboard(getScoreboard()));
+    }
+
+    private static Map<String, String> asPersistableScoreboard(Scoreboard.Snapshot scoreboard) {
+        return scoreboard.scoredCategoryHandMap()
+                         .entrySet()
+                         .stream()
+                         .collect(Collectors.toMap(
+                                 entry -> entry.getKey().toString(),
+                                 entry -> asPersistableHand(entry.getValue())));
+    }
+
+    private static String asPersistableHand(HandOfDice handOfDice) {
+        return handOfDice
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
+
+    private static Scoreboard.Snapshot fromPersistedScoreboard(Map<String, String> scoreboardStrings) {
+        Map<ScoreCategory, HandOfDice> map = scoreboardStrings
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> fromPersistedScoreCategory(entry),
+                        entry -> fromPersistedHand(entry.getValue()))
+                );
+        return new Scoreboard.Snapshot(map);
+    }
+
+    private static ScoreCategory fromPersistedScoreCategory(Map.Entry<String, String> entry) {
+        try {
+            return ScoreCategory.valueOf(entry.getKey());
+        } catch (IllegalArgumentException e) {
+            throw new GameCorruptedInternalException(
+                    "Unrecognized ScoreCategory when loading game: " +
+                            entry.getKey());
+        }
+    }
+
+    private static HandOfDice fromPersistedHand(String handOfDice) {
+        List<Integer> integers;
+        try {
+            integers = Arrays.stream(handOfDice.split(","))
+                             .map(Integer::parseInt)
+                             .toList();
+        } catch (NumberFormatException nfe) {
+            throw new GameCorruptedInternalException(
+                    "Invalid hand of dice when loading game: "
+                            + handOfDice
+            );
+        }
+
+        return HandOfDice.from(integers, () -> {
+            throw new GameCorruptedInternalException(
+                    "Invalid hand of dice when loading game: "
+                            + handOfDice);
+        });
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -64,4 +150,5 @@ public class GameTable {
     public void setScoreboard(Map<String, String> scoreboard) {
         this.scoreboard = scoreboard;
     }
+
 }

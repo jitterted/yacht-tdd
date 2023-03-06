@@ -222,6 +222,35 @@ public class GameDatabaseTest {
     }
 
 
+    // ----- NULLABILITY ----
+
+    @Test
+    void nulledSaveGameDoesNotWriteToDatabase() {
+         GameDatabase gameDatabase = GameDatabase.createNull();
+
+         saveGame(new SaveGameOptions().gameDatabase(gameDatabase));
+
+         List<BigInteger> ids = executeQuery("SELECT id FROM games");
+         assertThat(ids)
+                 .isEmpty();
+    }
+
+    @Test
+    void nulledLoadGameProvidesDefaultGame() throws Exception {
+        GameDatabase gameDatabase = GameDatabase.createNull();
+        Optional<Game.Snapshot> loadedGameSnapshot = gameDatabase.loadGame();
+
+        Game.Snapshot defaultSnapshot = new Game.Snapshot(
+                1,
+                false,
+                HandOfDice.of(1, 2, 3, 4, 5),
+                new Scoreboard.Snapshot(Collections.emptyMap()));
+
+        assertThat(loadedGameSnapshot)
+                .contains(defaultSnapshot);
+    }
+
+
     // ----- HELPERS -----
 
     private Optional<Game.Snapshot> loadGame() throws Exception {
@@ -249,16 +278,16 @@ public class GameDatabaseTest {
     }
 
     private void saveGame(SaveGameOptions saveGameOptions) {
-        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
         Game.Snapshot gameSnapshot = new Game.Snapshot(
                 saveGameOptions.rolls,
                 saveGameOptions.roundCompleted,
                 saveGameOptions.currentHand,
                 new Scoreboard.Snapshot(saveGameOptions.scoreboard));
-        gameDatabase.saveGame(gameSnapshot);
+        saveGameOptions.gameDatabase.saveGame(gameSnapshot);
     }
 
-    private static class SaveGameOptions {
+    private class SaveGameOptions {
+        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
         int rolls = 42;
         boolean roundCompleted = false;
         HandOfDice currentHand = HandOfDice.of(1, 1, 1, 1, 1);
@@ -281,6 +310,12 @@ public class GameDatabaseTest {
 
         SaveGameOptions scoreboard(Map<ScoreCategory, HandOfDice> scoreboard) {
             this.scoreboard = scoreboard;
+
+            return this;
+        }
+
+        public SaveGameOptions gameDatabase(GameDatabase gameDatabase) {
+            this.gameDatabase = gameDatabase;
 
             return this;
         }

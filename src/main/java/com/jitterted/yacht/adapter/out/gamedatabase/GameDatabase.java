@@ -4,27 +4,35 @@ import com.jitterted.yacht.adapter.OutputListener;
 import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
-import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.Scoreboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class GameDatabase {
 
     static final Long THE_ONLY_GAME_ID = 777L;
-    private final GameDatabaseJpa gameDatabaseJpa;
+    private final Jpa gameDatabaseJpa;
     private final OutputListener<Game.Snapshot> listener = new OutputListener<>();
+
+//     public static GameDatabase createNull() {
+//         return new GameDatabase(new StubbedJpa(gameDatabaseJpa));
+//     }
 
     @Autowired
     public GameDatabase(GameDatabaseJpa gameDatabaseJpa) {
+        this(new RealJpa(gameDatabaseJpa));
+    }
+
+    private GameDatabase(Jpa gameDatabaseJpa) {
         this.gameDatabaseJpa = gameDatabaseJpa;
+    }
+
+    public static GameDatabase createNull() {
+        return new GameDatabase(new StubbedJpa());
     }
 
     public OutputTracker<Game.Snapshot> trackSaves() {
@@ -32,96 +40,64 @@ public class GameDatabase {
     }
 
     public void saveGame(Game.Snapshot snapshot) {
-        GameTable gameTable = new GameTable();
-        gameTable.setId(THE_ONLY_GAME_ID);
-
-        gameTable.setRolls(snapshot.rolls());
-        gameTable.setRoundCompleted(snapshot.roundCompleted());
-        gameTable.setCurrentHand(asPersistableHand(snapshot.currentHand()));
-        gameTable.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
+        GameTable gameTable = GameTable.from(snapshot);
 
         gameDatabaseJpa.save(gameTable);
         listener.emit(snapshot);
-    }
-
-    private static Map<String, String> asPersistableScoreboard(Scoreboard.Snapshot scoreboard) {
-        return scoreboard.scoredCategoryHandMap()
-                         .entrySet()
-                         .stream()
-                         .collect(Collectors.toMap(
-                                 entry -> entry.getKey().toString(),
-                                 entry -> asPersistableHand(entry.getValue())));
     }
 
     public Optional<Game.Snapshot> loadGame() throws GameCorrupted {
         try {
             return gameDatabaseJpa
                     .findById(THE_ONLY_GAME_ID)
-                    .map(this::fromPersistedGame);
+                    .map(GameTable::asSnapshot);
         } catch (GameCorruptedInternalException e) {
             throw new GameCorrupted(e.getMessage());
         }
     }
 
-    private Game.Snapshot fromPersistedGame(GameTable gameTable) {
-        return new Game.Snapshot(
-                gameTable.getRolls(),
-                gameTable.isRoundCompleted(),
-                fromPersistedHand(gameTable.getCurrentHand()),
-                fromPersistedScoreboard(gameTable.getScoreboard()));
+
+    // ----- NULLABILITY -----
+
+    interface Jpa {
+        GameTable save(GameTable gameTable);
+
+        Optional<GameTable> findById(Long id);
     }
 
-    private Scoreboard.Snapshot fromPersistedScoreboard(Map<String, String> scoreboardStrings) {
-        Map<ScoreCategory, HandOfDice> map = scoreboardStrings
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        entry -> fromPersistedScoreCategory(entry),
-                        entry -> fromPersistedHand(entry.getValue()))
-                );
-        return new Scoreboard.Snapshot(map);
-    }
+    private static class RealJpa implements Jpa {
 
-    private ScoreCategory fromPersistedScoreCategory(Map.Entry<String, String> entry) {
-        try {
-            return ScoreCategory.valueOf(entry.getKey());
-        } catch (IllegalArgumentException e) {
-            throw new GameCorruptedInternalException(
-                    "Unrecognized ScoreCategory when loading game: " +
-                            entry.getKey());
+        private final GameDatabaseJpa gameDatabaseJpa;
+
+        public RealJpa(GameDatabaseJpa gameDatabaseJpa) {
+            this.gameDatabaseJpa = gameDatabaseJpa;
+        }
+
+        @Override
+        public GameTable save(GameTable gameTable) {
+            return gameDatabaseJpa.save(gameTable);
+        }
+
+        @Override
+        public Optional<GameTable> findById(Long id) {
+            return gameDatabaseJpa.findById(id);
         }
     }
 
-    private static String asPersistableHand(HandOfDice handOfDice) {
-        return handOfDice
-                .stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-    }
-
-    private HandOfDice fromPersistedHand(String handOfDice) {
-        List<Integer> integers;
-        try {
-            integers = Arrays.stream(handOfDice.split(","))
-                             .map(Integer::parseInt)
-                             .toList();
-        } catch (NumberFormatException nfe) {
-            throw new GameCorruptedInternalException(
-                    "Invalid hand of dice when loading game: "
-                            + handOfDice
-            );
+    private static class StubbedJpa implements Jpa {
+        @Override
+        public GameTable save(GameTable gameTable) {
+            return null;
         }
 
-        return HandOfDice.from(integers, () -> {
-            throw new GameCorruptedInternalException(
-                    "Invalid hand of dice when loading game: "
-                            + handOfDice);
-        });
-    }
-
-    private static class GameCorruptedInternalException extends RuntimeException {
-        public GameCorruptedInternalException(String message) {
-            super(message);
+        @Override
+        public Optional<GameTable> findById(Long id) {
+            Game.Snapshot snapshot = new Game.Snapshot(
+                    1,
+                    false,
+                    HandOfDice.of(1, 2, 3, 4, 5),
+                    new Scoreboard.Snapshot(Collections.emptyMap()));
+            return Optional.of(GameTable.from(snapshot));
         }
     }
 }
