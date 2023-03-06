@@ -18,10 +18,6 @@ public class GameDatabase {
     private final Jpa gameDatabaseJpa;
     private final OutputListener<Game.Snapshot> listener = new OutputListener<>();
 
-//     public static GameDatabase createNull() {
-//         return new GameDatabase(new StubbedJpa(gameDatabaseJpa));
-//     }
-
     @Autowired
     public GameDatabase(GameDatabaseJpa gameDatabaseJpa) {
         this(new RealJpa(gameDatabaseJpa));

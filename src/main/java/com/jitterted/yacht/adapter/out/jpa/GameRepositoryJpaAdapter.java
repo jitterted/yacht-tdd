@@ -3,8 +3,6 @@ package com.jitterted.yacht.adapter.out.jpa;
 import com.jitterted.yacht.application.GameRepository;
 import com.jitterted.yacht.domain.Game;
 
-import java.util.Optional;
-
 public class GameRepositoryJpaAdapter implements GameRepository {
     private final GameJpaRepository gameJpaRepository;
 
@@ -23,8 +21,9 @@ public class GameRepositoryJpaAdapter implements GameRepository {
 
     @Override
     public Game find() {
-        Optional<GameDbo> foundGame = gameJpaRepository
-                .findById(GameDbo.THE_ONLY_ID);
-        return foundGame.orElseThrow().toDomain();
+        return gameJpaRepository
+                .findById(GameDbo.THE_ONLY_ID)
+                .orElseThrow()
+                .toDomain();
     }
 }
