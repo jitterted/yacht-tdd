@@ -55,9 +55,9 @@ public class GameDatabaseTest {
     @Test
     void saveGameWritesCoreGameStateToDatabase() {
         saveGame(new SaveGameOptions()
-            .rolls(2)
-            .roundCompleted(true)
-            .currentHand(HandOfDice.of(3, 4, 4, 5, 6))
+                         .rolls(2)
+                         .roundCompleted(true)
+                         .currentHand(HandOfDice.of(3, 4, 4, 5, 6))
         );
 
         List<Object[]> gameRows = executeQuery(
@@ -100,8 +100,8 @@ public class GameDatabaseTest {
     @Test
     void saveGameUpdatesExistingGame() throws Exception {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,1,1,1,1')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '1,1,1,1,1')");
 
         saveGame(new SaveGameOptions()
                          .currentHand(HandOfDice.of(5, 5, 5, 5, 5)));
@@ -135,8 +135,8 @@ public class GameDatabaseTest {
     @Test
     void loadsCoreGameState() throws Exception {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
 
         Game.Snapshot loadedGameSnapshot = loadGame().get();
 
@@ -151,12 +151,12 @@ public class GameDatabaseTest {
     @Test
     void loadsScoreboardState() throws Exception {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
         executeUpdate("INSERT INTO games_scoreboards " +
-                "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 'FIVES', '5,5,5,5,5'), " +
-                "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
+                              "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 'FIVES', '5,5,5,5,5'), " +
+                              "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
 
         Game.Snapshot loadedGameSnapshot = loadGame().get();
 
@@ -180,25 +180,25 @@ public class GameDatabaseTest {
     @Test
     void databaseConstraintPreventsDuplicateScoreboardRowsWithSameScoreCategory() {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
 
         assertThatThrownBy(() -> {
             executeUpdate("INSERT INTO games_scoreboards " +
-                    "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                    "(" + THE_ONLY_GAME_ID + ", 'FOURS', '5,4,4,5,5'), " +
-                    "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
+                                  "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                                  "(" + THE_ONLY_GAME_ID + ", 'FOURS', '5,4,4,5,5'), " +
+                                  "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
         }).isInstanceOf(PersistenceException.class);
     }
 
     @Test
     void throwsExceptionWhenScoreCategoryDoesNotExist() {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
         executeUpdate("INSERT INTO games_scoreboards " +
-                "(game_table_id, scoreboard_key, scoreboard) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 'NO_SUCH_CATEGORY', '5,4,4,5,5')");
+                              "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 'NO_SUCH_CATEGORY', '5,4,4,5,5')");
 
         assertLoadGameThrowsGameCorrupted("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
     }
@@ -206,8 +206,8 @@ public class GameDatabaseTest {
     @Test
     void throwsExceptionWhenCurrentHandHasNonIntegerDice() {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6,1.5,6')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6,1.5,6')");
 
         assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,6,6,1.5,6");
     }
@@ -215,8 +215,8 @@ public class GameDatabaseTest {
     @Test
     void throwsExceptionWhenHandOfDiceIsInvalid() {
         executeUpdate("INSERT INTO games " +
-                "(id, rolls, round_completed, current_hand) VALUES " +
-                "(" + THE_ONLY_GAME_ID + ", 3, true, '6')");
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 3, true, '6')");
 
         assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6");
     }
@@ -226,13 +226,13 @@ public class GameDatabaseTest {
 
     @Test
     void nulledSaveGameDoesNotWriteToDatabase() {
-         GameDatabase gameDatabase = GameDatabase.createNull();
+        GameDatabase gameDatabase = GameDatabase.createNull();
 
-         saveGame(new SaveGameOptions().gameDatabase(gameDatabase));
+        saveGame(new SaveGameOptions().gameDatabase(gameDatabase));
 
-         List<BigInteger> ids = executeQuery("SELECT id FROM games");
-         assertThat(ids)
-                 .isEmpty();
+        List<BigInteger> ids = executeQuery("SELECT id FROM games");
+        assertThat(ids)
+                .isEmpty();
     }
 
     @Test
@@ -250,6 +250,21 @@ public class GameDatabaseTest {
                 .contains(defaultSnapshot);
     }
 
+    @Test
+    void nulledLoadGameProvidesConfiguredGame() throws Exception {
+        Game.Snapshot configuredSnapshot = new Game.Snapshot(
+                2,
+                true,
+                HandOfDice.of(6, 6, 6, 6, 6),
+                new Scoreboard.Snapshot(Collections.emptyMap()));
+
+        GameDatabase gameDatabase = GameDatabase.createNull(configuredSnapshot);
+        Optional<Game.Snapshot> loadedGameSnapshot = gameDatabase.loadGame();
+
+        assertThat(loadedGameSnapshot)
+                .contains(configuredSnapshot);
+    }
+
 
     // ----- HELPERS -----
 
@@ -264,7 +279,7 @@ public class GameDatabaseTest {
                 .isInstanceOf(GameCorrupted.class)
                 .hasMessage(message);
     }
-    
+
     private List executeQuery(String sqlString) {
         return entityManager.createNativeQuery(sqlString).getResultList();
     }

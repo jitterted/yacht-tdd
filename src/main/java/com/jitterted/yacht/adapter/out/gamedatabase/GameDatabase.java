@@ -35,6 +35,10 @@ public class GameDatabase {
         return new GameDatabase(new StubbedJpa());
     }
 
+    public static GameDatabase createNull(Game.Snapshot configuredSnapshot) {
+        return new GameDatabase(new StubbedJpa(configuredSnapshot));
+    }
+
     public OutputTracker<Game.Snapshot> trackSaves() {
         return listener.createTracker();
     }
@@ -85,6 +89,20 @@ public class GameDatabase {
     }
 
     private static class StubbedJpa implements Jpa {
+        private final Game.Snapshot snapshot;
+
+        public StubbedJpa() {
+            this(new Game.Snapshot(
+                    1,
+                    false,
+                    HandOfDice.of(1, 2, 3, 4, 5),
+                    new Scoreboard.Snapshot(Collections.emptyMap())));
+        }
+
+        public StubbedJpa(Game.Snapshot configuredSnapshot) {
+            this.snapshot = configuredSnapshot;
+        }
+
         @Override
         public GameTable save(GameTable gameTable) {
             return null;
@@ -92,11 +110,6 @@ public class GameDatabase {
 
         @Override
         public Optional<GameTable> findById(Long id) {
-            Game.Snapshot snapshot = new Game.Snapshot(
-                    1,
-                    false,
-                    HandOfDice.of(1, 2, 3, 4, 5),
-                    new Scoreboard.Snapshot(Collections.emptyMap()));
             return Optional.of(GameTable.from(snapshot));
         }
     }
