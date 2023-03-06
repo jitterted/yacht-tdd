@@ -1,5 +1,7 @@
 package com.jitterted.yacht.adapter.out.gamedatabase;
 
+import com.jitterted.yacht.adapter.OutputListener;
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -18,10 +20,15 @@ public class GameDatabase {
 
     static final Long THE_ONLY_GAME_ID = 777L;
     private final GameDatabaseJpa gameDatabaseJpa;
+    private final OutputListener<Game.Snapshot> listener = new OutputListener<>();
 
     @Autowired
     public GameDatabase(GameDatabaseJpa gameDatabaseJpa) {
         this.gameDatabaseJpa = gameDatabaseJpa;
+    }
+
+    public OutputTracker<Game.Snapshot> trackSaves() {
+        return listener.createTracker();
     }
 
     public void saveGame(Game.Snapshot snapshot) {
@@ -34,6 +41,7 @@ public class GameDatabase {
         gameTable.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
 
         gameDatabaseJpa.save(gameTable);
+        listener.emit(snapshot);
     }
 
     private static Map<String, String> asPersistableScoreboard(Scoreboard.Snapshot scoreboard) {

@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.out.gamedatabase;
 
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -108,6 +109,24 @@ public class GameDatabaseTest {
         var handRow = executeQuery("SELECT current_hand FROM games WHERE id=" + THE_ONLY_GAME_ID);
         assertThat(handRow)
                 .containsExactly("5,5,5,5,5");
+    }
+
+    @Test
+    void savingGamesIsTrackable() {
+        GameDatabase gameDatabase = new GameDatabase(gameDatabaseJpa);
+
+        OutputTracker<Game.Snapshot> outputTracker = gameDatabase.trackSaves();
+
+        Game.Snapshot gameSnapshot = new Game.Snapshot(
+                2,
+                true,
+                HandOfDice.of(1, 3, 5, 2, 4),
+                new Scoreboard.Snapshot(Collections.emptyMap()));
+
+        gameDatabase.saveGame(gameSnapshot);
+
+        assertThat(outputTracker.output())
+                .containsExactly(gameSnapshot);
     }
 
 
