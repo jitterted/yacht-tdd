@@ -265,6 +265,14 @@ public class GameDatabaseTest {
                 .contains(configuredSnapshot);
     }
 
+    @Test
+    void loadGameThrowsExceptionWithCorruptedNull() {
+        GameDatabase gameDatabase = GameDatabase.createCorruptedNull();
+
+        assertThatThrownBy(gameDatabase::loadGame)
+                .isExactlyInstanceOf(GameCorrupted.class);
+    }
+
 
     // ----- HELPERS -----
 

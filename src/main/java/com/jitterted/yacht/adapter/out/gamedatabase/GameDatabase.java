@@ -32,11 +32,15 @@ public class GameDatabase {
     }
 
     public static GameDatabase createNull() {
-        return new GameDatabase(new StubbedJpa());
+        return new GameDatabase(StubbedJpa.asDefault());
     }
 
     public static GameDatabase createNull(Game.Snapshot configuredSnapshot) {
-        return new GameDatabase(new StubbedJpa(configuredSnapshot));
+        return new GameDatabase(StubbedJpa.asConfigured(configuredSnapshot));
+    }
+
+    public static GameDatabase createCorruptedNull() {
+        return new GameDatabase(StubbedJpa.asCorrupted());
     }
 
     public OutputTracker<Game.Snapshot> trackSaves() {
@@ -89,18 +93,30 @@ public class GameDatabase {
     }
 
     private static class StubbedJpa implements Jpa {
-        private final Game.Snapshot snapshot;
+        private final GameTable gameTable;
 
-        public StubbedJpa() {
-            this(new Game.Snapshot(
+        public static StubbedJpa asDefault() {
+            Game.Snapshot snapshot = new Game.Snapshot(
                     1,
                     false,
                     HandOfDice.of(1, 2, 3, 4, 5),
-                    new Scoreboard.Snapshot(Collections.emptyMap())));
+                    new Scoreboard.Snapshot(Collections.emptyMap()));
+
+            return new StubbedJpa(GameTable.from(snapshot));
         }
 
-        public StubbedJpa(Game.Snapshot configuredSnapshot) {
-            this.snapshot = configuredSnapshot;
+        public static StubbedJpa asConfigured(Game.Snapshot snapshot) {
+            return new StubbedJpa(GameTable.from(snapshot));
+        }
+
+        public static StubbedJpa asCorrupted() {
+            GameTable corruptedGameTable = new GameTable();
+            corruptedGameTable.setCurrentHand("invalid");
+            return new StubbedJpa(corruptedGameTable);
+        }
+
+        public StubbedJpa(GameTable gameTable) {
+            this.gameTable = gameTable;
         }
 
         @Override
@@ -110,7 +126,7 @@ public class GameDatabase {
 
         @Override
         public Optional<GameTable> findById(Long id) {
-            return Optional.of(GameTable.from(snapshot));
+            return Optional.of(gameTable);
         }
     }
 }
