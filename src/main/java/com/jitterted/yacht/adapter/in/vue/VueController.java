@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.in.vue;
 
 import com.jitterted.yacht.adapter.in.web.ScoredCategoryView;
+import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -36,17 +37,17 @@ public class VueController {
     }
 
     @GetMapping("last-roll")
-    public DiceRollDto lastRoll() {
+    public DiceRollDto lastRoll() throws GameCorrupted {
         return DiceRollDto.from(gameService.currentHand());
     }
 
     @PostMapping("roll-dice")
-    public void rollDice() {
+    public void rollDice() throws GameCorrupted {
         gameService.rollDice();
     }
 
     @GetMapping("score-categories")
-    public ScoreCategoriesDto scoringCategories() {
+    public ScoreCategoriesDto scoringCategories() throws GameCorrupted {
         return new ScoreCategoriesDto(gameService.score(),
                                       ScoredCategoryView.viewOf(
                                               gameService.scoredCategories(),
@@ -54,14 +55,14 @@ public class VueController {
     }
 
     @PostMapping(value = "assign-roll", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void assignRollToCategory(@RequestBody Map<String, String> map) {
+    public void assignRollToCategory(@RequestBody Map<String, String> map) throws GameCorrupted {
         String scoreCategoryString = map.get("category");
         ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
         gameService.assignCurrentHandTo(scoreCategory);
     }
 
     @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void reroll(@RequestBody Keep keep) {
+    public void reroll(@RequestBody Keep keep) throws GameCorrupted {
         List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
         gameService.reRoll(keptDice);
     }

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 public class GameServiceDieRollerTest {
 
     @Test
-    void rollDiceRollsAllDice() {
+    void rollDiceRollsAllDice() throws Exception {
         GameService gameService = createGameServiceWithDieRollsOf(5, 1, 4, 2, 3);
         gameService.start();
 
@@ -24,7 +24,7 @@ public class GameServiceDieRollerTest {
     }
 
     @Test
-    void reRollingDiceKeepsSpecifiedDice() {
+    void reRollingDiceKeepsSpecifiedDice() throws Exception {
         GameService gameService = createGameServiceWithDieRollsOf(6, 6, 6, 6, 6, 2, 3);
         gameService.start();
         gameService.rollDice();
@@ -39,7 +39,7 @@ public class GameServiceDieRollerTest {
         return new GameService(
                 ScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(),
-                DieRoller.createNull(dieRolls), 
+                DieRoller.createNull(dieRolls),
                 new InMemoryGameRepository());
     }
 

@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.in.web;
 
+import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
@@ -101,7 +102,7 @@ public class YachtControllerAssignRollTest {
                 .isTrue();
     }
 
-    private String rollAndAssignForAllCategories(GameService gameService, YachtController yachtController) {
+    private String rollAndAssignForAllCategories(GameService gameService, YachtController yachtController) throws GameCorrupted {
         String viewName = null;
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
             gameService.rollDice();

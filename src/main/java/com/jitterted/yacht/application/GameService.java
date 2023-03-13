@@ -2,6 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase;
 import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
@@ -61,32 +62,32 @@ public class GameService {
         gameRepository.saveGame(game.memento());
     }
 
-    public void rollDice() {
+    public void rollDice() throws GameCorrupted {
         HandOfDice handOfDice = HandOfDice.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
         executeAndSave(game -> game.diceRolled(handOfDice));
     }
 
-    public void reRoll(List<Integer> keptDice) {
+    public void reRoll(List<Integer> keptDice) throws GameCorrupted {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
         executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
     }
 
-    private void executeAndSave(Consumer<Game> consumer) {
+    private void executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
         Game game = loadGame();
         consumer.accept(game);
         gameRepository.saveGame(game.memento());
     }
 
-    private Game loadGame() {
+    private Game loadGame() throws GameCorrupted {
         return Game.from(
                 gameRepository.loadGame()
                               .orElseThrow(
                                       () -> new IllegalStateException("Current design does not support that the Game might not be (or no longer be) in the database, but it SHOULD.")));
     }
 
-    public void assignCurrentHandTo(ScoreCategory scoreCategory) {
+    public void assignCurrentHandTo(ScoreCategory scoreCategory) throws GameCorrupted {
         executeAndSave(game -> game.assignCurrentHandTo(scoreCategory));
         Game game = loadGame();
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
@@ -94,27 +95,27 @@ public class GameService {
                                            scoreCategory);
     }
 
-    public HandOfDice currentHand() {
+    public HandOfDice currentHand() throws GameCorrupted {
         return loadGame().currentHand();
     }
 
-    public boolean canReRoll() {
+    public boolean canReRoll() throws GameCorrupted {
         return loadGame().canReRoll();
     }
 
-    public boolean roundCompleted() {
+    public boolean roundCompleted() throws GameCorrupted {
         return loadGame().roundCompleted();
     }
 
-    public boolean isOver() {
+    public boolean isOver() throws GameCorrupted {
         return loadGame().isOver();
     }
 
-    public List<ScoredCategory> scoredCategories() {
+    public List<ScoredCategory> scoredCategories() throws GameCorrupted {
         return loadGame().scoredCategories();
     }
 
-    public int score() {
+    public int score() throws GameCorrupted {
         return loadGame().score();
     }
 

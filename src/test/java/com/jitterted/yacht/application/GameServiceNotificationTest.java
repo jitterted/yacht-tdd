@@ -18,7 +18,7 @@ class GameServiceNotificationTest {
 
     // TODO: Move to more appropriate test class
     @Test
-    void canConfigureGameServiceWithDieRolls() {
+    void canConfigureGameServiceWithDieRolls() throws Exception {
         GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
                         .withDieRolls(List.of(1, 2, 3, 4, 5)));

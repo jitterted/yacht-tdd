@@ -1,5 +1,6 @@
 package com.jitterted.yacht.adapter.in.web;
 
+import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.ScoreCategory;
@@ -32,13 +33,13 @@ public class YachtController {
     }
 
     @PostMapping("/rolldice")
-    public String rollDice() {
+    public String rollDice() throws GameCorrupted {
         gameService.rollDice();
         return "redirect:/rollresult";
     }
 
     @GetMapping("/rollresult")
-    public String rollResult(Model model) {
+    public String rollResult(Model model) throws GameCorrupted {
         addCurrentScoreTo(model);
         model.addAttribute("roll", RollView.listOf(gameService.currentHand()));
         addCategoriesTo(model);
@@ -50,7 +51,7 @@ public class YachtController {
     }
 
     @PostMapping("/re-roll")
-    public String reRoll(Keep keep) {
+    public String reRoll(Keep keep) throws GameCorrupted {
         List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
         gameService.reRoll(keptDice);
         return "redirect:/rollresult";
@@ -58,7 +59,7 @@ public class YachtController {
 
 
     @PostMapping("/select-category")
-    public String assignRollToCategory(@RequestParam("category") String category) {
+    public String assignRollToCategory(@RequestParam("category") String category) throws GameCorrupted {
         ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
         gameService.assignCurrentHandTo(scoreCategory);
 
@@ -69,13 +70,13 @@ public class YachtController {
     }
 
     @GetMapping("/game-over")
-    public String displayGameOverPage(Model model) {
+    public String displayGameOverPage(Model model) throws GameCorrupted {
         addCurrentScoreTo(model);
         addCategoriesTo(model);
         return "game-over";
     }
 
-    private void addCategoriesTo(Model model) {
+    private void addCategoriesTo(Model model) throws GameCorrupted {
         List<ScoredCategory> scoredCategories = gameService.scoredCategories();
         List<ScoreCategory> scoreCategories =
                 scoredCategories.stream()
@@ -88,7 +89,7 @@ public class YachtController {
                                    averages));
     }
 
-    private void addCurrentScoreTo(Model model) {
+    private void addCurrentScoreTo(Model model) throws GameCorrupted {
         model.addAttribute("score", String.valueOf(gameService.score()));
     }
 }
