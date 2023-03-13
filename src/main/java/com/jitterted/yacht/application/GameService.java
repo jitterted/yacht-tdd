@@ -55,7 +55,6 @@ public class GameService {
     }
 
 
-
     public void start() {
         final Game game = new Game();
         gameRepository.saveGame(game.memento());
@@ -74,41 +73,48 @@ public class GameService {
     }
 
     private void executeAndSave(Consumer<Game> consumer) {
-        Game game = gameRepository.loadGameOld();
+        Game game = loadGame();
         consumer.accept(game);
         gameRepository.saveGame(game.memento());
     }
 
+    private Game loadGame() {
+        return Game.from(
+                gameRepository.loadGame()
+                              .orElseThrow(
+                                      () -> new IllegalStateException("Current design does not support that the Game might not be (or no longer be) in the database, but it SHOULD.")));
+    }
+
     public void assignCurrentHandTo(ScoreCategory scoreCategory) {
         executeAndSave(game -> game.assignCurrentHandTo(scoreCategory));
-        Game game = gameRepository.loadGameOld();
+        Game game = loadGame();
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);
     }
 
     public HandOfDice currentHand() {
-        return gameRepository.loadGameOld().currentHand();
+        return loadGame().currentHand();
     }
 
     public boolean canReRoll() {
-        return gameRepository.loadGameOld().canReRoll();
+        return loadGame().canReRoll();
     }
 
     public boolean roundCompleted() {
-        return gameRepository.loadGameOld().roundCompleted();
+        return loadGame().roundCompleted();
     }
 
     public boolean isOver() {
-        return gameRepository.loadGameOld().isOver();
+        return loadGame().isOver();
     }
 
     public List<ScoredCategory> scoredCategories() {
-        return gameRepository.loadGameOld().scoredCategories();
+        return loadGame().scoredCategories();
     }
 
     public int score() {
-        return gameRepository.loadGameOld().score();
+        return loadGame().score();
     }
 
     public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {

@@ -15,8 +15,4 @@ public class InMemoryGameRepository {
         return Optional.of(gameSnapshot);
     }
 
-    public Game loadGameOld() {
-        return Game.from(loadGame().get());
-    }
-
 }
