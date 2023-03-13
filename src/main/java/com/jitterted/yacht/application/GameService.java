@@ -2,6 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase;
 import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
@@ -128,6 +129,7 @@ public class GameService {
     public static class NulledResponses {
         private List<Integer> dieRolls = Collections.emptyList();
         private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
+        private GameDatabase gameDatabase = GameDatabase.createNull();
 
         public NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;
@@ -141,6 +143,11 @@ public class GameService {
 
         public NulledResponses withDieRolls(Integer... dieRolls) {
             return withDieRolls(Arrays.asList(dieRolls));
+        }
+
+        public NulledResponses withCorruptedGame() {
+            this.gameDatabase = GameDatabase.createCorruptedNull();
+            return this;
         }
     }
 }
