@@ -39,6 +39,10 @@ public class GameDatabase {
         return new GameDatabase(StubbedJpa.asCorrupted());
     }
 
+    public static GameDatabase createEmptyNull() {
+        return new GameDatabase(StubbedJpa.asEmpty());
+    }
+
     public OutputTracker<Game.Snapshot> trackSaves() {
         return listener.createTracker();
     }
@@ -89,7 +93,7 @@ public class GameDatabase {
     }
 
     private static class StubbedJpa implements Jpa {
-        private final GameRow gameRow;
+        private final Optional<GameRow> gameRow;
 
         public static StubbedJpa asDefault() {
             Game.Snapshot snapshot = new Game.Snapshot(
@@ -98,21 +102,25 @@ public class GameDatabase {
                     HandOfDice.of(1, 2, 3, 4, 5),
                     new Scoreboard.Snapshot(Collections.emptyMap()));
 
-            return new StubbedJpa(GameRow.from(snapshot));
+            return new StubbedJpa(Optional.of(GameRow.from(snapshot)));
         }
 
         public static StubbedJpa asConfigured(Game.Snapshot snapshot) {
-            return new StubbedJpa(GameRow.from(snapshot));
+            return new StubbedJpa(Optional.of(GameRow.from(snapshot)));
         }
 
         public static StubbedJpa asCorrupted() {
             GameRow corruptedGameRow = new GameRow();
             corruptedGameRow.setCurrentHand("invalid");
-            return new StubbedJpa(corruptedGameRow);
+            return new StubbedJpa(Optional.of(corruptedGameRow));
         }
 
-        public StubbedJpa(GameRow gameRow) {
+        public StubbedJpa(Optional<GameRow> gameRow) {
             this.gameRow = gameRow;
+        }
+
+        public static StubbedJpa asEmpty() {
+            return new StubbedJpa(Optional.empty());
         }
 
         @Override
@@ -122,7 +130,7 @@ public class GameDatabase {
 
         @Override
         public Optional<GameRow> findById(Long id) {
-            return Optional.of(gameRow);
+            return gameRow;
         }
     }
 }

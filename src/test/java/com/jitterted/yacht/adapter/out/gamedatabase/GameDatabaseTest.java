@@ -266,6 +266,15 @@ public class GameDatabaseTest {
     }
 
     @Test
+    void nulledLoadGameProvidesNoGame() throws Exception {
+        GameDatabase gameDatabase = GameDatabase.createEmptyNull();
+        Optional<Game.Snapshot> loadedGameSnapshot = gameDatabase.loadGame();
+
+        assertThat(loadedGameSnapshot)
+                .isEmpty();
+    }
+
+    @Test
     void loadGameThrowsExceptionWithCorruptedNull() {
         GameDatabase gameDatabase = GameDatabase.createCorruptedNull();
 
