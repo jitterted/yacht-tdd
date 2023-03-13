@@ -68,7 +68,7 @@ class GameServiceNotificationTest {
         gameService.rollDice();
 
         // WHEN
-        gameService.assignRollTo(ScoreCategory.SIXES);
+        gameService.assignCurrentHandTo(ScoreCategory.SIXES);
 
         // THEN
         assertThat(tracker.output())

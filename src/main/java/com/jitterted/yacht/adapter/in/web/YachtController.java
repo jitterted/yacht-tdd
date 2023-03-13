@@ -60,7 +60,7 @@ public class YachtController {
     @PostMapping("/select-category")
     public String assignRollToCategory(@RequestParam("category") String category) {
         ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
-        gameService.assignRollTo(scoreCategory);
+        gameService.assignCurrentHandTo(scoreCategory);
 
         if (gameService.isOver()) {
             return "redirect:/game-over";

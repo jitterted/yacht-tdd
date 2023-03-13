@@ -98,8 +98,8 @@ public class GameService {
         gameRepository.save(game);
     }
 
-    public void assignRollTo(ScoreCategory scoreCategory) {
-        executeAndSave(game -> game.assignRollTo(scoreCategory));
+    public void assignCurrentHandTo(ScoreCategory scoreCategory) {
+        executeAndSave(game -> game.assignCurrentHandTo(scoreCategory));
         Game game = gameRepository.find();
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),

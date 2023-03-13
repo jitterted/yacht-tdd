@@ -23,7 +23,7 @@ public class GameCategoryAssignmentTest {
         Game game = new Game();
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
-        game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
+        game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY);
 
         assertThat(game.roundCompleted())
                 .isTrue();
@@ -33,7 +33,7 @@ public class GameCategoryAssignmentTest {
     public void newRollAfterAssignmentWhenRollAgainThenRollIsNotAssignedToCategory() throws Exception {
         Game game = new Game();
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
-        game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
+        game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY);
 
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
@@ -46,7 +46,7 @@ public class GameCategoryAssignmentTest {
         Game game = new Game();
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
-        game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
+        game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY);
 
         assertThat(game.canReRoll())
                 .isFalse();
@@ -74,10 +74,10 @@ public class GameCategoryAssignmentTest {
     public void assignedCategoryCanNotBeAssignedToAgain() throws Exception {
         Game game = new Game();
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
-        game.assignRollTo(ARBITRARY_SCORE_CATEGORY);
+        game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY);
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
 
-        assertThatThrownBy(() -> game.assignRollTo(ARBITRARY_SCORE_CATEGORY))
+        assertThatThrownBy(() -> game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY))
                 .isInstanceOf(IllegalStateException.class);
     }
 
@@ -85,17 +85,17 @@ public class GameCategoryAssignmentTest {
     void assignedRollCanNotBeReAssigned() throws Exception {
         Game game = new Game();
         game.diceRolled(DICE_ROLL_1_2_3_4_5);
-        game.assignRollTo(ScoreCategory.FOURS);
+        game.assignCurrentHandTo(ScoreCategory.FOURS);
 
         assertThatThrownBy(() -> {
-            game.assignRollTo(ScoreCategory.FULLHOUSE);
+            game.assignCurrentHandTo(ScoreCategory.FULLHOUSE);
         }).isInstanceOf(IllegalStateException.class);
     }
 
     private void assignRollToAllCategories(Game game) {
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
             game.diceRolled(DICE_ROLL_1_2_3_4_5);
-            game.assignRollTo(scoreCategory);
+            game.assignCurrentHandTo(scoreCategory);
         }
     }
 }

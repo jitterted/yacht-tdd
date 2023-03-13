@@ -6,14 +6,14 @@ public class Game {
 
     private final Scoreboard scoreboard;
 
-    private HandOfDice lastRoll;
+    private HandOfDice currentHand;
 
     private Rolls rolls = Rolls.start();
 
     private boolean roundCompleted;
 
     public Game() {
-        lastRoll = HandOfDice.unassigned();
+        currentHand = HandOfDice.unassigned();
         roundCompleted = true;
         scoreboard = new Scoreboard();
     }
@@ -21,7 +21,7 @@ public class Game {
     private Game(Snapshot snapshot) {
         roundCompleted = snapshot.roundCompleted();
         rolls = new Rolls(snapshot.rolls());
-        lastRoll = snapshot.currentHand();
+        currentHand = snapshot.currentHand();
         scoreboard = Scoreboard.from(snapshot.scoreboard());
     }
 
@@ -32,13 +32,13 @@ public class Game {
     public void diceRolled(HandOfDice handOfDice) {
         roundCompleted = false;
         rolls = Rolls.start();
-        lastRoll = handOfDice;
+        currentHand = handOfDice;
     }
 
     public void diceReRolled(HandOfDice handOfDice) {
         requireRerollsRemaining();
         rolls.increment();
-        lastRoll = handOfDice;
+        currentHand = handOfDice;
     }
 
     private void requireRerollsRemaining() {
@@ -48,20 +48,20 @@ public class Game {
     }
 
     public HandOfDice currentHand() {
-        return lastRoll;
+        return currentHand;
     }
 
     public int score() {
         return scoreboard.score();
     }
 
-    public void assignRollTo(ScoreCategory scoreCategory) {
-        requireRollNotYetAssigned();
-        scoreboard.scoreAs(scoreCategory, lastRoll);
+    public void assignCurrentHandTo(ScoreCategory scoreCategory) {
+        requireHandNotYetAssigned();
+        scoreboard.scoreAs(scoreCategory, currentHand);
         roundCompleted = true;
     }
 
-    private void requireRollNotYetAssigned() {
+    private void requireHandNotYetAssigned() {
         if (roundCompleted) {
             throw new IllegalStateException();
         }
@@ -88,7 +88,7 @@ public class Game {
 
     public Snapshot memento() {
         return new Snapshot(rolls.rolls(), roundCompleted,
-                            lastRoll,
+                            currentHand,
                             scoreboard.memento());
     }
 
@@ -115,7 +115,7 @@ public class Game {
         if (!scoreboard.equals(game.scoreboard)) {
             return false;
         }
-        if (!lastRoll.equals(game.lastRoll)) {
+        if (!currentHand.equals(game.currentHand)) {
             return false;
         }
         return rolls.equals(game.rolls);
@@ -124,7 +124,7 @@ public class Game {
     @Override
     public int hashCode() {
         int result = scoreboard.hashCode();
-        result = 31 * result + lastRoll.hashCode();
+        result = 31 * result + currentHand.hashCode();
         result = 31 * result + rolls.hashCode();
         result = 31 * result + (roundCompleted ? 1 : 0);
         return result;
@@ -134,7 +134,7 @@ public class Game {
     public String toString() {
         return "Game{" +
                 "scoreboard=" + scoreboard +
-                ", lastRoll=" + lastRoll +
+                ", lastRoll=" + currentHand +
                 ", rolls=" + rolls +
                 ", roundCompleted=" + roundCompleted +
                 '}';

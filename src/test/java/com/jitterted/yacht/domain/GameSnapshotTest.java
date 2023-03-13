@@ -12,7 +12,7 @@ class GameSnapshotTest {
     void mementoSavesAllGameState() {
         Game game = new Game();
         game.diceRolled(HandOfDice.of(1, 2, 3, 4, 5));
-        game.assignRollTo(ScoreCategory.FIVES);
+        game.assignCurrentHandTo(ScoreCategory.FIVES);
 
         Game.Snapshot snapshot = game.memento();
 
@@ -31,7 +31,7 @@ class GameSnapshotTest {
     void createFromMementoRestoresAllGameState() {
         Game originalGame = new Game();
         originalGame.diceRolled(HandOfDice.of(3, 3, 4, 4, 5));
-        originalGame.assignRollTo(ScoreCategory.FOURS);
+        originalGame.assignCurrentHandTo(ScoreCategory.FOURS);
         originalGame.diceRolled(HandOfDice.of(6, 6, 6, 6, 1));
         originalGame.diceReRolled(HandOfDice.of(6, 6, 6, 6, 6));
 

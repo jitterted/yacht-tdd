@@ -57,7 +57,7 @@ public class VueController {
     public void assignRollToCategory(@RequestBody Map<String, String> map) {
         String scoreCategoryString = map.get("category");
         ScoreCategory scoreCategory = ScoreCategory.valueOf(scoreCategoryString.toUpperCase());
-        gameService.assignRollTo(scoreCategory);
+        gameService.assignCurrentHandTo(scoreCategory);
     }
 
     @PostMapping(value = "reroll", consumes = MediaType.APPLICATION_JSON_VALUE)
