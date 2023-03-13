@@ -26,7 +26,7 @@ public class VueControllerWebTest {
     public static class Configuration {
         @Bean
         @Primary
-        GameService createNullGameService() {
+        GameService createGameService() {
             return GameService.createNull();
         }
     }
