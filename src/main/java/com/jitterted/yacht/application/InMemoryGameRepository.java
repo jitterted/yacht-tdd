@@ -5,12 +5,11 @@ import com.jitterted.yacht.domain.Game;
 public class InMemoryGameRepository {
     private Game.Snapshot gameSnapshot;
 
-    public Game save(Game game) {
-        this.gameSnapshot = game.memento();
-        return Game.from(gameSnapshot);
+    public void saveGame(Game.Snapshot snapshot) {
+        this.gameSnapshot = snapshot;
     }
 
-    public Game find() {
+    public Game loadGame() {
         return Game.from(gameSnapshot);
     }
 

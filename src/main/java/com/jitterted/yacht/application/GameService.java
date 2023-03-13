@@ -57,7 +57,8 @@ public class GameService {
 
 
     public void start() {
-        gameRepository.save(new Game());
+        final Game game = new Game();
+        gameRepository.saveGame(game.memento());
     }
 
     public void rollDice() {
@@ -73,41 +74,41 @@ public class GameService {
     }
 
     private void executeAndSave(Consumer<Game> consumer) {
-        Game game = gameRepository.find();
+        Game game = gameRepository.loadGame();
         consumer.accept(game);
-        gameRepository.save(game);
+        gameRepository.saveGame(game.memento());
     }
 
     public void assignCurrentHandTo(ScoreCategory scoreCategory) {
         executeAndSave(game -> game.assignCurrentHandTo(scoreCategory));
-        Game game = gameRepository.find();
+        Game game = gameRepository.loadGame();
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);
     }
 
     public HandOfDice currentHand() {
-        return gameRepository.find().currentHand();
+        return gameRepository.loadGame().currentHand();
     }
 
     public boolean canReRoll() {
-        return gameRepository.find().canReRoll();
+        return gameRepository.loadGame().canReRoll();
     }
 
     public boolean roundCompleted() {
-        return gameRepository.find().roundCompleted();
+        return gameRepository.loadGame().roundCompleted();
     }
 
     public boolean isOver() {
-        return gameRepository.find().isOver();
+        return gameRepository.loadGame().isOver();
     }
 
     public List<ScoredCategory> scoredCategories() {
-        return gameRepository.find().scoredCategories();
+        return gameRepository.loadGame().scoredCategories();
     }
 
     public int score() {
-        return gameRepository.find().score();
+        return gameRepository.loadGame().score();
     }
 
     public Map<ScoreCategory, Double> averagesFor(List<ScoreCategory> scoreCategories) {
