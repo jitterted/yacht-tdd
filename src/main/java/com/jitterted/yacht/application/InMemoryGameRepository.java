@@ -2,6 +2,8 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.domain.Game;
 
+import java.util.Optional;
+
 public class InMemoryGameRepository {
     private Game.Snapshot gameSnapshot;
 
@@ -9,8 +11,12 @@ public class InMemoryGameRepository {
         this.gameSnapshot = snapshot;
     }
 
-    public Game loadGame() {
-        return Game.from(gameSnapshot);
+    public Optional<Game.Snapshot> loadGame() {
+        return Optional.of(gameSnapshot);
+    }
+
+    public Game loadGameOld() {
+        return Game.from(loadGame().get());
     }
 
 }
