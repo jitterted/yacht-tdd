@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "games")
-public class GameTable {
+public class GameRow {
     @Id
     private Long id;
 
@@ -35,15 +35,15 @@ public class GameTable {
 
     // -- from and asSnapshot are tested (indirectly) via GameDatabaseTest
     
-    static GameTable from(Game.Snapshot snapshot) {
-        GameTable gameTable = new GameTable();
-        gameTable.setId(GameDatabase.THE_ONLY_GAME_ID);
+    static GameRow from(Game.Snapshot snapshot) {
+        GameRow gameRow = new GameRow();
+        gameRow.setId(GameDatabase.THE_ONLY_GAME_ID);
 
-        gameTable.setRolls(snapshot.rolls());
-        gameTable.setRoundCompleted(snapshot.roundCompleted());
-        gameTable.setCurrentHand(asPersistableHand(snapshot.currentHand()));
-        gameTable.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
-        return gameTable;
+        gameRow.setRolls(snapshot.rolls());
+        gameRow.setRoundCompleted(snapshot.roundCompleted());
+        gameRow.setCurrentHand(asPersistableHand(snapshot.currentHand()));
+        gameRow.setScoreboard(asPersistableScoreboard(snapshot.scoreboard()));
+        return gameRow;
     }
 
     Game.Snapshot asSnapshot() {

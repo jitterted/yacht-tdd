@@ -44,9 +44,9 @@ public class GameDatabase {
     }
 
     public void saveGame(Game.Snapshot snapshot) {
-        GameTable gameTable = GameTable.from(snapshot);
+        GameRow gameRow = GameRow.from(snapshot);
 
-        gameDatabaseJpa.save(gameTable);
+        gameDatabaseJpa.save(gameRow);
         listener.emit(snapshot);
     }
 
@@ -54,7 +54,7 @@ public class GameDatabase {
         try {
             return gameDatabaseJpa
                     .findById(THE_ONLY_GAME_ID)
-                    .map(GameTable::asSnapshot);
+                    .map(GameRow::asSnapshot);
         } catch (GameCorruptedInternalException e) {
             throw new GameCorrupted(e.getMessage());
         }
@@ -64,9 +64,9 @@ public class GameDatabase {
     // ----- NULLABILITY -----
 
     interface Jpa {
-        GameTable save(GameTable gameTable);
+        GameRow save(GameRow gameRow);
 
-        Optional<GameTable> findById(Long id);
+        Optional<GameRow> findById(Long id);
     }
 
     private static class RealJpa implements Jpa {
@@ -78,18 +78,18 @@ public class GameDatabase {
         }
 
         @Override
-        public GameTable save(GameTable gameTable) {
-            return gameDatabaseJpa.save(gameTable);
+        public GameRow save(GameRow gameRow) {
+            return gameDatabaseJpa.save(gameRow);
         }
 
         @Override
-        public Optional<GameTable> findById(Long id) {
+        public Optional<GameRow> findById(Long id) {
             return gameDatabaseJpa.findById(id);
         }
     }
 
     private static class StubbedJpa implements Jpa {
-        private final GameTable gameTable;
+        private final GameRow gameRow;
 
         public static StubbedJpa asDefault() {
             Game.Snapshot snapshot = new Game.Snapshot(
@@ -98,31 +98,31 @@ public class GameDatabase {
                     HandOfDice.of(1, 2, 3, 4, 5),
                     new Scoreboard.Snapshot(Collections.emptyMap()));
 
-            return new StubbedJpa(GameTable.from(snapshot));
+            return new StubbedJpa(GameRow.from(snapshot));
         }
 
         public static StubbedJpa asConfigured(Game.Snapshot snapshot) {
-            return new StubbedJpa(GameTable.from(snapshot));
+            return new StubbedJpa(GameRow.from(snapshot));
         }
 
         public static StubbedJpa asCorrupted() {
-            GameTable corruptedGameTable = new GameTable();
-            corruptedGameTable.setCurrentHand("invalid");
-            return new StubbedJpa(corruptedGameTable);
+            GameRow corruptedGameRow = new GameRow();
+            corruptedGameRow.setCurrentHand("invalid");
+            return new StubbedJpa(corruptedGameRow);
         }
 
-        public StubbedJpa(GameTable gameTable) {
-            this.gameTable = gameTable;
+        public StubbedJpa(GameRow gameRow) {
+            this.gameRow = gameRow;
         }
 
         @Override
-        public GameTable save(GameTable gameTable) {
+        public GameRow save(GameRow gameRow) {
             return null;
         }
 
         @Override
-        public Optional<GameTable> findById(Long id) {
-            return Optional.of(gameTable);
+        public Optional<GameRow> findById(Long id) {
+            return Optional.of(gameRow);
         }
     }
 }

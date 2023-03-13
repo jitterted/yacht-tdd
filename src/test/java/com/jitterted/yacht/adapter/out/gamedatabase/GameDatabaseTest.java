@@ -83,7 +83,7 @@ public class GameDatabaseTest {
         BigInteger gameId = gameRows.get(0);
 
         List<Object[]> scoreboardRows = executeQuery(
-                "SELECT game_table_id, scoreboard_key, scoreboard FROM games_scoreboards");
+                "SELECT game_row_id, scoreboard_key, scoreboard FROM games_scoreboards");
 
         assertThat(scoreboardRows)
                 .containsExactly(new Object[]{
@@ -154,7 +154,7 @@ public class GameDatabaseTest {
                               "(id, rolls, round_completed, current_hand) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
         executeUpdate("INSERT INTO games_scoreboards " +
-                              "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                              "(game_row_id, scoreboard_key, scoreboard) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 'FIVES', '5,5,5,5,5'), " +
                               "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
 
@@ -185,7 +185,7 @@ public class GameDatabaseTest {
 
         assertThatThrownBy(() -> {
             executeUpdate("INSERT INTO games_scoreboards " +
-                                  "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                                  "(game_row_id, scoreboard_key, scoreboard) VALUES " +
                                   "(" + THE_ONLY_GAME_ID + ", 'FOURS', '5,4,4,5,5'), " +
                                   "(" + THE_ONLY_GAME_ID + ", 'FOURS', '4,4,4,4,4')");
         }).isInstanceOf(PersistenceException.class);
@@ -197,7 +197,7 @@ public class GameDatabaseTest {
                               "(id, rolls, round_completed, current_hand) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 3, true, '1,2,3,4,4')");
         executeUpdate("INSERT INTO games_scoreboards " +
-                              "(game_table_id, scoreboard_key, scoreboard) VALUES " +
+                              "(game_row_id, scoreboard_key, scoreboard) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 'NO_SUCH_CATEGORY', '5,4,4,5,5')");
 
         assertLoadGameThrowsGameCorrupted("Unrecognized ScoreCategory when loading game: NO_SUCH_CATEGORY");
