@@ -16,37 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-
-/* ANOTHER WAY:
-
-App:
-* startServer()
-* when request comes in
-  * Game game = load game
-  * game.onReadyToSave(() -> save game)
-  * game.onCategoryAssigned(() -> notify)
-
-  * controller.process request(game)
-
-        game.doLogic()
-
-*/
-
-
-
-
-
 public class GameService {
     private static final int YACHT_DICE_COUNT = 5;
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-    private final GameRepository gameRepository;
+    private final InMemoryGameRepository gameRepository;
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
                 DieRoller dieRoller,
-                GameRepository gameRepository) {
+                InMemoryGameRepository gameRepository) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;

@@ -39,10 +39,9 @@ class GameServiceAverageFetcherTest {
     private static GameService createGameServiceWithAverageScoresOf(Map<ScoreCategory, Double> map) {
         return new GameService(
                 ScoreCategoryNotifier.createNull(),
-                AverageScoreFetcher.createNull(
-                        map
-                ),
-                DieRoller.createNull(), new InMemoryGameRepository());
+                AverageScoreFetcher.createNull(map),
+                DieRoller.createNull(),
+                new InMemoryGameRepository());
     }
 
 }

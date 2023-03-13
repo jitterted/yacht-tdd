@@ -63,7 +63,8 @@ class GameServiceNotificationTest {
         GameService gameService = new GameService(
                 scoreCategoryNotifier,
                 AverageScoreFetcher.createNull(),
-                allSixesDieRoller, new InMemoryGameRepository());
+                allSixesDieRoller,
+                new InMemoryGameRepository());
         gameService.start();
         gameService.rollDice();
 
