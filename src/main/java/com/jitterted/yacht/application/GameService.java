@@ -23,23 +23,23 @@ public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-    private final InMemoryGameRepository gameRepository;
+    private final GameDatabaseInterface gameRepository;
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
                 DieRoller dieRoller,
-                InMemoryGameRepository gameRepository) {
+                GameDatabaseInterface gameRepository) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
         this.gameRepository = gameRepository;
     }
 
-    public static GameService create() {
+    public static GameService create(GameDatabase gameDatabase) {
         return new GameService(ScoreCategoryNotifier.create(),
                                AverageScoreFetcher.create(),
                                DieRoller.create(),
-                               new InMemoryGameRepository());
+                               gameDatabase);
     }
 
     public static GameService createNull() {
@@ -53,7 +53,7 @@ public class GameService {
                                DieRoller.createNull(
                                        nulledResponses.dieRolls
                                ),
-                               new InMemoryGameRepository());
+                               new DeleteMeImpl());
     }
 
 
@@ -67,17 +67,18 @@ public class GameService {
         executeAndSave(game -> game.diceRolled(handOfDice));
     }
 
-    public void reRoll(List<Integer> keptDice) throws GameCorrupted {
+    public Game reRoll(List<Integer> keptDice) throws GameCorrupted {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
-        executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
+        return executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
     }
 
-    private void executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
+    private Game executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
         Game game = loadGame();
         consumer.accept(game);
         gameRepository.saveGame(game.memento());
+        return game;
     }
 
     private Game loadGame() throws GameCorrupted {
@@ -88,8 +89,7 @@ public class GameService {
     }
 
     public void assignCurrentHandTo(ScoreCategory scoreCategory) throws GameCorrupted {
-        executeAndSave(game -> game.assignCurrentHandTo(scoreCategory));
-        Game game = loadGame();
+        Game game = executeAndSave(g -> g.assignCurrentHandTo(scoreCategory));
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);

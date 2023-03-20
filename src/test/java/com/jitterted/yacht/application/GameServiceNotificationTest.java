@@ -3,12 +3,16 @@ package com.jitterted.yacht.application;
 import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase;
 import com.jitterted.yacht.adapter.out.scorecategory.RollAssignment;
 import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
+import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
+import com.jitterted.yacht.domain.Scoreboard;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -55,18 +59,23 @@ class GameServiceNotificationTest {
     @Test
     void whenRollAssignedToCategoryNotificationIsSent() throws Exception {
         // GIVEN a started game and dice rolled
-        DieRoller allSixesDieRoller = DieRoller.createNull(6, 6, 6, 6, 6);
         ScoreCategoryNotifier scoreCategoryNotifier =
                 ScoreCategoryNotifier.createNull();
-        OutputTracker<RollAssignment> tracker = scoreCategoryNotifier.trackAssignments();
+        OutputTracker<RollAssignment> tracker =
+                scoreCategoryNotifier.trackAssignments();
 
         GameService gameService = new GameService(
                 scoreCategoryNotifier,
                 AverageScoreFetcher.createNull(),
-                allSixesDieRoller,
-                new InMemoryGameRepository());
-        gameService.start();
-        gameService.rollDice();
+                DieRoller.createNull(),
+                GameDatabase.createNull(
+                        new Game.Snapshot(
+                                1,
+                                false,
+                                HandOfDice.of(6, 6, 6, 6, 6),
+                                new Scoreboard.Snapshot(Collections.emptyMap())
+                        )
+                ));
 
         // WHEN
         gameService.assignCurrentHandTo(ScoreCategory.SIXES);

@@ -2,6 +2,7 @@ package com.jitterted.yacht.application;
 
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
+import com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase;
 import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class GameServiceAverageFetcherTest {
                 ScoreCategoryNotifier.createNull(),
                 AverageScoreFetcher.createNull(map),
                 DieRoller.createNull(),
-                new InMemoryGameRepository());
+                GameDatabase.createNull());
     }
 
 }
