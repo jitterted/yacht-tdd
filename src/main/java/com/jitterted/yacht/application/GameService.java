@@ -1,5 +1,7 @@
 package com.jitterted.yacht.application;
 
+import com.jitterted.yacht.adapter.OutputListener;
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.adapter.out.averagescore.AverageScoreFetcher;
 import com.jitterted.yacht.adapter.out.dieroller.DieRoller;
 import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
@@ -23,16 +25,17 @@ public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-    private final GameDatabaseInterface gameRepository;
+    private final GameDatabaseInterface gameDatabase;
+    private final OutputListener<Game> listener = new OutputListener<>();
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
                 DieRoller dieRoller,
-                GameDatabaseInterface gameRepository) {
+                GameDatabaseInterface gameDatabase) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
-        this.gameRepository = gameRepository;
+        this.gameDatabase = gameDatabase;
     }
 
     public static GameService create(GameDatabase gameDatabase) {
@@ -56,10 +59,15 @@ public class GameService {
                                new DeleteMeImpl());
     }
 
+    public OutputTracker<Game> trackSaves() {
+        return listener.createTracker();
+    }
+
 
     public void start() {
         final Game game = new Game();
-        gameRepository.saveGame(game.memento());
+        gameDatabase.saveGame(game.memento());
+        listener.emit(game);
     }
 
     public void rollDice() throws GameCorrupted {
@@ -74,25 +82,26 @@ public class GameService {
         return executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
     }
 
-    private Game executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
-        Game game = loadGame();
-        consumer.accept(game);
-        gameRepository.saveGame(game.memento());
-        return game;
-    }
-
-    private Game loadGame() throws GameCorrupted {
-        return Game.from(
-                gameRepository.loadGame()
-                              .orElseThrow(
-                                      () -> new IllegalStateException("Current design does not support that the Game might not be (or no longer be) in the database, but it SHOULD.")));
-    }
-
     public void assignCurrentHandTo(ScoreCategory scoreCategory) throws GameCorrupted {
         Game game = executeAndSave(g -> g.assignCurrentHandTo(scoreCategory));
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);
+    }
+
+    private Game executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
+        Game game = loadGame();
+        consumer.accept(game);
+        gameDatabase.saveGame(game.memento());
+        listener.emit(game);
+        return game;
+    }
+
+    private Game loadGame() throws GameCorrupted {
+        return Game.from(
+                gameDatabase.loadGame()
+                            .orElseThrow(
+                                      () -> new IllegalStateException("Current design does not support that the Game might not be (or no longer be) in the database, but it SHOULD.")));
     }
 
     public HandOfDice currentHand() throws GameCorrupted {
