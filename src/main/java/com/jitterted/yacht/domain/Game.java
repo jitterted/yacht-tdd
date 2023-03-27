@@ -86,7 +86,7 @@ public class Game {
         return scoreboard.isComplete();
     }
 
-    public Snapshot memento() {
+    public Snapshot snapshot() {
         return new Snapshot(rolls.rolls(), roundCompleted,
                             currentHand,
                             scoreboard.memento());

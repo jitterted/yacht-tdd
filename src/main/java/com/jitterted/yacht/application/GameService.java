@@ -57,6 +57,7 @@ public class GameService {
                                        nulledResponses.dieRolls
                                ),
                                new DeleteMeImpl());
+//                               GameDatabase.createNull());
     }
 
     public OutputTracker<Game> trackSaves() {
@@ -66,7 +67,7 @@ public class GameService {
 
     public void start() {
         final Game game = new Game();
-        gameDatabase.saveGame(game.memento());
+        gameDatabase.saveGame(game.snapshot());
         listener.emit(game);
     }
 
@@ -92,7 +93,7 @@ public class GameService {
     private Game executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
         Game game = loadGame();
         consumer.accept(game);
-        gameDatabase.saveGame(game.memento());
+        gameDatabase.saveGame(game.snapshot());
         listener.emit(game);
         return game;
     }
@@ -147,7 +148,7 @@ public class GameService {
         }
 
         public NulledResponses withAverageScores(Map<ScoreCategory, Double> scoreResponses) {
-            this.averageScoreResponses = scoreResponses;
+            averageScoreResponses = scoreResponses;
             return this;
         }
 
@@ -155,8 +156,13 @@ public class GameService {
             return withDieRolls(Arrays.asList(dieRolls));
         }
 
+        public NulledResponses withGame(Game game) {
+            gameDatabase = GameDatabase.createNull(game.snapshot());
+            return this;
+        }
+
         public NulledResponses withCorruptedGame() {
-            this.gameDatabase = GameDatabase.createCorruptedNull();
+            gameDatabase = GameDatabase.createCorruptedNull();
             return this;
         }
     }

@@ -14,7 +14,7 @@ class GameSnapshotTest {
         game.diceRolled(HandOfDice.of(1, 2, 3, 4, 5));
         game.assignCurrentHandTo(ScoreCategory.FIVES);
 
-        Game.Snapshot snapshot = game.memento();
+        Game.Snapshot snapshot = game.snapshot();
 
         assertThat(snapshot.roundCompleted())
                 .isTrue();
@@ -35,7 +35,7 @@ class GameSnapshotTest {
         originalGame.diceRolled(HandOfDice.of(6, 6, 6, 6, 1));
         originalGame.diceReRolled(HandOfDice.of(6, 6, 6, 6, 6));
 
-        Game.Snapshot originalGameSnapshot = originalGame.memento();
+        Game.Snapshot originalGameSnapshot = originalGame.snapshot();
 
         Game restoredGame = Game.from(originalGameSnapshot);
 

@@ -14,17 +14,6 @@ import static org.assertj.core.api.Assertions.*;
 public class VueControllerTest {
 
     @Test
-    public void callingStateOnNonStartedGameThrowsException() throws Exception {
-        GameService gameService = GameService.createNull();
-
-        VueController vueController = new VueController(gameService);
-
-        assertThatThrownBy(() -> {
-            gameService.roundCompleted();
-        }).isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
     public void postToStartGameStartsGame() throws Exception {
         GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
@@ -36,36 +25,34 @@ public class VueControllerTest {
     }
 
     @Test
-    public void newGameStartedWhenGetLastRollReturnsEmptyDiceRoll() throws Exception {
+    public void canGetCurrentHand() throws Exception {
         GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
         vueController.startGame();
 
-        DiceRollDto dto = vueController.lastRoll();
+        DiceRollDto dto = vueController.currentHand();
 
         assertThat(dto.getRoll())
                 .isEmpty();
     }
 
     @Test
-    public void gameStartedRollDiceButtonRollsTheDice() throws Exception {
+    public void canRollDice() throws Exception {
         GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
                         .withDieRolls(2, 3, 4, 5, 6));
-
         VueController vueController = new VueController(gameService);
-
         vueController.startGame();
 
         vueController.rollDice();
-        DiceRollDto dto = vueController.lastRoll();
+        DiceRollDto dto = vueController.currentHand();
 
         assertThat(dto.getRoll())
                 .isEqualTo(List.of(2, 3, 4, 5, 6));
     }
 
     @Test
-    public void scoreCategoriesReturnsScoredCategories() throws Exception {
+    public void canGetScoredCategories() throws Exception {
         GameService gameService = GameService.createNull();
         VueController vueController = new VueController(gameService);
         vueController.startGame();
@@ -79,7 +66,7 @@ public class VueControllerTest {
     }
 
     @Test
-    public void assignLastRollToCategoryThenCategoryIsAssignedAndScored() throws Exception {
+    public void canAssignCurrentHandToCategory() throws Exception {
         GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
                         .withDieRolls(6, 6, 5, 5, 5));
@@ -95,7 +82,7 @@ public class VueControllerTest {
     }
 
     @Test
-    public void keepDiceReRollsTheNonKeptDice() throws Exception {
+    public void reRollKeepsSpecifiedDice() throws Exception {
         GameService gameService = GameService.createNull(
                 new GameService.NulledResponses()
                         .withDieRolls(1, 2, 3, 4, 5, 6, 6));

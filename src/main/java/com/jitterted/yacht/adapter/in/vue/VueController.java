@@ -37,7 +37,7 @@ public class VueController {
     }
 
     @GetMapping("last-roll")
-    public DiceRollDto lastRoll() throws GameCorrupted {
+    public DiceRollDto currentHand() throws GameCorrupted {
         return DiceRollDto.from(gameService.currentHand());
     }
 
