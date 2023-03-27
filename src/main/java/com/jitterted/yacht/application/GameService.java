@@ -8,6 +8,7 @@ import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.adapter.out.gamedatabase.GameDatabase;
 import com.jitterted.yacht.adapter.out.scorecategory.ScoreCategoryNotifier;
 import com.jitterted.yacht.domain.Game;
+import com.jitterted.yacht.domain.GameEvent;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import com.jitterted.yacht.domain.ScoredCategory;
@@ -26,7 +27,7 @@ public class GameService {
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
     private final GameDatabaseInterface gameDatabase;
-    private final OutputListener<Game> listener = new OutputListener<>();
+    private final OutputListener<GameEvent> listener = new OutputListener<>();
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
@@ -60,27 +61,29 @@ public class GameService {
 //                               GameDatabase.createNull());
     }
 
-    public OutputTracker<Game> trackSaves() {
+    public OutputTracker<GameEvent> trackEvents() {
         return listener.createTracker();
     }
-
 
     public void start() {
         final Game game = new Game();
         gameDatabase.saveGame(game.snapshot());
-        listener.emit(game);
+        listener.emit(new GameEvent.Started());
     }
 
     public void rollDice() throws GameCorrupted {
         HandOfDice handOfDice = HandOfDice.from(dieRoller.rollMultiple(YACHT_DICE_COUNT));
         executeAndSave(game -> game.diceRolled(handOfDice));
+        listener.emit(new GameEvent.DiceRolled());
     }
 
     public Game reRoll(List<Integer> keptDice) throws GameCorrupted {
         List<Integer> dieRolls = new ArrayList<>();
         dieRolls.addAll(keptDice);
         dieRolls.addAll(dieRoller.rollMultiple(YACHT_DICE_COUNT - dieRolls.size()));
-        return executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
+        Game result = executeAndSave(game -> game.diceReRolled(HandOfDice.from(dieRolls)));
+        listener.emit(new GameEvent.DiceRerolled(keptDice.toArray(new Integer[0])));
+        return result;
     }
 
     public void assignCurrentHandTo(ScoreCategory scoreCategory) throws GameCorrupted {
@@ -88,13 +91,13 @@ public class GameService {
         scoreCategoryNotifier.rollAssigned(game.currentHand(),
                                            game.score(),
                                            scoreCategory);
+        listener.emit(new GameEvent.CategoryAssigned(scoreCategory));
     }
 
     private Game executeAndSave(Consumer<Game> consumer) throws GameCorrupted {
         Game game = loadGame();
         consumer.accept(game);
         gameDatabase.saveGame(game.snapshot());
-        listener.emit(game);
         return game;
     }
 
