@@ -1,7 +1,9 @@
 package com.jitterted.yacht.adapter.in.vue;
 
+import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
+import com.jitterted.yacht.domain.GameEvent;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
@@ -14,14 +16,13 @@ import static org.assertj.core.api.Assertions.*;
 public class VueControllerTest {
 
     @Test
-    public void postToStartGameStartsGame() throws Exception {
-        GameService gameService = GameService.createNull();
-        VueController vueController = new VueController(gameService);
+    public void startsGame() throws Exception {
+        Fixture fixture = createFixture();
 
-        vueController.startGame();
+        fixture.vueController.startGame();
 
-        assertThat(gameService.roundCompleted())
-                .isTrue();
+        assertThat(fixture.tracker.output())
+                .containsExactly(new GameEvent.Started());
     }
 
     @Test
@@ -37,18 +38,13 @@ public class VueControllerTest {
     }
 
     @Test
-    public void canRollDice() throws Exception {
-        GameService gameService = GameService.createNull(
-                new GameService.NulledResponses()
-                        .withDieRolls(2, 3, 4, 5, 6));
-        VueController vueController = new VueController(gameService);
-        vueController.startGame();
+    public void rollsDice() throws Exception {
+        Fixture fixture = createFixture();
 
-        vueController.rollDice();
-        DiceRollDto dto = vueController.currentHand();
+        fixture.vueController.rollDice();
 
-        assertThat(dto.getRoll())
-                .isEqualTo(List.of(2, 3, 4, 5, 6));
+        assertThat(fixture.tracker.output())
+                .containsExactly(new GameEvent.DiceRolled());
     }
 
     @Test
@@ -67,18 +63,14 @@ public class VueControllerTest {
 
     @Test
     public void canAssignCurrentHandToCategory() throws Exception {
-        GameService gameService = GameService.createNull(
-                new GameService.NulledResponses()
-                        .withDieRolls(6, 6, 5, 5, 5));
-        VueController vueController = new VueController(gameService);
-        vueController.startGame();
-        vueController.rollDice();
+        Fixture fixture = createFixture();
+        fixture.gameService.rollDice();
+        fixture.tracker.clear();
 
-        vueController.assignRollToCategory(Map.of("category", "SIXES"));
+        fixture.vueController.assignRollToCategory(Map.of("category", "SIXES"));
 
-        ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
-        assertThat(scoreCategoriesDto.getTotalScore())
-                .isEqualTo(6 + 6);
+        assertThat(fixture.tracker.output())
+                .containsExactly(new GameEvent.CategoryAssigned(ScoreCategory.SIXES));
     }
 
     @Test
@@ -97,6 +89,17 @@ public class VueControllerTest {
 
         assertThat(gameService.currentHand())
                 .isEqualTo(HandOfDice.of(2, 3, 5, 6, 6));
+    }
+
+    record Fixture(VueController vueController,
+                   GameService gameService,
+                   OutputTracker<GameEvent> tracker) {}
+
+    private Fixture createFixture() {
+        GameService gameService = GameService.createNull();
+        OutputTracker<GameEvent> tracker = gameService.trackEvents();
+        VueController vueController = new VueController(gameService);
+        return new Fixture(vueController, gameService, tracker);
     }
 
 }

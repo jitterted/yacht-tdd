@@ -6,7 +6,7 @@ import com.jitterted.yacht.domain.Game;
 import java.util.Optional;
 
 public class DeleteMeImpl implements GameDatabaseInterface {
-    private Game.Snapshot gameSnapshot;
+    private Game.Snapshot gameSnapshot = new Game().snapshot();
 
     @Override
     public void saveGame(Game.Snapshot snapshot) {
