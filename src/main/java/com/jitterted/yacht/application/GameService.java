@@ -57,8 +57,7 @@ public class GameService {
                                DieRoller.createNull(
                                        nulledResponses.dieRolls
                                ),
-                               new DeleteMeImpl());
-//                               GameDatabase.createNull());
+                               nulledResponses.gameDatabase);
     }
 
     public OutputTracker<GameEvent> trackEvents() {
@@ -143,7 +142,8 @@ public class GameService {
     public static class NulledResponses {
         private List<Integer> dieRolls = Collections.emptyList();
         private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
-        private GameDatabase gameDatabase = GameDatabase.createNull();
+//         private GameDatabaseInterface gameDatabase = GameDatabase.createNull();
+        private GameDatabaseInterface gameDatabase = new DeleteMeImpl();
 
         public NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;
@@ -160,7 +160,8 @@ public class GameService {
         }
 
         public NulledResponses withGame(Game game) {
-            gameDatabase = GameDatabase.createNull(game.snapshot());
+//             gameDatabase = GameDatabase.createNull(game.snapshot());
+            gameDatabase.saveGame(game.snapshot());
             return this;
         }
 
