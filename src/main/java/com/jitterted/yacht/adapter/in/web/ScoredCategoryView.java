@@ -58,4 +58,51 @@ public class ScoredCategoryView {
     public String getScoreAverage() {
         return scoreAverage;
     }
+
+    @Override
+    public String toString() {
+        return "ScoredCategoryView{" +
+                "description='" + description + '\'' +
+                ", handOfDice='" + handOfDice + '\'' +
+                ", score='" + score + '\'' +
+                ", scoreAverage='" + scoreAverage + '\'' +
+                ", rollAssigned=" + rollAssigned +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ScoredCategoryView that = (ScoredCategoryView) o;
+
+        if (rollAssigned != that.rollAssigned) {
+            return false;
+        }
+        if (!description.equals(that.description)) {
+            return false;
+        }
+        if (!handOfDice.equals(that.handOfDice)) {
+            return false;
+        }
+        if (!score.equals(that.score)) {
+            return false;
+        }
+        return scoreAverage.equals(that.scoreAverage);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = description.hashCode();
+        result = 31 * result + handOfDice.hashCode();
+        result = 31 * result + score.hashCode();
+        result = 31 * result + scoreAverage.hashCode();
+        result = 31 * result + (rollAssigned ? 1 : 0);
+        return result;
+    }
 }

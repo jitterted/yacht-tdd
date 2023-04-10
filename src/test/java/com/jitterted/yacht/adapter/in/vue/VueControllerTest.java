@@ -1,6 +1,7 @@
 package com.jitterted.yacht.adapter.in.vue;
 
 import com.jitterted.yacht.adapter.OutputTracker;
+import com.jitterted.yacht.adapter.in.web.ScoredCategoryView;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
@@ -9,6 +10,7 @@ import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.ScoreCategory;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +30,14 @@ public class VueControllerTest {
 
     @Test
     public void canGetCurrentHand() throws Exception {
-        GameService gameService = GameService.createNull();
-        VueController vueController = new VueController(gameService);
-        vueController.startGame();
+        Game game = new Game();
+        game.diceRolled(HandOfDice.of(6, 5, 4, 3, 2));
+        Fixture fixture = createFixture(game);
 
-        DiceRollDto dto = vueController.currentHand();
+        DiceRollDto dto = fixture.vueController.currentHand();
 
         assertThat(dto.getRoll())
-                .isEmpty();
+                .containsExactly(6, 5, 4, 3, 2);
     }
 
     @Test
@@ -50,23 +52,25 @@ public class VueControllerTest {
 
     @Test
     public void canGetScoredCategories() throws Exception {
-        GameService gameService = GameService.createNull();
-        VueController vueController = new VueController(gameService);
-        vueController.startGame();
+        Game game = new Game();
+        game.diceRolled(HandOfDice.of(5, 5, 5, 5, 5));
+        game.assignCurrentHandTo(ScoreCategory.FIVES);
+        Fixture fixture = createFixture(game);
 
-        ScoreCategoriesDto scoreCategoriesDto = vueController.scoringCategories();
+        ScoreCategoriesDto scoreCategoriesDto = fixture.vueController.scoringCategories();
 
+        // Collaborator-based Isolation
         assertThat(scoreCategoriesDto.getTotalScore())
-                .isZero();
+                .isEqualTo(game.score());
+        List<ScoredCategoryView> expectedCategories = ScoredCategoryView.viewOf(game.scoredCategories(), Collections.emptyMap());
         assertThat(scoreCategoriesDto.getCategories())
-                .hasSize(ScoreCategory.values().length);
+                .isEqualTo(expectedCategories);
     }
 
     @Test
     public void canAssignCurrentHandToCategory() throws Exception {
         Game game = new Game();
         game.diceRolled(HandOfDice.of(6, 5, 4, 3, 2));
-
         Fixture fixture = createFixture(game);
 
         fixture.vueController.assignRollToCategory(Map.of("category", "SIXES"));
@@ -79,7 +83,6 @@ public class VueControllerTest {
     public void reRollKeepsSpecifiedDice() throws Exception {
         Game game = new Game();
         game.diceRolled(HandOfDice.of(6, 5, 4, 3, 2));
-
         Fixture fixture = createFixture(game);
 
         Keep keep = new Keep();
@@ -93,7 +96,8 @@ public class VueControllerTest {
 
     record Fixture(VueController vueController,
                    GameService gameService,
-                   OutputTracker<GameEvent> tracker) {}
+                   OutputTracker<GameEvent> tracker) {
+    }
 
     private Fixture createFixture() {
         return createFixture(new Game());
