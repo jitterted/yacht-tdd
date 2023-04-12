@@ -40,7 +40,7 @@ public class YachtControllerRuleTest {
         yachtController.startGame();
         yachtController.rollDice();
 
-        yachtController.assignRollToCategory(ScoreCategory.FULLHOUSE.toString());
+        yachtController.assignCurrentHandToCategory(ScoreCategory.FULLHOUSE.toString());
 
         Model model = new ConcurrentModel();
         yachtController.rollResult(model);

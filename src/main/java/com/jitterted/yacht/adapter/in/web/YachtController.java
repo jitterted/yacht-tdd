@@ -59,7 +59,7 @@ public class YachtController {
 
 
     @PostMapping("/select-category")
-    public String assignRollToCategory(@RequestParam("category") String category) throws GameCorrupted {
+    public String assignCurrentHandToCategory(@RequestParam("category") String category) throws GameCorrupted {
         ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
         gameService.assignCurrentHandTo(scoreCategory);
 
