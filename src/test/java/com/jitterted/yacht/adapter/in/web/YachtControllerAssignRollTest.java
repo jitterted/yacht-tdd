@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +92,6 @@ public class YachtControllerAssignRollTest {
 
         assertThat(model.asMap())
                 .containsAllEntriesOf(expectedMap);
-    }
-
-    private static Fixture createFixture(Game game, Map<ScoreCategory, Double> averageScores) {
-        return createFixture(GameService.createNull(
-                new GameService.NulledResponses()
-                        .withAverageScores(averageScores)
-                        .withGame(game)));
     }
 
     @Test
@@ -180,16 +174,17 @@ public class YachtControllerAssignRollTest {
     }
 
     private static Fixture createFixture(Game game) {
-        GameService gameService = GameService.createNull(
-                new GameService.NulledResponses().withGame(game));
-        return createFixture(gameService);
+        return createFixture(game, Collections.emptyMap());
     }
 
-    private static Fixture createFixture(GameService gameService) {
+    private static Fixture createFixture(Game game, Map<ScoreCategory, Double> averageScores) {
+        GameService gameService = GameService.createNull(
+                new GameService.NulledResponses()
+                    .withGame(game)
+                    .withAverageScores(averageScores));
         OutputTracker<GameEvent> tracker = gameService.trackEvents();
         YachtController yachtController = new YachtController(gameService);
         return new Fixture(yachtController, gameService, tracker);
     }
-
 
 }
