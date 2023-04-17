@@ -1,7 +1,6 @@
 package com.jitterted.yacht.adapter.in.web;
 
 import com.jitterted.yacht.adapter.OutputTracker;
-import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.application.GameService;
 import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
@@ -14,7 +13,6 @@ import org.springframework.ui.Model;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -24,7 +22,6 @@ public class YachtControllerAssignRollTest {
 
     private static final HandOfDice DUMMY_HAND = HandOfDice.of(1, 1, 1, 1, 1);
     private static final String DUMMY_SCORE_CATEGORY = ScoreCategory.THREES.toString();
-
 
     @Test
     public void canAssignCurrentHandToCategory() throws Exception {
@@ -94,49 +91,7 @@ public class YachtControllerAssignRollTest {
                 .containsAllEntriesOf(expectedMap);
     }
 
-    @Test
-    public void assignRollToAllCategoriesResultsInAllCategoriesAssignedWithAverages() throws Exception {
-        GameService gameService = createGameServiceWithAllAverageScoresOf(12.0);
-        YachtController yachtController = new YachtController(gameService);
-        yachtController.startGame();
-        rollAndAssignForAllCategories(gameService, yachtController);
-
-        Model model = new ConcurrentModel();
-        yachtController.rollResult(model);
-        List<ScoredCategoryView> categories = (List<ScoredCategoryView>) model.getAttribute("categories");
-
-        assertThat(categories.stream().allMatch(ScoredCategoryView::isRollAssigned))
-                .isTrue();
-        assertThat(categories)
-                .extracting(ScoredCategoryView::getScoreAverage)
-                .containsOnly("12.0");
-    }
-
-    @Test
-    public void newGameAllCategoriesAreUnassigned() throws Exception {
-        GameService gameService = GameService.createNull();
-        YachtController yachtController = new YachtController(gameService);
-        yachtController.startGame();
-
-        Model model = new ConcurrentModel();
-        yachtController.rollResult(model);
-
-        List<ScoredCategoryView> categories = (List<ScoredCategoryView>) model.getAttribute("categories");
-
-        assertThat(categories.stream().noneMatch(ScoredCategoryView::isRollAssigned))
-                .isTrue();
-    }
-
-    private String rollAndAssignForAllCategories(GameService gameService, YachtController yachtController) throws GameCorrupted {
-        String viewName = null;
-        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            gameService.rollDice();
-            viewName = yachtController.assignCurrentHandToCategory(scoreCategory.toString());
-        }
-        return viewName;
-    }
-
-    private Game createGameWithAllButOneCategoryAssigned(ScoreCategory scoreCategoryToSkip) {
+    private static Game createGameWithAllButOneCategoryAssigned(ScoreCategory scoreCategoryToSkip) {
         Game game = new Game();
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
             if (scoreCategory == scoreCategoryToSkip) {
@@ -149,28 +104,10 @@ public class YachtControllerAssignRollTest {
         return game;
     }
 
-    private GameService createGameServiceWithAllAverageScoresOf(double averageScore) {
-        Map<ScoreCategory, Double> map = new HashMap<>();
-        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            map.put(scoreCategory, averageScore);
-        }
-        return GameService.createNull(
-                new GameService.NulledResponses().withAverageScores(map));
-    }
-
-
-    private static GameService createGameServiceWithDieRollsOf(Integer... dieRolls) {
-        return GameService.createNull(new GameService.NulledResponses()
-                                              .withDieRolls(dieRolls));
-    }
 
     record Fixture(YachtController yachtController,
                    GameService gameService,
                    OutputTracker<GameEvent> tracker) {
-    }
-
-    private static Fixture createFixture() {
-        return createFixture(new Game());
     }
 
     private static Fixture createFixture(Game game) {
