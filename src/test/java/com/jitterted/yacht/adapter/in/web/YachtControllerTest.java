@@ -67,6 +67,8 @@ public class YachtControllerTest {
         game.diceRolled(DUMMY_HAND);
         Fixture fixture = createFixture(game);
 
+        // CONTINUE: this is failing because assign shouldn't be calling GameService twice
+        // for the same game
         String redirectPage = fixture.yachtController
                 .assignCurrentHandToCategory(ScoreCategory.TWOS.toString());
 

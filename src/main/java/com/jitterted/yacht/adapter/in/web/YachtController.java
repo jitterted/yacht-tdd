@@ -40,6 +40,7 @@ public class YachtController {
 
     @GetMapping("/rollresult")
     public String rollResult(Model model) throws GameCorrupted {
+        // CONTINUE: Make decision here whether to show Roll Result or Game Over
         model.addAttribute("score", gameService.score());
         model.addAttribute("roll", RollView.listOf(gameService.currentHand()));
         addCategoriesTo(model);
