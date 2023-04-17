@@ -27,7 +27,7 @@ public class YachtControllerInitialRollTest {
                 .isEqualTo(List.of(3, 1, 4, 1, 5));
 
         assertThat(model.getAttribute("score"))
-                .isEqualTo("0");
+                .isEqualTo(0);
     }
 
 }

@@ -48,7 +48,7 @@ public class GameCategoryAssignmentTest {
 
         game.assignCurrentHandTo(ARBITRARY_SCORE_CATEGORY);
 
-        assertThat(game.canReRoll())
+        assertThat(game.canReroll())
                 .isFalse();
     }
 

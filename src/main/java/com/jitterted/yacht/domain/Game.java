@@ -42,7 +42,7 @@ public class Game {
     }
 
     private void requireRerollsRemaining() {
-        if (!canReRoll()) {
+        if (!canReroll()) {
             throw new TooManyRollsException();
         }
     }
@@ -71,7 +71,7 @@ public class Game {
         return scoreboard.scoredCategories();
     }
 
-    public boolean canReRoll() {
+    public boolean canReroll() {
         if (roundCompleted()) {
             return false;
         }

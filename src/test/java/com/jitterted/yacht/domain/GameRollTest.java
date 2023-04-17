@@ -14,7 +14,7 @@ public class GameRollTest {
 
         game.diceRolled(DICE_ROLE_2_3_4_5_6);
 
-        assertThat(game.canReRoll())
+        assertThat(game.canReroll())
                 .isTrue();
     }
 
@@ -25,7 +25,7 @@ public class GameRollTest {
         game.diceRolled(DICE_ROLE_2_3_4_5_6);
         game.diceReRolled(DICE_ROLE_2_3_4_5_6);
 
-        assertThat(game.canReRoll())
+        assertThat(game.canReroll())
                 .isTrue();
     }
 
@@ -37,7 +37,7 @@ public class GameRollTest {
         game.diceReRolled(DICE_ROLE_2_3_4_5_6);
         game.diceReRolled(DICE_ROLE_2_3_4_5_6);
 
-        assertThat(game.canReRoll())
+        assertThat(game.canReroll())
                 .isFalse();
     }
 

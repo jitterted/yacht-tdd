@@ -40,7 +40,7 @@ public class YachtController {
 
     @GetMapping("/rollresult")
     public String rollResult(Model model) throws GameCorrupted {
-        addCurrentScoreTo(model);
+        model.addAttribute("score", gameService.score());
         model.addAttribute("roll", RollView.listOf(gameService.currentHand()));
         addCategoriesTo(model);
         model.addAttribute("canReRoll", gameService.canReRoll());
@@ -71,7 +71,7 @@ public class YachtController {
 
     @GetMapping("/game-over")
     public String displayGameOverPage(Model model) throws GameCorrupted {
-        addCurrentScoreTo(model);
+        model.addAttribute("score", gameService.score());
         addCategoriesTo(model);
         return "game-over";
     }
@@ -89,7 +89,4 @@ public class YachtController {
                                    averages));
     }
 
-    private void addCurrentScoreTo(Model model) throws GameCorrupted {
-        model.addAttribute("score", String.valueOf(gameService.score()));
-    }
 }

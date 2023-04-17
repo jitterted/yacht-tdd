@@ -3,6 +3,7 @@ package com.jitterted.yacht.adapter.in.web;
 import com.jitterted.yacht.adapter.OutputTracker;
 import com.jitterted.yacht.adapter.out.gamedatabase.GameCorrupted;
 import com.jitterted.yacht.application.GameService;
+import com.jitterted.yacht.application.Keep;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.GameEvent;
 import com.jitterted.yacht.domain.HandOfDice;
@@ -64,21 +65,39 @@ public class YachtControllerAssignRollTest {
 
     @Test
     public void rollResultPagePopulatesModelWithGameInfo() throws Exception {
+        Map<ScoreCategory, Double> averageScores = new HashMap<>();
+        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+            averageScores.put(scoreCategory, 7.0);
+        }
+
         Game game = new Game();
         game.diceRolled(HandOfDice.of(4, 4, 4, 4, 4));
         game.assignCurrentHandTo(ScoreCategory.FOURS);
-        Fixture fixture = createFixture(game);
+        Fixture fixture = createFixture(game, averageScores);
 
-        Model expectedModel = new ConcurrentModel();
-        expectedModel.addAttribute("score", game.score());
-        expectedModel.addAttribute("roll", RollView.listOf(game.currentHand()));
-        // CONTINUE HERE with "categories" attribute
+        var expectedMap = Map.of(
+                "score", game.score(),
+                "roll", RollView.listOf(game.currentHand()),
+                "categories", ScoredCategoryView.viewOf(
+                        game.scoredCategories(),
+                        averageScores),
+                "canReRoll", game.canReroll(),
+                "roundCompleted", game.roundCompleted(),
+                "keep", new Keep(),
+                "categoryNames", ScoreCategory.values());
 
         Model model = new ConcurrentModel();
         fixture.yachtController.rollResult(model);
 
-        assertThat(model)
-                .isEqualTo(expectedModel);
+        assertThat(model.asMap())
+                .containsAllEntriesOf(expectedMap);
+    }
+
+    private static Fixture createFixture(Game game, Map<ScoreCategory, Double> averageScores) {
+        return createFixture(GameService.createNull(
+                new GameService.NulledResponses()
+                        .withAverageScores(averageScores)
+                        .withGame(game)));
     }
 
     @Test
@@ -126,7 +145,9 @@ public class YachtControllerAssignRollTest {
     private Game createGameWithAllButOneCategoryAssigned(ScoreCategory scoreCategoryToSkip) {
         Game game = new Game();
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            if (scoreCategory == scoreCategoryToSkip) continue;
+            if (scoreCategory == scoreCategoryToSkip) {
+                continue;
+            }
 
             game.diceRolled(DUMMY_HAND);
             game.assignCurrentHandTo(scoreCategory);
@@ -154,13 +175,17 @@ public class YachtControllerAssignRollTest {
                    OutputTracker<GameEvent> tracker) {
     }
 
-    private Fixture createFixture() {
+    private static Fixture createFixture() {
         return createFixture(new Game());
     }
 
-    private Fixture createFixture(Game game) {
+    private static Fixture createFixture(Game game) {
         GameService gameService = GameService.createNull(
                 new GameService.NulledResponses().withGame(game));
+        return createFixture(gameService);
+    }
+
+    private static Fixture createFixture(GameService gameService) {
         OutputTracker<GameEvent> tracker = gameService.trackEvents();
         YachtController yachtController = new YachtController(gameService);
         return new Fixture(yachtController, gameService, tracker);

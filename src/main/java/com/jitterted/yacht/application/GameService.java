@@ -39,7 +39,7 @@ public class GameService {
         this.gameDatabase = gameDatabase;
     }
 
-    public static GameService create(GameDatabase gameDatabase) {
+    public static GameService create(GameDatabaseInterface gameDatabase) {
         return new GameService(ScoreCategoryNotifier.create(),
                                AverageScoreFetcher.create(),
                                DieRoller.create(),
@@ -112,7 +112,7 @@ public class GameService {
     }
 
     public boolean canReRoll() throws GameCorrupted {
-        return loadGame().canReRoll();
+        return loadGame().canReroll();
     }
 
     public boolean roundCompleted() throws GameCorrupted {
