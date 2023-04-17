@@ -142,8 +142,8 @@ public class GameService {
     public static class NulledResponses {
         private List<Integer> dieRolls = Collections.emptyList();
         private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
-//         private GameDatabaseInterface gameDatabase = GameDatabase.createNull();
-        private GameDatabaseInterface gameDatabase = new DeleteMeImpl();
+//          private GameDatabaseInterface gameDatabase = GameDatabase.createNull();
+       private GameDatabaseInterface gameDatabase = new DeleteMeImpl();
 
         public NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;

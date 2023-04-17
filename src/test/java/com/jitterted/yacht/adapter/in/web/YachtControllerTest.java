@@ -13,15 +13,28 @@ import org.springframework.ui.Model;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SuppressWarnings({"unchecked", "ConstantConditions"})
-public class YachtControllerAssignRollTest {
+@SuppressWarnings({"ConstantConditions"})
+public class YachtControllerTest {
 
     private static final HandOfDice DUMMY_HAND = HandOfDice.of(1, 1, 1, 1, 1);
     private static final String DUMMY_SCORE_CATEGORY = ScoreCategory.THREES.toString();
+
+    @Test
+    public void startsGame() throws Exception {
+        Fixture fixture = createFixture();
+
+        String redirectPage = fixture.yachtController.startGame();
+
+        assertThat(redirectPage)
+                .isEqualTo("redirect:/rollresult");
+        assertThat(fixture.tracker.output())
+                .containsExactly(new GameEvent.Started());
+    }
 
     @Test
     public void canAssignCurrentHandToCategory() throws Exception {
@@ -91,6 +104,23 @@ public class YachtControllerAssignRollTest {
                 .containsAllEntriesOf(expectedMap);
     }
 
+    @Test
+    public void canReroll() throws Exception {
+        Game game = new Game();
+        game.diceRolled(HandOfDice.of(6, 5, 4, 3, 2));
+        Fixture fixture = createFixture(game);
+
+        Keep keep = new Keep();
+        keep.setDiceIndexesToKeep(List.of(0, 1, 3));
+
+        String redirectPage = fixture.yachtController.reRoll(keep);
+
+        assertThat(redirectPage)
+               .isEqualTo("redirect:/rollresult");
+        assertThat(fixture.tracker.output())
+                .containsExactly(new GameEvent.DiceRerolled(6, 5, 3));
+    }
+
     private static Game createGameWithAllButOneCategoryAssigned(ScoreCategory scoreCategoryToSkip) {
         Game game = new Game();
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
@@ -108,6 +138,10 @@ public class YachtControllerAssignRollTest {
     record Fixture(YachtController yachtController,
                    GameService gameService,
                    OutputTracker<GameEvent> tracker) {
+    }
+
+    private static Fixture createFixture() {
+        return createFixture(new Game());
     }
 
     private static Fixture createFixture(Game game) {
