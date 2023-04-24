@@ -2,7 +2,6 @@ package com.jitterted.yacht.adapter.out.gamedatabase;
 
 import com.jitterted.yacht.adapter.OutputListener;
 import com.jitterted.yacht.adapter.OutputTracker;
-import com.jitterted.yacht.application.GameDatabaseInterface;
 import com.jitterted.yacht.domain.Game;
 import com.jitterted.yacht.domain.HandOfDice;
 import com.jitterted.yacht.domain.Scoreboard;
@@ -13,7 +12,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Repository
-public class GameDatabase implements GameDatabaseInterface {
+public class GameDatabase {
 
     static final Long THE_ONLY_GAME_ID = 777L;
     private final Jpa gameDatabaseJpa;

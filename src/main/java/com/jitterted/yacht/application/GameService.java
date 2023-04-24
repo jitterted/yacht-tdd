@@ -26,20 +26,20 @@ public class GameService {
     private final ScoreCategoryNotifier scoreCategoryNotifier;
     private final AverageScoreFetcher averageScoreFetcher;
     private final DieRoller dieRoller;
-    private final GameDatabaseInterface gameDatabase;
+    private final GameDatabase gameDatabase;
     private final OutputListener<GameEvent> listener = new OutputListener<>();
 
     GameService(ScoreCategoryNotifier scoreCategoryNotifier,
                 AverageScoreFetcher averageScoreFetcher,
                 DieRoller dieRoller,
-                GameDatabaseInterface gameDatabase) {
+                GameDatabase gameDatabase) {
         this.scoreCategoryNotifier = scoreCategoryNotifier;
         this.averageScoreFetcher = averageScoreFetcher;
         this.dieRoller = dieRoller;
         this.gameDatabase = gameDatabase;
     }
 
-    public static GameService create(GameDatabaseInterface gameDatabase) {
+    public static GameService create(GameDatabase gameDatabase) {
         return new GameService(ScoreCategoryNotifier.create(),
                                AverageScoreFetcher.create(),
                                DieRoller.create(),
@@ -142,8 +142,7 @@ public class GameService {
     public static class NulledResponses {
         private List<Integer> dieRolls = Collections.emptyList();
         private Map<ScoreCategory, Double> averageScoreResponses = Collections.emptyMap();
-//          private GameDatabaseInterface gameDatabase = GameDatabase.createNull();
-       private GameDatabaseInterface gameDatabase = new DeleteMeImpl();
+        private GameDatabase gameDatabase = GameDatabase.createNull();
 
         public NulledResponses withDieRolls(List<Integer> rolls) {
             dieRolls = rolls;
@@ -160,8 +159,7 @@ public class GameService {
         }
 
         public NulledResponses withGame(Game game) {
-//             gameDatabase = GameDatabase.createNull(game.snapshot());
-            gameDatabase.saveGame(game.snapshot());
+            gameDatabase = GameDatabase.createNull(game.snapshot());
             return this;
         }
 
