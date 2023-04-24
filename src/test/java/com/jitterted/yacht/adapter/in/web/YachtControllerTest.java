@@ -31,7 +31,7 @@ public class YachtControllerTest {
         String redirectPage = fixture.yachtController.startGame();
 
         assertThat(redirectPage)
-                .isEqualTo("redirect:/rollresult");
+                .isEqualTo("redirect:/game");
         assertThat(fixture.tracker.output())
                 .containsExactly(new GameEvent.Started());
     }
@@ -42,46 +42,50 @@ public class YachtControllerTest {
         game.diceRolled(HandOfDice.of(1, 3, 3, 5, 5));
         Fixture fixture = createFixture(game);
 
-        fixture.yachtController.assignCurrentHandToCategory(ScoreCategory.THREES.toString());
+        String redirectString = fixture.yachtController.assignCurrentHandToCategory(ScoreCategory.THREES.toString());
+
+        assertThat(redirectString)
+                .isEqualTo("redirect:/game");
 
         assertThat(fixture.tracker.output())
                 .containsExactly(new GameEvent.CategoryAssigned(ScoreCategory.THREES));
     }
 
     @Test
-    public void assigningCategoryRedirectsToRollResult() throws Exception {
+    public void rollResultEndpointDisplaysGameOverPageWhenGameIsOver() throws Exception {
+        Game game = createCompletedGame();
+        Map<ScoreCategory, Double> averagesForScoreCategories =
+                createAveragesForScoreCategories();
+        Fixture fixture = createFixture(game, averagesForScoreCategories);
+
+        var expectedMap = Map.of(
+                "score", game.score(),
+                "categories", ScoredCategoryView.viewOf(
+                        game.scoredCategories(),
+                        averagesForScoreCategories));
+
+        Model model = new ConcurrentModel();
+        String viewName = fixture.yachtController.game(model);
+
+        assertThat(viewName)
+                .isEqualTo("game-over");
+        assertThat(model.asMap())
+                .containsAllEntriesOf(expectedMap);
+
+    }
+
+    private static Game createCompletedGame() {
         Game game = new Game();
-        game.diceRolled(DUMMY_HAND);
-        Fixture fixture = createFixture(game);
-
-        String redirectPage = fixture.yachtController.assignCurrentHandToCategory(
-                DUMMY_SCORE_CATEGORY);
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/rollresult");
-    }
-
-    @Test
-    public void assigningLastCategoryRedirectsToGameOverPage() throws Exception {
-        Game game = createGameWithAllButOneCategoryAssigned(ScoreCategory.TWOS);
-        game.diceRolled(DUMMY_HAND);
-        Fixture fixture = createFixture(game);
-
-        // CONTINUE: this is failing because assign shouldn't be calling GameService twice
-        // for the same game
-        String redirectPage = fixture.yachtController
-                .assignCurrentHandToCategory(ScoreCategory.TWOS.toString());
-
-        assertThat(redirectPage)
-                .isEqualTo("redirect:/game-over");
-    }
-
-    @Test
-    public void rollResultPagePopulatesModelWithGameInfo() throws Exception {
-        Map<ScoreCategory, Double> averageScores = new HashMap<>();
         for (ScoreCategory scoreCategory : ScoreCategory.values()) {
-            averageScores.put(scoreCategory, 7.0);
+            game.diceRolled(DUMMY_HAND);
+            game.assignCurrentHandTo(scoreCategory);
         }
+        return game;
+    }
+
+    @Test
+    public void rollResultEndpointDisplaysGameInProgressPageWhenGameIsNotOver() throws Exception {
+        Map<ScoreCategory, Double> averageScores = createAveragesForScoreCategories();
 
         Game game = new Game();
         game.diceRolled(HandOfDice.of(4, 4, 4, 4, 4));
@@ -100,10 +104,20 @@ public class YachtControllerTest {
                 "categoryNames", ScoreCategory.values());
 
         Model model = new ConcurrentModel();
-        fixture.yachtController.rollResult(model);
+        String page = fixture.yachtController.game(model);
 
+        assertThat(page)
+                .isEqualTo("roll-result");
         assertThat(model.asMap())
                 .containsAllEntriesOf(expectedMap);
+    }
+
+    private static Map<ScoreCategory, Double> createAveragesForScoreCategories() {
+        Map<ScoreCategory, Double> averageScores = new HashMap<>();
+        for (ScoreCategory scoreCategory : ScoreCategory.values()) {
+            averageScores.put(scoreCategory, 7.0);
+        }
+        return averageScores;
     }
 
     @Test
@@ -118,7 +132,7 @@ public class YachtControllerTest {
         String redirectPage = fixture.yachtController.reRoll(keep);
 
         assertThat(redirectPage)
-               .isEqualTo("redirect:/rollresult");
+               .isEqualTo("redirect:/game");
         assertThat(fixture.tracker.output())
                 .containsExactly(new GameEvent.DiceRerolled(6, 5, 3));
     }

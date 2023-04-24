@@ -29,18 +29,45 @@ public class YachtController {
     @PostMapping("/start-game")
     public String startGame() {
         gameService.start();
-        return "redirect:/rollresult";
+        return redirectToGamePage();
     }
 
     @PostMapping("/rolldice")
     public String rollDice() throws GameCorrupted {
         gameService.rollDice();
-        return "redirect:/rollresult";
+        return redirectToGamePage();
     }
 
-    @GetMapping("/rollresult")
-    public String rollResult(Model model) throws GameCorrupted {
-        // CONTINUE: Make decision here whether to show Roll Result or Game Over
+    @GetMapping("/game")
+    public String game(Model model) throws GameCorrupted {
+        if (gameService.isOver()) {
+            return displayGameOverPage(model);
+        } else {
+            return displayGameInProgressPage(model);
+        }
+    }
+
+    @PostMapping("/re-roll")
+    public String reRoll(Keep keep) throws GameCorrupted {
+        List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
+        gameService.reRoll(keptDice);
+
+        return redirectToGamePage();
+    }
+
+    @PostMapping("/select-category")
+    public String assignCurrentHandToCategory(@RequestParam("category") String category) throws GameCorrupted {
+        ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
+        gameService.assignCurrentHandTo(scoreCategory);
+
+        return redirectToGamePage();
+    }
+
+    private String redirectToGamePage() {
+        return "redirect:/game";
+    }
+
+    private String displayGameInProgressPage(Model model) throws GameCorrupted {
         model.addAttribute("score", gameService.score());
         model.addAttribute("roll", RollView.listOf(gameService.currentHand()));
         addCategoriesTo(model);
@@ -51,27 +78,7 @@ public class YachtController {
         return "roll-result";
     }
 
-    @PostMapping("/re-roll")
-    public String reRoll(Keep keep) throws GameCorrupted {
-        List<Integer> keptDice = keep.diceValuesFrom(gameService.currentHand());
-        gameService.reRoll(keptDice);
-        return "redirect:/rollresult";
-    }
-
-
-    @PostMapping("/select-category")
-    public String assignCurrentHandToCategory(@RequestParam("category") String category) throws GameCorrupted {
-        ScoreCategory scoreCategory = ScoreCategory.valueOf(category.toUpperCase());
-        gameService.assignCurrentHandTo(scoreCategory);
-
-        if (gameService.isOver()) {
-            return "redirect:/game-over";
-        }
-        return "redirect:/rollresult";
-    }
-
-    @GetMapping("/game-over")
-    public String displayGameOverPage(Model model) throws GameCorrupted {
+    private String displayGameOverPage(Model model) throws GameCorrupted {
         model.addAttribute("score", gameService.score());
         addCategoriesTo(model);
         return "game-over";

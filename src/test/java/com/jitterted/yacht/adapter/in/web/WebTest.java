@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +34,7 @@ public class WebTest {
     public void postToRollDiceRedirectsToRollResult() throws Exception {
         mockMvc.perform(post("/rolldice"))
                .andExpect(status().is3xxRedirection())
-               .andExpect(redirectedUrl("/rollresult"));
+               .andExpect(redirectedUrl("/game"));
     }
 
     @Test
@@ -43,14 +42,7 @@ public class WebTest {
         mockMvc.perform(post("/select-category")
                                 .param("category", "threes"))
                .andExpect(status().is3xxRedirection())
-               .andExpect(redirectedUrl("/rollresult"));
+               .andExpect(redirectedUrl("/game"));
     }
 
-    @Test
-    public void gameOverPageDisplaysScoreboard() throws Exception {
-        mockMvc.perform(get("/game-over"))
-               .andExpect(status().isOk())
-               .andExpect(model().attributeExists("score"))
-               .andExpect(model().attributeExists("categories"));
-    }
 }
