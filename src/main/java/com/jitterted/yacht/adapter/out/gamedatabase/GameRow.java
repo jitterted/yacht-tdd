@@ -92,6 +92,10 @@ public class GameRow {
     }
 
     private static HandOfDice fromPersistedHand(String handOfDice) {
+        if (handOfDice.isBlank()) {
+            return HandOfDice.unassigned();
+        }
+
         List<Integer> integers;
         try {
             integers = Arrays.stream(handOfDice.split(","))
@@ -99,15 +103,15 @@ public class GameRow {
                              .toList();
         } catch (NumberFormatException nfe) {
             throw new GameCorruptedInternalException(
-                    "Invalid hand of dice when loading game: "
-                            + handOfDice
+                    "Invalid hand of dice when loading game: ["
+                            + handOfDice + "]"
             );
         }
 
         return HandOfDice.from(integers, () -> {
             throw new GameCorruptedInternalException(
-                    "Invalid hand of dice when loading game: "
-                            + handOfDice);
+                    "Invalid hand of dice when loading game: ["
+                            + handOfDice + "]");
         });
     }
 

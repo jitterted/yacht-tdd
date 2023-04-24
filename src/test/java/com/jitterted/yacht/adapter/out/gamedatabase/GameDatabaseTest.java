@@ -72,6 +72,18 @@ public class GameDatabaseTest {
     }
 
     @Test
+    void saveGameCanWriteGamesThatHaveNoCurrentHand() {
+        saveGame(new SaveGameOptions()
+                         .currentHand(HandOfDice.unassigned()));
+
+        List<Object[]> gameRows = executeQuery(
+                "SELECT id, current_hand FROM games");
+
+        assertThat(gameRows.get(0)[1])
+                .isEqualTo("");
+    }
+
+    @Test
     void saveGameWritesScoreboardStateToDatabase() {
         saveGame(new SaveGameOptions()
                          .scoreboard(
@@ -149,6 +161,18 @@ public class GameDatabaseTest {
     }
 
     @Test
+    void loadsGameWithNoCurrentHand() throws Exception {
+        executeUpdate("INSERT INTO games " +
+                              "(id, rolls, round_completed, current_hand) VALUES " +
+                              "(" + THE_ONLY_GAME_ID + ", 42, false, '')");
+
+        Game.Snapshot loadedGameSnapshot = loadGame().get();
+
+        assertThat(loadedGameSnapshot.currentHand())
+                .isEqualTo(HandOfDice.unassigned());
+    }
+
+    @Test
     void loadsScoreboardState() throws Exception {
         executeUpdate("INSERT INTO games " +
                               "(id, rolls, round_completed, current_hand) VALUES " +
@@ -209,7 +233,7 @@ public class GameDatabaseTest {
                               "(id, rolls, round_completed, current_hand) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 3, true, '6,6,6,1.5,6')");
 
-        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6,6,6,1.5,6");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: [6,6,6,1.5,6]");
     }
 
     @Test
@@ -218,7 +242,7 @@ public class GameDatabaseTest {
                               "(id, rolls, round_completed, current_hand) VALUES " +
                               "(" + THE_ONLY_GAME_ID + ", 3, true, '6')");
 
-        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: 6");
+        assertLoadGameThrowsGameCorrupted("Invalid hand of dice when loading game: [6]");
     }
 
 
