@@ -85,7 +85,7 @@ public class Scoreboard {
                                 .noneMatch(ScoredCategory::isAssigned);
     }
 
-    Snapshot memento() {
+    Snapshot snapshot() {
         Map<ScoreCategory, HandOfDice> scoredCategoryHandMap =
                 scoredCategoryMap
                         .entrySet()

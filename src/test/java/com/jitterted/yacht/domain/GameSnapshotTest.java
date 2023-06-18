@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.*;
 class GameSnapshotTest {
 
     @Test
-    void mementoSavesAllGameState() {
+    void snapshotSavesAllGameState() {
         Game game = new Game();
         game.diceRolled(HandOfDice.of(1, 2, 3, 4, 5));
         game.assignCurrentHandTo(ScoreCategory.FIVES);
@@ -28,7 +28,7 @@ class GameSnapshotTest {
     }
 
     @Test
-    void createFromMementoRestoresAllGameState() {
+    void createFromSnapshotRestoresAllGameState() {
         Game originalGame = new Game();
         originalGame.diceRolled(HandOfDice.of(3, 3, 4, 4, 5));
         originalGame.assignCurrentHandTo(ScoreCategory.FOURS);

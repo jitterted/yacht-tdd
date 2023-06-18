@@ -89,7 +89,7 @@ public class Game {
     public Snapshot snapshot() {
         return new Snapshot(rolls.rolls(), roundCompleted,
                             currentHand,
-                            scoreboard.memento());
+                            scoreboard.snapshot());
     }
 
     public record Snapshot(int rolls,
